@@ -5,10 +5,10 @@ namespace CarRentalClientServer.Data
 {
     public interface CarList
     {
-        IList<Car> GetCars();
+        IList<Car> GetAllCars();
         void AddCar(Car car);
         void RemoveCar(int carId);
         void UpdateCar(Car car);
-        Car GetSpcificCar (int carId);
+        Car GetSpecifiedCar (int carId);
     }
 }
