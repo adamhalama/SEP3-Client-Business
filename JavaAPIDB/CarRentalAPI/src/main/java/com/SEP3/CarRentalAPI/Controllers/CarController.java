@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -22,12 +23,20 @@ public class CarController
 //        return new Car(counter.incrementAndGet(), String.format(templateName, name), String.format(templateModel, model));
     }
 
-    @GetMapping("/cars")
+   /* @GetMapping("/cars")
     public CarList cars()
     {
         CarList carList = new CarList();
         carList.generateCars();
         return carList;
+    }*/
+
+    @GetMapping("/cars")
+    public ArrayList<Car> cars()
+    {
+        CarList carList = new CarList();
+        carList.generateCars();
+        return carList.getCarList();
     }
 }
 
