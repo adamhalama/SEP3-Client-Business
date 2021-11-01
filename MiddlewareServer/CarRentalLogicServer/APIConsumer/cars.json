@@ -1,0 +1,29 @@
+{
+  "carList": [
+    {
+      "id": 1,
+      "name": "BMW",
+      "model": "3er"
+    },
+    {
+      "id": 2,
+      "name": "BMW",
+      "model": "2er coupe"
+    },
+    {
+      "id": 3,
+      "name": "Mercedes",
+      "model": "CLS 63"
+    },
+    {
+      "id": 4,
+      "name": "Mercedes",
+      "model": "A 45"
+    },
+    {
+      "id": 5,
+      "name": "BMW",
+      "model": "4er Gran Coupe"
+    }
+  ]
+}
