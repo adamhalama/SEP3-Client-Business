@@ -90,7 +90,7 @@ using CarRentalClientServer.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "C:\Users\fhuur\OneDrive\DNPSolutions\SEP3Blazor\BlazorClientServer\CarRentalClientServer\Shared\NavMenu.razor"
+#line 23 "C:\Users\fhuur\OneDrive\DNPSolutions\SEP3Blazor\BlazorClientServer\CarRentalClientServer\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

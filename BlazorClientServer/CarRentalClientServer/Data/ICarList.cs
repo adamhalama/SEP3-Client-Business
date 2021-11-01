@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CarRentalClientServer.Data
 {
-    public interface CarList
+    public interface ICarList
     {
         IList<Car> GetAllCars();
         void AddCar(Car car);

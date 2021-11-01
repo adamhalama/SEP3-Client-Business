@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace CarRentalClientServer.Data
 {
-    public class CarListJson : CarList
+    public class CarListJson : ICarList
     {
         private string carFile = "car.json";
         private IList<Car> cars;
@@ -15,7 +15,7 @@ namespace CarRentalClientServer.Data
         {
             if (!File.Exists(carFile))
             {
-                //Seed();
+                Seed();
                 WriteCarsToFile();
             }
             else
@@ -39,13 +39,13 @@ namespace CarRentalClientServer.Data
             WriteCarsToFile();
         }
 
-        public IList<Car> GetCars()
+        public IList<Car> GetAllCars()
         {
             List<Car> tmp = new List<Car>(cars);
             return tmp;
         }
 
-        public Car GetSpcificCar(int carId)
+        public Car GetSpecifiedCar(int carId)
         {
             return cars.FirstOrDefault(c => c.Id == carId);
         }
@@ -61,6 +61,16 @@ namespace CarRentalClientServer.Data
         {
             Car carUpdate = cars.First(c => c.Id == car.Id);
             WriteCarsToFile();
+        }
+
+        private void Seed()
+        {
+            Car[] cs =
+            {
+                new Car {Id = 1, Name = "Focus", Brand = "Ford"},
+                new Car {Id = 2, Name = "325i", Brand = "BMW"},
+            };
+            cars = cs.ToList();
         }
     }
 }
