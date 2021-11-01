@@ -16,7 +16,7 @@ namespace CarRentalClientServer.Data
             if (!File.Exists(carFile))
             {
                 //Seed();
-                WriteTodosToFile();
+                WriteCarsToFile();
             }
             else
             {
@@ -25,7 +25,7 @@ namespace CarRentalClientServer.Data
             }
         }
 
-        private void WriteTodosToFile()
+        private void WriteCarsToFile()
         {
             string todoAsJson = JsonSerializer.Serialize(cars);
             File.WriteAllText(carFile, todoAsJson);
@@ -36,27 +36,31 @@ namespace CarRentalClientServer.Data
             car.Id = (++max);
 
             cars.Add(car);
-            WriteTodosToFile();
+            WriteCarsToFile();
         }
 
         public IList<Car> GetCars()
         {
-            throw new System.NotImplementedException();
+            List<Car> tmp = new List<Car>(cars);
+            return tmp;
         }
 
         public Car GetSpcificCar(int carId)
         {
-            throw new System.NotImplementedException();
+            return cars.FirstOrDefault(c => c.Id == carId);
         }
 
         public void RemoveCar(int carId)
         {
-            throw new System.NotImplementedException();
+            Car carRemove = cars.First(c => c.Id == carId);
+            cars.Remove(carRemove);
+            WriteCarsToFile();
         }
 
         public void UpdateCar(Car car)
         {
-            throw new System.NotImplementedException();
+            Car carUpdate = cars.First(c => c.Id == car.Id);
+            WriteCarsToFile();
         }
     }
 }
