@@ -2,8 +2,10 @@
 
 namespace CarRentalLogicServer.Models
 {
-    public class Car : CarList
+    public class Car
     {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
         [JsonPropertyName("name")]
         public string Name { get; set; }
         

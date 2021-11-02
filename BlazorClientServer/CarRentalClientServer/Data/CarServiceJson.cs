@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CarRentalClientServer.Data
 {
-    public class CarListJson : CarList
+    public class CarServiceJson : ICarService
     {
         private string carFile = "car.json";
         private IList<Car> cars;
 
-        public CarListJson()
+        public CarServiceJson()
         {
             if (!File.Exists(carFile))
             {
@@ -39,7 +40,17 @@ namespace CarRentalClientServer.Data
             WriteCarsToFile();
         }
 
-        public IList<Car> GetCars()
+        public void StartClient()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string SendMessage(string message)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<IList<Car>> GetCarsAsync()
         {
             List<Car> tmp = new List<Car>(cars);
             return tmp;

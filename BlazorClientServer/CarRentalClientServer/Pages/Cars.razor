@@ -1,0 +1,56 @@
+﻿@page "/Cars"
+@using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+
+@inject ICarService carService
+
+<h3>Car list</h3>
+
+@if (CarsToShow == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!CarsToShow.Any())
+{
+    <p>
+        <em>No adults are in this list. Please add some.</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Model</td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in CarsToShow)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Model</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private IList<Car> cars;
+    private IList<Car> CarsToShow;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getCarsTask = carService.GetCarsAsync();
+        cars = await getCarsTask;
+        CarsToShow = cars;
+    }
+
+}

@@ -1,0 +1,39 @@
+﻿@page "/testSockets"
+@using CarRentalClientServer.Data
+
+@inject ICarService carService;
+
+@*<div>
+    <input type="text" @onsubmit="@((arg) => SendMessage(arg))" style="width:250px"/>
+
+    <button type="submit">
+        Send
+    </button>
+</div>*@
+
+<div>
+     <button @onclick="@(() => SendMessage("default"))">
+            Send default
+        </button>
+</div>
+
+
+@code {
+    private string message;
+
+
+    private void SendMessage(string m)
+    {
+        if (string.IsNullOrEmpty(m))
+        {
+            message = "Hello world";
+        }
+        else
+        {
+            message = m;
+        }
+        var carServiceSockets = new CarServiceSockets();
+        carServiceSockets.SendMessage(message);
+    }
+
+}

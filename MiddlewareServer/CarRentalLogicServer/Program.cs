@@ -1,5 +1,6 @@
 ﻿using System;
 using CarRentalLogicServer.APIConsumer;
+using CarRentalLogicServer.ClientServerHost;
 
 namespace CarRentalLogicServer
 {
@@ -9,17 +10,29 @@ namespace CarRentalLogicServer
         {
             do
             {
-                Console.WriteLine("press escape to exit, press anything else to continue and fech again");
-                
-                
-                ICarService carService = new WebCarService();
-                var result = carService.GetCarsAsync().Result;
-                foreach (var car in result)
-                {
-                    Console.WriteLine(car.Model + " - " + car.Name);
-                }
-                
+                // APIConsumer();
+
+                StartSocketServer();
             } while (Console.ReadKey().Key != ConsoleKey.Escape);
+        }
+
+        private static void StartSocketServer()
+        {
+            var server = new Server();
+            server.Listen();
+        }
+
+        private static void APIConsumer()
+        {
+            Console.WriteLine("press escape to exit, press anything else to continue and fech again");
+
+
+            ICarService carService = new WebCarService();
+            var result = carService.GetCarsAsync().Result;
+            foreach (var car in result)
+            {
+                Console.WriteLine(car.Model + " - " + car.Name);
+            }
         }
     }
 }
