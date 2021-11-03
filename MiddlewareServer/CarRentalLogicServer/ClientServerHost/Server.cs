@@ -20,7 +20,7 @@ namespace CarRentalLogicServer.ClientServerHost
         public Server()
         {
             CarService = new WebCarService();
-            
+
             /*Console.WriteLine("\nHit enter to continue...");
             Console.Read();*/
         }
@@ -70,6 +70,7 @@ namespace CarRentalLogicServer.ClientServerHost
 
                         string outgoingMessage;
 
+
                         switch (incommingMessage)
                         {
                             case "GetCars":
@@ -77,9 +78,35 @@ namespace CarRentalLogicServer.ClientServerHost
                                 outgoingMessage = JsonSerializer.Serialize(carsAsync);
                                 break;
                             default:
-                                outgoingMessage = "Unknown command";
+
+                                Car incomingCar;
+                                try
+                                {
+                                    incomingCar = JsonSerializer.Deserialize<Car>(incommingMessage);
+                                    if (incomingCar == null)
+                                    {
+                                        incomingCar = new Car(-2, "null car", "null car");
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    incomingCar = new Car(-2, "null car", "null car");
+                                    Console.WriteLine(e);
+                                }
+                                
+                                if (incomingCar.Id != -2)
+                                {
+                                    var createdCar = await CarService.CreateCarAsync(incomingCar);
+                                    outgoingMessage = JsonSerializer.Serialize(createdCar);
+                                }
+                                else
+                                {
+                                    outgoingMessage = "Unknown command";
+                                }
+
                                 break;
                         }
+
 
                         // Process the data sent by the client.
                         // outgoingMessage = incommingMessage.ToUpper();

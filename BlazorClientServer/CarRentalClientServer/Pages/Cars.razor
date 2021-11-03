@@ -3,8 +3,16 @@
 @using CarRentalClientServer.Data
 
 @inject ICarService carService
+@inject NavigationManager NavigationManager
 
 <h3>Car list</h3>
+
+
+<div>
+     <button @onclick="@(() => OpenAddCar())">
+            Send default
+        </button>
+</div>
 
 @if (CarsToShow == null)
 {
@@ -51,6 +59,11 @@ else
         var getCarsTask = carService.GetCarsAsync();
         cars = await getCarsTask;
         CarsToShow = cars;
+    }
+
+    private void OpenAddCar()
+    {
+        NavigationManager.NavigateTo("/AddCar");
     }
 
 }

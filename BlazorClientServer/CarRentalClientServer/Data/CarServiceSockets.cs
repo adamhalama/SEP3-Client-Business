@@ -97,9 +97,12 @@ namespace CarRentalClientServer.Data
             return result;
         }
 
-        public void AddCar(Car car)
+        public Car AddCar(Car car)
         {
-            throw new System.NotImplementedException();
+            var outgoingMessage = JsonSerializer.Serialize(car);
+            var receivedJson = SendMessage(outgoingMessage);
+            var incomingCar = JsonSerializer.Deserialize<Car>(receivedJson);
+            return incomingCar;
         }
 
         public void RemoveCar(int carId)

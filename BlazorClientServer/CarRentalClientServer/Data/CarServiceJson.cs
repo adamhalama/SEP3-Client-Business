@@ -31,13 +31,14 @@ namespace CarRentalClientServer.Data
             string todoAsJson = JsonSerializer.Serialize(cars);
             File.WriteAllText(carFile, todoAsJson);
         }
-        public void AddCar(Car car)
+        public Car AddCar(Car car)
         {
             int max = cars.Max(car => car.Id);
             car.Id = (++max);
 
             cars.Add(car);
             WriteCarsToFile();
+            return car;
         }
 
         public void StartClient()

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
@@ -38,5 +40,24 @@ namespace CarRentalLogicServer.APIConsumer
             List<Car> result = JsonSerializer.Deserialize<List<Car>>(message);
             return result;
         }
+
+        public async Task<Car> CreateCarAsync(Car car)
+        {
+            string carAsJson = JsonSerializer.Serialize(car);
+            HttpContent content = new StringContent(carAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PostAsync(uri + "/cars", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+            }
+            
+            string message = await response.Content.ReadAsStringAsync();
+            Car result = JsonSerializer.Deserialize<Car>(message);
+            return result;
+         
+        }
+
     }
 }

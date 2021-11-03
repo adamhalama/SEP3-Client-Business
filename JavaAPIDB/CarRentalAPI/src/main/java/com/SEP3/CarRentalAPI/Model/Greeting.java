@@ -1,4 +1,4 @@
-package com.SEP3.CarRentalAPI;
+package com.SEP3.CarRentalAPI.Model;
 
 public class Greeting {
 

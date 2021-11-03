@@ -1,19 +1,19 @@
-package com.SEP3.CarRentalAPI;
+package com.SEP3.CarRentalAPI.Model;
 
 public class Car
 {
-    private final long id;
+    private final int id;
     private final String name;
     private final String model;
 
-    public Car(long id, String name, String model)
+    public Car(int id, String name, String model)
     {
         this.id = id;
         this.name = name;
         this.model = model;
     }
 
-    public long getId()
+    public int getId()
     {
         return id;
     }
