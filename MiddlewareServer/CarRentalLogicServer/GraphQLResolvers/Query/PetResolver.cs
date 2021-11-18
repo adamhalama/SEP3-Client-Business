@@ -1,6 +1,6 @@
 ﻿using HotChocolate.Types;
 
-namespace CarRentalLogicServer.QueryResolvers
+namespace CarRentalLogicServer.GraphQLResolvers.Query
 {
     [ExtendObjectType(Name = "Query")]
     public class PetResolver

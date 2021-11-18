@@ -1,6 +1,8 @@
 package com.SEP3.CarRentalAPI.Model;
 
-public class Car
+import java.io.Serializable;
+
+public class Car implements Serializable
 {
     private final int id;
     private final String name;

@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CarRentalLogicServer.QueryResolvers;
+using CarRentalLogicServer.APIConsumer;
+using CarRentalLogicServer.GraphQLResolvers.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,14 @@ namespace CarRentalLogicServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICarService, WebCarService>();
+            
+            
             services
                 .AddGraphQLServer()
                 .AddQueryType(q => q.Name("Query"))
                 .AddType<PetResolver>()
+                .AddType<CarListResolver>()
                 // .AddMutationType(m => m.Name("Mutation"))
                 // .AddType<PetsMutateResolver>()
                 ;

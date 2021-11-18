@@ -15,8 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CarController
 {
 
-    @Autowired
-    CarRentalModel carRentalModel;
+   /* @Autowired
+    CarRentalModel carRentalModel;*/
 
     private static final String templateName = "name=" + "%s";
     private static final String templateModel = "model=" + "%s";
