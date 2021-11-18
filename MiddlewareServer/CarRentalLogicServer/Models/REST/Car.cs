@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CarRentalLogicServer.Models
+namespace CarRentalLogicServer.Models.REST
 {
     public class Car
     {

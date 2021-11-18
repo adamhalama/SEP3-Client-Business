@@ -1,38 +1,28 @@
-﻿using System;
-using CarRentalLogicServer.APIConsumer;
-using CarRentalLogicServer.ClientServerHost;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace CarRentalLogicServer
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            do
-            {
-                // APIConsumer();
-
-                StartSocketServer();
-            } while (Console.ReadKey().Key != ConsoleKey.Escape);
+            //TODO the application is on "applicationUrl": "https://localhost:5010;http://localhost:5009",
+            
+            CreateHostBuilder(args).Build().Run();
         }
 
-        private static void StartSocketServer()
-        {
-            var server = new Server();
-            server.Listen();
-        }
-
-        private static void APIConsumer()
-        {
-            Console.WriteLine("press escape to exit, press anything else to continue and fech again");
-
-
-            ICarService carService = new WebCarService();
-            var result = carService.GetCarsAsync().Result;
-            foreach (var car in result)
-            {
-                Console.WriteLine(car.Model + " - " + car.Name);
-            }
-        }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
