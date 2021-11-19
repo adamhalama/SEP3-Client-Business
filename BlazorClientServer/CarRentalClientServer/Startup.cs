@@ -29,7 +29,7 @@ namespace CarRentalClientServer
             services.AddRazorPages();
             services.AddServerSideBlazor();
             
-            services.AddSingleton<ICarService, CarServiceSockets>();
+            services.AddScoped<ICarService, CarServiceGraphQL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

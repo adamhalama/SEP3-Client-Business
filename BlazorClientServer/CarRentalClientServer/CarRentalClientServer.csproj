@@ -5,7 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Data\Responses" />
+      <PackageReference Include="GraphQL.Client" Version="4.0.1" />
+      <PackageReference Include="GraphQL.Client.Abstractions" Version="4.0.1" />
+      <PackageReference Include="GraphQL.Client.Abstractions.Websocket" Version="4.0.1" />
+      <PackageReference Include="GraphQL.Client.LocalExecution" Version="4.0.1" />
+      <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="4.0.1" />
+      <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="4.0.1" />
+      <PackageReference Include="GraphQL.Primitives" Version="4.0.1" />
     </ItemGroup>
 
 </Project>
