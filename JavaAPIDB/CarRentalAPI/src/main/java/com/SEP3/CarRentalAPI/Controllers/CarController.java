@@ -3,6 +3,7 @@ package com.SEP3.CarRentalAPI.Controllers;
 import com.SEP3.CarRentalAPI.Model.Car;
 import com.SEP3.CarRentalAPI.Model.CarRentalModel;
 import com.SEP3.CarRentalAPI.Model.CarRentalModelManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CarController
 {
 
-    /*@Autowired
+   /* @Autowired
     CarRentalModel carRentalModel;*/
 
     private static final String templateName = "name=" + "%s";

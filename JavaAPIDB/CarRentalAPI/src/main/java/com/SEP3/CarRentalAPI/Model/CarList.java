@@ -1,8 +1,9 @@
 package com.SEP3.CarRentalAPI.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CarList
+public class CarList implements Serializable
 {
     private ArrayList<Car> carList;
     static int incrementor = 0;
