@@ -1,7 +1,7 @@
 ﻿@page "/testSockets"
 @using CarRentalClientServer.Data
 
-@inject ICarService carService;
+@inject IVehicleService _vehicleService;
 
 @*<div>
     <input type="text" @onsubmit="@((arg) => SendMessage(arg))" style="width:250px"/>
@@ -32,7 +32,7 @@
         {
             message = m;
         }
-        var carServiceSockets = new CarServiceSockets();
+        var carServiceSockets = new VehicleServiceSockets();
         carServiceSockets.SendMessage(message);
     }
 

@@ -8,7 +8,7 @@ using HotChocolate.Types;
 namespace CarRentalLogicServer.GraphQLResolvers.Query
 {
     [ExtendObjectType(Name="Query")]
-    public class CarListResolver
+    public class CarResolver
     {
         public List<Car> GetAllCars([Service] ICarService carService)
         {

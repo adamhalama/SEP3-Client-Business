@@ -1,6 +1,6 @@
 package com.SEP3.CarRentalAPI.Persistence;
 
-import com.SEP3.CarRentalAPI.Model.CarList;
+import com.SEP3.CarRentalAPI.DBEntities.CarList;
 
 import java.io.*;
 

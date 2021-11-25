@@ -1,26 +1,26 @@
-﻿@page "/AddCar"
+﻿@page "/AddVehicle"
 @using Microsoft.AspNetCore.Components
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 
-@inject ICarService carService
+@inject IVehicleService _vehicleService
 
-<h3>AddCar</h3>
+<h3>AddVehicle</h3>
 
-<EditForm Model="@newCar" OnValidSubmit="@AddNewCar">
+<EditForm Model="@_newVehicle" OnValidSubmit="@AddNewVehicle">
 
     <div class="form-row">
         @*<div class="form-group col-md-1">
             <label for="Id" class="form-check-label">Id </label>
-            <InputNumber id="Id" class="form-control" placeholder="Number" @bind-Value="newcar.id"/>
+            <InputNumber id="Id" class="form-control" placeholder="Number" @bind-Value="newvehicle.id"/>
         </div>*@
         <div class="form-group col-md-6">
             <label for="Name" class="form-check-label">First name </label>
-            <InputText id="Name" class="form-control" placeholder="Make" @bind-Value="newCar.Name"/>
+            <InputText id="Name" class="form-control" placeholder="Make" @bind-Value="_newVehicle.Name"/>
         </div>
         <div class="form-group col-md-6">
             <label for="Model" class="form-check-label">Last name </label>
-            <InputText id="Model" class="form-control" placeholder="Car model" @bind-Value="newCar.Model"/>
+            <InputText id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="_newVehicle.Model"/>
         </div>
     </div>
    
@@ -34,10 +34,10 @@
 
 
 @code {
-    private Car newCar = new();
+    private Vehicle _newVehicle = new();
 
-    private void AddNewCar()
+    private void AddNewVehicle()
     {
-        carService.AddCar(new Car(-1, newCar.Name, newCar.Model));
+        _vehicleService.AddCar(new Vehicle(-1, _newVehicle.Name, _newVehicle.Model));
     }
 }

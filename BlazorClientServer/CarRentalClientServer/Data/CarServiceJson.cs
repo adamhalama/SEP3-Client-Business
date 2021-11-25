@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CarRentalClientServer.Data
 {
-    public class CarServiceJson : ICarService
+    public class VehicleServiceJson : IVehicleService
     {
-        private string carFile = "car.json";
-        private IList<Car> cars;
+        private string carFile = "vehicle.json";
+        private IList<Vehicle> cars;
 
-        public CarServiceJson()
+        public VehicleServiceJson()
         {
             if (!File.Exists(carFile))
             {
@@ -22,7 +22,7 @@ namespace CarRentalClientServer.Data
             else
             {
                 string content = File.ReadAllText(carFile);
-                cars = JsonSerializer.Deserialize<List<Car>>(content);
+                cars = JsonSerializer.Deserialize<List<Vehicle>>(content);
             }
         }
 
@@ -31,14 +31,14 @@ namespace CarRentalClientServer.Data
             string todoAsJson = JsonSerializer.Serialize(cars);
             File.WriteAllText(carFile, todoAsJson);
         }
-        public Car AddCar(Car car)
+        public Vehicle AddCar(Vehicle vehicle)
         {
             int max = cars.Max(car => car.Id);
-            car.Id = (++max);
+            vehicle.Id = (++max);
 
-            cars.Add(car);
+            cars.Add(vehicle);
             WriteCarsToFile();
-            return car;
+            return vehicle;
         }
 
         public void StartClient()
@@ -51,27 +51,27 @@ namespace CarRentalClientServer.Data
             throw new System.NotImplementedException();
         }
 
-        public async Task<IList<Car>> GetCarsAsync()
+        public async Task<IList<Vehicle>> GetCarsAsync()
         {
-            List<Car> tmp = new List<Car>(cars);
+            List<Vehicle> tmp = new List<Vehicle>(cars);
             return tmp;
         }
 
-        public Car GetSpcificCar(int carId)
+        public Vehicle GetSpcificCar(int carId)
         {
             return cars.FirstOrDefault(c => c.Id == carId);
         }
 
         public void RemoveCar(int carId)
         {
-            Car carRemove = cars.First(c => c.Id == carId);
-            cars.Remove(carRemove);
+            Vehicle vehicleRemove = cars.First(c => c.Id == carId);
+            cars.Remove(vehicleRemove);
             WriteCarsToFile();
         }
 
-        public void UpdateCar(Car car)
+        public void UpdateCar(Vehicle vehicle)
         {
-            Car carUpdate = cars.First(c => c.Id == car.Id);
+            Vehicle vehicleUpdate = cars.First(c => c.Id == vehicle.Id);
             WriteCarsToFile();
         }
     }

@@ -2,25 +2,25 @@
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 
-@inject ICarService carService
+@inject IVehicleService _vehicleService
 @inject NavigationManager NavigationManager
 
-<h3>Car list</h3>
+<h3>Vehicle list</h3>
 
 
 <div>
-     <button @onclick="@(() => OpenAddCar())">
+     <button @onclick="@(() => OpenAddVehicle())">
             Send default
         </button>
 </div>
 
-@if (CarsToShow == null)
+@if (VehiclesToShow == null)
 {
     <p>
         <em>Loading...</em>
     </p>
 }
-else if (!CarsToShow.Any())
+else if (!VehiclesToShow.Any())
 {
     <p>
         <em>No adults are in this list. Please add some.</em>
@@ -37,7 +37,7 @@ else
         </tr>
         </thead>
         <tbody>
-        @foreach (var item in CarsToShow)
+        @foreach (var item in VehiclesToShow)
         {
             <tr>
                 <td>@item.Id</td>
@@ -51,19 +51,19 @@ else
 
 @code {
 
-    private IList<Car> cars;
-    private IList<Car> CarsToShow;
+    private IList<Vehicle> vehicles;
+    private IList<Vehicle> VehiclesToShow;
 
     protected override async Task OnInitializedAsync()
     {
-        var getCarsTask = carService.GetCarsAsync();
-        cars = await getCarsTask;
-        CarsToShow = cars;
+        var getVehiclesTask = _vehicleService.GetCarsAsync();
+        vehicles = await getVehiclesTask;
+        VehiclesToShow = vehicles;
     }
 
-    private void OpenAddCar()
+    private void OpenAddVehicle()
     {
-        NavigationManager.NavigateTo("/AddCar");
+        NavigationManager.NavigateTo("/AddVehicle");
     }
 
 }

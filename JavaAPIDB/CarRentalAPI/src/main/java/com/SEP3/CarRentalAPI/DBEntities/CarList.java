@@ -1,4 +1,4 @@
-package com.SEP3.CarRentalAPI.Model;
+package com.SEP3.CarRentalAPI.DBEntities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class CarList implements Serializable
 {
     private ArrayList<Car> carList;
-    static int incrementor = 0;
+    static long incrementor = 0;
 
     public CarList()
     {
@@ -35,7 +35,7 @@ public class CarList implements Serializable
         return newCar;
     }
 
-    public Car addCar(int id, String name, String model)
+    public Car addCar(long id, String name, String model)
     {
         Car newCar = new Car(id, name, model);
         carList.add(newCar);

@@ -4,14 +4,15 @@ using System.Threading.Tasks;
 
 namespace CarRentalClientServer.Data
 {
-    public interface ICarService
+    public interface IVehicleService
     {
 
+        //rename to vehicle
        string SendMessage(string message);
-       Task<IList<Car>> GetCarsAsync();
-        Car AddCar(Car car);
+       Task<IList<Vehicle>> GetCarsAsync();
+        Vehicle AddCar(Vehicle vehicle);
         void RemoveCar(int carId);
-        void UpdateCar(Car car);
-        Car GetSpcificCar (int carId);
+        void UpdateCar(Vehicle vehicle);
+        Vehicle GetSpcificCar (int carId);
     }
 }

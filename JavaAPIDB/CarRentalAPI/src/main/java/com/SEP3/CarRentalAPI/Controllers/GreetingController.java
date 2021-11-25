@@ -1,6 +1,6 @@
 package com.SEP3.CarRentalAPI.Controllers;
 
-import com.SEP3.CarRentalAPI.Model.Greeting;
+import com.SEP3.CarRentalAPI.DBEntities.Greeting;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

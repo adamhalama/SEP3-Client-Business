@@ -5,7 +5,7 @@ namespace CarRentalClientServer.Data.Responses
 {
     public class AllCarsResponse
     {
-        public List<Car> AllCars { get; set; }
+        public List<Vehicle> AllCars { get; set; }
         
         /*public class CarContent
         {

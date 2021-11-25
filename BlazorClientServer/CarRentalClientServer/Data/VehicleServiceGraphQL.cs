@@ -10,7 +10,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace CarRentalClientServer.Data
 {
-    public class CarServiceGraphQL : ICarService
+    public class VehicleServiceGraphQL : IVehicleService
     {
         private GraphQLHttpClient graphQlClient
             = new GraphQLHttpClient("https://localhost:5010/graphql", new NewtonsoftJsonSerializer());
@@ -20,7 +20,8 @@ namespace CarRentalClientServer.Data
             throw new System.NotImplementedException();
         }
 
-        public async Task<IList<Car>> GetCarsAsync()
+        //todo rename to VEHICLE
+        public async Task<IList<Vehicle>> GetCarsAsync()
         {
             string query = @"
             query
@@ -52,7 +53,6 @@ namespace CarRentalClientServer.Data
                     {
                         WriteIndented = true
                     }));
-
                 
                 var graphQLResponse = await graphQlClient.SendQueryAsync<AllCarsResponse>(request);
                 
@@ -101,7 +101,7 @@ namespace CarRentalClientServer.Data
             return request;
         }
 
-        public Car AddCar(Car car)
+        public Vehicle AddCar(Vehicle vehicle)
         {
             throw new System.NotImplementedException();
         }
@@ -111,12 +111,12 @@ namespace CarRentalClientServer.Data
             throw new System.NotImplementedException();
         }
 
-        public void UpdateCar(Car car)
+        public void UpdateCar(Vehicle vehicle)
         {
             throw new System.NotImplementedException();
         }
 
-        public Car GetSpcificCar(int carId)
+        public Vehicle GetSpcificCar(int carId)
         {
             throw new System.NotImplementedException();
         }

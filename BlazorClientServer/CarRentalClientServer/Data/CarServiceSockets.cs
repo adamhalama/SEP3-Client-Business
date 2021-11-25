@@ -10,7 +10,7 @@ using CarRentalClientServer.Models;
 
 namespace CarRentalClientServer.Data
 {
-    public class CarServiceSockets : ICarService
+    public class VehicleServiceSockets : IVehicleService
     {
         // private string message = "Hello world";
         static private string serverIP = "127.0.0.1";
@@ -20,7 +20,7 @@ namespace CarRentalClientServer.Data
 
         private String responseData;
 
-        public CarServiceSockets()
+        public VehicleServiceSockets()
         {
         }
 
@@ -89,19 +89,19 @@ namespace CarRentalClientServer.Data
 
 
 
-        public async Task<IList<Car>> GetCarsAsync()
+        public async Task<IList<Vehicle>> GetCarsAsync()
         {
             var jsonString = SendMessage("GetCars");
             
-            List<Car> result = JsonSerializer.Deserialize<List<Car>>(jsonString);
+            List<Vehicle> result = JsonSerializer.Deserialize<List<Vehicle>>(jsonString);
             return result;
         }
 
-        public Car AddCar(Car car)
+        public Vehicle AddCar(Vehicle vehicle)
         {
-            var outgoingMessage = JsonSerializer.Serialize(car);
+            var outgoingMessage = JsonSerializer.Serialize(vehicle);
             var receivedJson = SendMessage(outgoingMessage);
-            var incomingCar = JsonSerializer.Deserialize<Car>(receivedJson);
+            var incomingCar = JsonSerializer.Deserialize<Vehicle>(receivedJson);
             return incomingCar;
         }
 
@@ -110,12 +110,12 @@ namespace CarRentalClientServer.Data
             throw new System.NotImplementedException();
         }
 
-        public void UpdateCar(Car car)
+        public void UpdateCar(Vehicle vehicle)
         {
             throw new System.NotImplementedException();
         }
 
-        public Car GetSpcificCar(int carId)
+        public Vehicle GetSpcificCar(int carId)
         {
             throw new System.NotImplementedException();
         }

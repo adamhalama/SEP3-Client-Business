@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
+using CarRentalLogicServer.GraphQLResolvers.Mutation;
 using CarRentalLogicServer.GraphQLResolvers.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,10 +25,10 @@ namespace CarRentalLogicServer
             services
                 .AddGraphQLServer()
                 .AddQueryType(q => q.Name("Query"))
-                .AddType<PetResolver>()
-                .AddType<CarListResolver>()
-                // .AddMutationType(m => m.Name("Mutation"))
-                // .AddType<PetsMutateResolver>()
+                .AddType<VehicleResolver>()
+                .AddType<CarResolver>() // todo gonna be removed
+                .AddMutationType(m => m.Name("Mutation"))
+                .AddType<VehicleMutationResolver>()
                 ;
         }
 

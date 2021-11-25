@@ -1,4 +1,4 @@
-package com.SEP3.CarRentalAPI.Model;
+package com.SEP3.CarRentalAPI.DBEntities;
 
 public class Greeting {
 
