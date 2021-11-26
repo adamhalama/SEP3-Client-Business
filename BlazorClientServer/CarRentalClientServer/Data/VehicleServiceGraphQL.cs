@@ -15,34 +15,18 @@ namespace CarRentalClientServer.Data
         private GraphQLHttpClient graphQlClient
             = new GraphQLHttpClient("https://localhost:5010/graphql", new NewtonsoftJsonSerializer());
 
-        public string SendMessage(string message)
-        {
-            throw new System.NotImplementedException();
-        }
 
-        //todo rename to VEHICLE
-        public async Task<IList<Vehicle>> GetCarsAsync()
+        public async Task<IList<Vehicle>> GetVehiclesAsync()
         {
             string query = @"
             query
-            AllCars
+            AllVehicles
             {
-                allCars
-                {
-                    id
-                    name
-                    model
-                }
+                allVehicles
             }
             ";
 
-            var variables = new
-            {
-                id = 1,
-                name = "Jebo"
-            };
-
-            var request = MakeGraphQLRequest(query, "AllCars");
+            var request = MakeGraphQLRequest(query, "AllVehicles");
 
 
             try
@@ -53,23 +37,178 @@ namespace CarRentalClientServer.Data
                     {
                         WriteIndented = true
                     }));
-                
-                var graphQLResponse = await graphQlClient.SendQueryAsync<AllCarsResponse>(request);
-                
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<AllVehiclesResponse>(request);
                 //showing serialized response
                 Console.WriteLine("serialised response:");
                 Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions {WriteIndented = true}));
+
+                return JsonSerializer.Deserialize<IList<Vehicle>>(graphQLResponse.Data.AllVehicles);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                if (e.InnerException != null)
+                {
+                    Console.WriteLine(e.InnerException.Message);
+                }
+
+                throw;
+            }
+        }
+
+        public async Task<Vehicle> GetVehicleAsync(int id)
+        {
+            string query = @"
+            query
+            Vehicle($id : Int!)
+            {
+                vehicle(id: $id)
+            }
+            ";
+            var variables = new {id = id};
+            var request = MakeGraphQLRequest(query, "Vehicle", variables);
+
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
+                    new JsonSerializerOptions { WriteIndented = true }));
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<VehicleResponse>(request);
+                //showing serialized response
+                Console.WriteLine("serialised response:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions {WriteIndented = true}));
+
+                return JsonSerializer.Deserialize<Vehicle>(graphQLResponse.Data.Vehicle);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                if (e.InnerException != null)
+                    Console.WriteLine(e.InnerException.Message);
+                
+                throw;
+            }
+        }
+
+        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
+        {
+            vehicle.Id = -1; //making sure that there is some id, and is invalid
+            string query = @"
+            mutation
+            CreateVehicle($vehicleInput : string!)
+            {
+                createVehicle(vehicle: $vehicleInput)
+            }  
+            ";
+            var variables = new
+            {
+                vehicleInput = JsonSerializer.Serialize(vehicle)
+            };
+
+            var request = MakeGraphQLRequest(query, "CreateVehicle", variables);
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
                     new JsonSerializerOptions
                     {
                         WriteIndented = true
                     }));
 
-                return graphQLResponse.Data.AllCars;
+                var graphQLResponse = await graphQlClient.SendQueryAsync<CreateVehicleResponse>(request);
+                //showing serialized response
+                Console.WriteLine("serialised response:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions {WriteIndented = true}));
+                return JsonSerializer.Deserialize<Vehicle>(graphQLResponse.Data.CreateVehicle);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                if (e.InnerException != null)
+                {
+                    Console.WriteLine(e.InnerException.Message);
+                }
+
+                throw;
+            }
+        }
+
+        public async Task<Vehicle> UpdateVehicleAsync(Vehicle vehicle)
+        {
+            string query = @"
+            mutation
+            UpdateVehicle($vehicleInput : string, $id : Int)
+            {
+                updateVehicle(vehicle: $vehicleInput, id : $id)
+            }
+            ";
+            var variables = new { vehicleInput = JsonSerializer.Serialize(vehicle), vehicle.Id };
+            var request = MakeGraphQLRequest(query, "UpdateVehicle", variables);
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
+                    new JsonSerializerOptions { WriteIndented = true }));
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<UpdateVehicleResponse>(request);
+                //showing serialized response
+                Console.WriteLine("serialised response:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions {WriteIndented = true}));
+                Console.WriteLine("serialised response v2:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse.Data.UpdateVehicle,
+                    new JsonSerializerOptions {WriteIndented = true}));
                 
+                return JsonSerializer.Deserialize<Vehicle>(graphQLResponse.Data.UpdateVehicle);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                if (e.InnerException != null)
+                {
+                    Console.WriteLine(e.InnerException.Message);
+                }
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteVehicleAsync(int id)
+        {
+            
+            string query = @"
+            mutation
+            DeleteVehicle($id : Int)
+            {
+                deleteVehicle(id : $id)
+            }
+            ";
+            var variables = new { id };
+            var request = MakeGraphQLRequest(query, "UpdateVehicle", variables);
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
+                    new JsonSerializerOptions { WriteIndented = true }));
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<DeleteVehicleResponse>(request);
+                //showing serialized response
+                Console.WriteLine("serialised response:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions {WriteIndented = true}));
+                Console.WriteLine("serialised response v2:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse.Data.DeleteVehicle,
+                    new JsonSerializerOptions {WriteIndented = true}));
+                
+                return JsonSerializer.Deserialize<bool>(graphQLResponse.Data.DeleteVehicle);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 if (e.InnerException != null)
                 {
                     Console.WriteLine(e.InnerException.Message);
@@ -80,8 +219,7 @@ namespace CarRentalClientServer.Data
 
         private static GraphQLRequest MakeGraphQLRequest(string query, string operationName, object variables)
         {
-            GraphQLRequest request;
-            request = new GraphQLRequest
+            var request = new GraphQLRequest
             {
                 Query = query,
                 OperationName = operationName,
@@ -92,8 +230,7 @@ namespace CarRentalClientServer.Data
 
         private static GraphQLRequest MakeGraphQLRequest(string query, string operationName)
         {
-            GraphQLRequest request;
-            request = new GraphQLRequest
+            var request = new GraphQLRequest
             {
                 Query = query,
                 OperationName = operationName
@@ -101,24 +238,79 @@ namespace CarRentalClientServer.Data
             return request;
         }
 
-        public Vehicle AddCar(Vehicle vehicle)
+        //legacy class not using Json
+        /*public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
         {
-            throw new System.NotImplementedException();
-        }
+            string query = @"
+            mutation
+            CreateVehicle($vehicleInput : VehicleInput)
+            {
+                createVehicle(vehicle: $vehicleInput)
+                {
+                    id
+                    name
+                    type
+                    pricePerDay
+                    seatsCount
+                    isAutomatic
+                    powerKw
+                    fuelType
+                    deposit
+                }
+            }
+            ";
 
-        public void RemoveCar(int carId)
-        {
-            throw new System.NotImplementedException();
-        }
+            var variables = new
+            {
+                vehicleInput = new Vehicle
+                {
+                    Id = vehicle.Id,
+                    Name = vehicle.Name,
+                    Type = vehicle.Type,
+                    PricePerDay = vehicle.PricePerDay,
+                    SeatsCount = vehicle.SeatsCount,
+                    IsAutomatic = vehicle.IsAutomatic,
+                    PowerKw = vehicle.PowerKw,
+                    FuelType = vehicle.FuelType,
+                    Deposit = vehicle.Deposit
+                }
+            };
 
-        public void UpdateCar(Vehicle vehicle)
-        {
-            throw new System.NotImplementedException();
-        }
+            var request = MakeGraphQLRequest(query, "CreateVehicle", variables);
 
-        public Vehicle GetSpcificCar(int carId)
-        {
-            throw new System.NotImplementedException();
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }));
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<CreateVehicleResponse>(request);
+
+                //showing serialized response
+                Console.WriteLine("serialised response:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }));
+
+                return graphQLResponse.Data.CreateVehicle;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                if (e.InnerException != null)
+                {
+                    Console.WriteLine(e.InnerException.Message);
+                }
+
+                throw;
+            }
         }
+        */
     }
 }

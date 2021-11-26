@@ -8,11 +8,10 @@ namespace CarRentalClientServer.Data
     {
 
         //rename to vehicle
-       string SendMessage(string message);
-       Task<IList<Vehicle>> GetCarsAsync();
-        Vehicle AddCar(Vehicle vehicle);
-        void RemoveCar(int carId);
-        void UpdateCar(Vehicle vehicle);
-        Vehicle GetSpcificCar (int carId);
+        Task<IList<Vehicle>> GetVehiclesAsync();
+        Task<Vehicle> GetVehicleAsync(int id);
+        Task<Vehicle>    CreateVehicleAsync(Vehicle vehicle);
+        Task<Vehicle> UpdateVehicleAsync(Vehicle vehicle);
+        Task<bool> DeleteVehicleAsync(int id);
     }
 }

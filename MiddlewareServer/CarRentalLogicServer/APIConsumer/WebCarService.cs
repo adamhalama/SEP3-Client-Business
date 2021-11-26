@@ -11,7 +11,7 @@ namespace CarRentalLogicServer.APIConsumer
 {
     public class WebCarService : ICarService
     {
-        private string uri = "http://localhost:8080";
+        private string uri = "http://localhost:8080/api";
 
         private readonly HttpClient client;
 
@@ -60,7 +60,7 @@ namespace CarRentalLogicServer.APIConsumer
 
         //  VEHICLES
         
-        public async Task<IList<Vehicle>> GetVehiclesAsync()
+        public async Task<string> GetVehiclesAsync()
         {
             HttpResponseMessage response = await client.GetAsync(uri + "/vehicles");
             if (!response.IsSuccessStatusCode)
@@ -69,11 +69,11 @@ namespace CarRentalLogicServer.APIConsumer
             }
 
             string message = await response.Content.ReadAsStringAsync();
-            List<Vehicle> result = JsonSerializer.Deserialize<List<Vehicle>>(message);
-            return result;
+            // List<Vehicle> result = JsonSerializer.Deserialize<List<Vehicle>>(message);
+            return message;
         }
 
-        public async Task<Vehicle> GetVehicleByIdAsync(int id)
+        public async Task<string> GetVehicleByIdAsync(int id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
@@ -82,15 +82,16 @@ namespace CarRentalLogicServer.APIConsumer
             }
 
             var message = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Vehicle>(message);
-            return result;
+            // var result = JsonSerializer.Deserialize<Vehicle>(message);
+            return message;
         }
 
 
-        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
+        //legacy class not using json to transfer
+        /*public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
         {
-            string carAsJson = JsonSerializer.Serialize(vehicle);
-            HttpContent content = new StringContent(carAsJson,
+            string vehicleAsJson = JsonSerializer.Serialize(vehicle);
+            HttpContent content = new StringContent(vehicleAsJson,
                 Encoding.UTF8,
                 "application/json");
             HttpResponseMessage response = await client.PostAsync(uri + "/vehicles", content);
@@ -102,31 +103,58 @@ namespace CarRentalLogicServer.APIConsumer
             string message = await response.Content.ReadAsStringAsync();
             Vehicle result = JsonSerializer.Deserialize<Vehicle>(message);
             return result;
-        }
-
-        public async Task UpdateVehicleAsync(Vehicle vehicle)
+        }*/
+        
+        public async Task<string> CreateVehicleAsync(string vehicle)
         {
-            string vehicleAsJson = JsonSerializer.Serialize(vehicle);
-            HttpContent content = new StringContent(vehicleAsJson,
+            HttpContent content = new StringContent(vehicle,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response = await client.PutAsync($"{uri}/vehicles/{vehicle.Id}", content);
+            HttpResponseMessage response = await client.PostAsync(uri + "/vehicles", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+            }
+
+            string message = await response.Content.ReadAsStringAsync();
+            return message;
+        }
+
+        public async Task<string> UpdateVehicleAsync(string vehicle, int id)
+        {
+            // string vehicleAsJson = JsonSerializer.Serialize(vehicle);
+            HttpContent content = new StringContent(vehicle,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PutAsync($"{uri}/vehicles/{id}", content);
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"{response.StatusCode};{response.ReasonPhrase}");
             }
+            else
+                return response.Content.ReadAsStringAsync().Result;
 
             //todo maybe add a successful return
         }
 
-        public async Task DeleteVehicleAsync(int id)
+        public async Task<bool> DeleteVehicleAsync(int id)
         {
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
             }
+            else
+            {
+                var isDeletedMap = JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
+                if (isDeletedMap == null)
+                {
+                    return false;
+                }
+                return isDeletedMap["deleted"];
+            }
+
         }
     }
 }

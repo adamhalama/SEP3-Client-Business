@@ -3,9 +3,9 @@ using CarRentalClientServer.Models;
 
 namespace CarRentalClientServer.Data.Responses
 {
-    public class AllCarsResponse
+    public class AllVehiclesResponse
     {
-        public List<Vehicle> AllCars { get; set; }
+        public string AllVehicles { get; set; }
         
         /*public class CarContent
         {

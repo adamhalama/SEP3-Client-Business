@@ -61,10 +61,10 @@ public class Vehicle
     }
     public void setType(String type)
     {
-        this.name = type;
+        this.type = type;
     }
 
-    @Column(name = "price_per_day", nullable = false)
+    @Column(name = "price_per_day", nullable = true)
     public int getPricePerDay()
     {
         return pricePerDay;
@@ -111,7 +111,7 @@ public class Vehicle
     }
     public void setFuelType(String fuelType)
     {
-        this.name = fuelType;
+        this.fuelType = fuelType;
     }
 
     @Column(name = "deposit", nullable = true)
@@ -122,5 +122,13 @@ public class Vehicle
     public void setDeposit(int deposit)
     {
         this.deposit = deposit;
+    }
+
+    public String toString()
+    {
+        return "id=" + id + " name=" + name + ", type=" + type
+                + ", price per day=" + pricePerDay + ", seats count=" + seatsCount
+                + ", is automatic=" + isAutomatic + ", power kw=" + powerKw
+                + ", fuel type=" + fuelType + ", deposit=" + deposit;
     }
 }

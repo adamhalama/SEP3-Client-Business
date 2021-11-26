@@ -1,4 +1,4 @@
-﻿@page "/Cars"
+﻿@page "/vehicles"
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 
@@ -42,7 +42,6 @@ else
             <tr>
                 <td>@item.Id</td>
                 <td>@item.Name</td>
-                <td>@item.Model</td>
             </tr>
         }
         </tbody>
@@ -56,7 +55,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var getVehiclesTask = _vehicleService.GetCarsAsync();
+        var getVehiclesTask = _vehicleService.GetVehiclesAsync();
         vehicles = await getVehiclesTask;
         VehiclesToShow = vehicles;
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CarRentalClientServer.Data
 {
-    public class VehicleServiceJson : IVehicleService
+    /*public class VehicleServiceJson : IVehicleService
     {
         private string carFile = "vehicle.json";
         private IList<Vehicle> cars;
@@ -74,5 +74,5 @@ namespace CarRentalClientServer.Data
             Vehicle vehicleUpdate = cars.First(c => c.Id == vehicle.Id);
             WriteCarsToFile();
         }
-    }
+    }*/
 }

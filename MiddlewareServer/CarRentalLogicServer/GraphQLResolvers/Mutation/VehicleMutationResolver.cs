@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models.REST;
 using HotChocolate;
@@ -6,17 +7,26 @@ using HotChocolate.Types;
 
 namespace CarRentalLogicServer.GraphQLResolvers.Mutation
 {
+    // class containing mutation resolvers for updating data
     [ExtendObjectType(Name = "Mutation")]
     public class VehicleMutationResolver
     {
-        public Vehicle CreateVehicle([Service] ICarService carService, Vehicle vehicle)
+        public async Task<string> CreateVehicle([Service] ICarService carService, string vehicle)
         {
-            return carService.CreateVehicleAsync(vehicle).Result;
+            //legacy not using json
+            //return await carService.CreateVehicleAsync(vehicle);
+
+            return await carService.CreateVehicleAsync(vehicle);
         }
 
-        public void DeleteVehicle([Service] ICarService carService, int id)
+        public string UpdateVehicle([Service] ICarService carService, string vehicle, int id)
         {
-            carService.DeleteVehicleAsync(id);
+            return carService.UpdateVehicleAsync(vehicle, id).Result;
+        }
+
+        public bool DeleteVehicle([Service] ICarService carService, int id)
+        {
+            return carService.DeleteVehicleAsync(id).Result;
         }
     }
 }

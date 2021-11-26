@@ -10,7 +10,7 @@ using CarRentalClientServer.Models;
 
 namespace CarRentalClientServer.Data
 {
-    public class VehicleServiceSockets : IVehicleService
+    /*public class VehicleServiceSockets : IVehicleService
     {
         // private string message = "Hello world";
         static private string serverIP = "127.0.0.1";
@@ -119,9 +119,5 @@ namespace CarRentalClientServer.Data
         {
             throw new System.NotImplementedException();
         }
-    }
-
-    public class Adult
-    {
-    }
+    }*/
 }

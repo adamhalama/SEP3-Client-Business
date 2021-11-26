@@ -11,12 +11,12 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
     [ExtendObjectType(Name = "Query")]
     public class VehicleResolver
     {
-        public List<Vehicle> GetAllVehicles([Service] ICarService carService)
+        public string GetAllVehicles([Service] ICarService carService)
         {
-            return carService.GetVehiclesAsync().Result.ToList();
+            return carService.GetVehiclesAsync().Result;
         }
 
-        public Vehicle GetVehicle([Service] ICarService carService, int id)
+        public string GetVehicle([Service] ICarService carService, int id)
         {
             return carService.GetVehicleByIdAsync(id).Result;
         }

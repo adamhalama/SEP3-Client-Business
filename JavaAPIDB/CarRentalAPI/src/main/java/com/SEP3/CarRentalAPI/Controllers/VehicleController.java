@@ -26,6 +26,8 @@ public class VehicleController
         return repository.findAll();
     }
 
+
+
     @GetMapping("/vehicles/{id}")
     public ResponseEntity<Vehicle> getVehicleById(@PathVariable(value = "id") Long vehicleId)
             throws ResourceNotFoundException
@@ -38,6 +40,9 @@ public class VehicleController
     @PostMapping("/vehicles")
     public Vehicle createVehicle(@Valid @RequestBody Vehicle vehicle)
     {
+        System.out.println("Creating vehicle");
+        System.out.println(vehicle.toString());
+        vehicle.setId(-1);
         return repository.save(vehicle);
     }
 
