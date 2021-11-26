@@ -11,15 +11,17 @@ public class Employee
 	private String name;
 	private String email;
 	private String password;
+	private String clearanceLevel;
 	
 	public Employee() {
 		
 	}
 	
-	public Employee(String name, String password, String email) {
+	public Employee(String name, String password, String email, String clearanceLevel) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.clearanceLevel = clearanceLevel;
 	}
 	
 	@Id
@@ -53,6 +55,14 @@ public class Employee
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Column(name = "clearance_level", nullable = false)
+	public String getClearanceLevel() {
+		return clearanceLevel;
+	}
+	public void setClearanceLevel(String clearanceLevel) {
+		this.clearanceLevel = clearanceLevel;
 	}
 
 	@Override

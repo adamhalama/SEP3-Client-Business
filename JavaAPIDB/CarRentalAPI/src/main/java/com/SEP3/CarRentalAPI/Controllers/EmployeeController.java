@@ -44,9 +44,10 @@ public class EmployeeController
 		Employee employee = repository.findById(employeeId)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 
+		employee.setName(employeeDetails.getName());
 		employee.setEmail(employeeDetails.getEmail());
 		employee.setPassword(employeeDetails.getPassword());
-		employee.setName(employeeDetails.getName());
+		employee.setClearanceLevel(employeeDetails.getClearanceLevel());
 		final Employee updatedEmployee = repository.save(employee);
 		return ResponseEntity.ok(updatedEmployee);
 	}

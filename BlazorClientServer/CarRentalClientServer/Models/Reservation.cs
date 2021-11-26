@@ -2,10 +2,10 @@
 {
     public class Reservation
     {
-        public int Id { get; set; }
-        public int VehicleId { get; set; }
-        public int CustomerId { get; set; }
-        public int EmployeeId { get; set; }
+        public long Id { get; set; }
+        public long VehicleId { get; set; }
+        public long CustomerId { get; set; }
+        public long EmployeeId { get; set; }
         public int SecurityDeposit { get; set; }
         public long DateCreated { get; set; }
         public long DateStart { get; set; }
