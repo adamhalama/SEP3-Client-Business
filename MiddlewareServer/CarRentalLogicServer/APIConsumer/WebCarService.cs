@@ -59,8 +59,8 @@ namespace CarRentalLogicServer.APIConsumer
         }
 
         //  VEHICLES
-        
-        public async Task<string> GetVehiclesAsync()
+
+        public async Task<List<Vehicle>> GetVehiclesAsync()
         {
             HttpResponseMessage response = await client.GetAsync(uri + "/vehicles");
             if (!response.IsSuccessStatusCode)
@@ -69,11 +69,11 @@ namespace CarRentalLogicServer.APIConsumer
             }
 
             string message = await response.Content.ReadAsStringAsync();
-            // List<Vehicle> result = JsonSerializer.Deserialize<List<Vehicle>>(message);
-            return message;
+            return JsonSerializer.Deserialize<List<Vehicle>>(message);
+            // return message;
         }
 
-        public async Task<string> GetVehicleByIdAsync(int id)
+        public async Task<Vehicle> GetVehicleByIdAsync(int id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
@@ -82,30 +82,29 @@ namespace CarRentalLogicServer.APIConsumer
             }
 
             var message = await response.Content.ReadAsStringAsync();
-            // var result = JsonSerializer.Deserialize<Vehicle>(message);
-            return message;
+            return JsonSerializer.Deserialize<Vehicle>(message);
+            // return message;
         }
 
 
-        //legacy class not using json to transfer
-        /*public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
+        // method not using json to transfer
+        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
         {
             string vehicleAsJson = JsonSerializer.Serialize(vehicle);
             HttpContent content = new StringContent(vehicleAsJson,
                 Encoding.UTF8,
                 "application/json");
+            
             HttpResponseMessage response = await client.PostAsync(uri + "/vehicles", content);
             if (!response.IsSuccessStatusCode)
-            {
                 throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
-            }
 
             string message = await response.Content.ReadAsStringAsync();
-            Vehicle result = JsonSerializer.Deserialize<Vehicle>(message);
-            return result;
-        }*/
-        
-        public async Task<string> CreateVehicleAsync(string vehicle)
+            return JsonSerializer.Deserialize<Vehicle>(message);
+        }
+
+        // method using JSON to transfer data
+        /*public async Task<string> CreateVehicleAsync(string vehicle)
         {
             HttpContent content = new StringContent(vehicle,
                 Encoding.UTF8,
@@ -118,22 +117,25 @@ namespace CarRentalLogicServer.APIConsumer
 
             string message = await response.Content.ReadAsStringAsync();
             return message;
-        }
+        }*/
 
-        public async Task<string> UpdateVehicleAsync(string vehicle, int id)
+        public async Task<Vehicle> UpdateVehicleAsync(Vehicle vehicle)
         {
-            // string vehicleAsJson = JsonSerializer.Serialize(vehicle);
-            HttpContent content = new StringContent(vehicle,
+            string vehicleAsJson = JsonSerializer.Serialize(vehicle);
+            HttpContent content = new StringContent(vehicleAsJson,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response = await client.PutAsync($"{uri}/vehicles/{id}", content);
-
+            
+            HttpResponseMessage response = await client.PutAsync($"{uri}/vehicles/{vehicle.Id}", content);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"{response.StatusCode};{response.ReasonPhrase}");
             }
             else
-                return response.Content.ReadAsStringAsync().Result;
+            {
+                string message = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<Vehicle>(message);
+            }
 
             //todo maybe add a successful return
         }
@@ -147,14 +149,15 @@ namespace CarRentalLogicServer.APIConsumer
             }
             else
             {
-                var isDeletedMap = JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
+                var isDeletedMap =
+                    JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
                 if (isDeletedMap == null)
                 {
                     return false;
                 }
+
                 return isDeletedMap["deleted"];
             }
-
         }
     }
 }

@@ -11,22 +11,19 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     [ExtendObjectType(Name = "Mutation")]
     public class VehicleMutationResolver
     {
-        public async Task<string> CreateVehicle([Service] ICarService carService, string vehicle)
+        public async Task<Vehicle> CreateVehicle([Service] ICarService carService, Vehicle vehicle)
         {
-            //legacy not using json
-            //return await carService.CreateVehicleAsync(vehicle);
-
             return await carService.CreateVehicleAsync(vehicle);
         }
 
-        public string UpdateVehicle([Service] ICarService carService, string vehicle, int id)
+        public async Task<Vehicle> UpdateVehicle([Service] ICarService carService, Vehicle vehicle)
         {
-            return carService.UpdateVehicleAsync(vehicle, id).Result;
+            return await carService.UpdateVehicleAsync(vehicle);
         }
 
-        public bool DeleteVehicle([Service] ICarService carService, int id)
+        public async Task<bool> DeleteVehicle([Service] ICarService carService, int id)
         {
-            return carService.DeleteVehicleAsync(id).Result;
+            return await carService.DeleteVehicleAsync(id);
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace CarRentalClientServer.Data.Responses
 {
-    public class CreateVehicleResponse
+    public class VehicleResponse
     {
-        public string CreateVehicle { get; set; }
+        public Vehicle Vehicle { get; set; }
     }
 }

@@ -14,4 +14,9 @@
       <PackageReference Include="GraphQL.Primitives" Version="4.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Data\Customer\Responses" />
+      <Folder Include="Data\Employee\Responses" />
+    </ItemGroup>
+
 </Project>

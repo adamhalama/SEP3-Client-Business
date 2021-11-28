@@ -15,26 +15,18 @@ namespace CarRentalClientServer
     {
         public static void Main(string[] args)
         {
+            
+            /*
             do
             {
                 IVehicleService vehicleService = new VehicleServiceGraphQL();
                 Console.WriteLine(vehicleService.GetVehicleAsync(1).Result.Name);
                 var vehicles = vehicleService.GetVehiclesAsync().Result;
                 vehicleService.CreateVehicleAsync(
-                    new Vehicle
-                    {
-                        Id = 1,
-                        Name = "jebo z lesa",
-                        Type = "jebovsky",
-                        PricePerDay = 420,
-                        SeatsCount = 2,
-                        IsAutomatic = false,
-                        PowerKw = 420,
-                        FuelType = "not electric",
-                        Deposit = 3
-                    }
-                );
+                    "BMW M2 Competition 3.0", "Coupe", 300, 
+                    4, false, 300, "Petrol", 3000);
             } while (Console.ReadLine() != "x");
+            */
             
             
             CreateHostBuilder(args).Build().Run();

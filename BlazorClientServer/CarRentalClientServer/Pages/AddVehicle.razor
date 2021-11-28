@@ -4,6 +4,7 @@
 @using CarRentalClientServer.Data
 
 @inject IVehicleService vehicleService
+@inject NavigationManager NavigationManager
 
 <h3>AddVehicle</h3>
 
@@ -15,38 +16,38 @@
         </div>*@
         <div class="form-group col-md-6">
             <label for="Name" class="form-check-label">Name</label>
-            <InputText id="Name" class="form-control" placeholder="Make" @bind-Value="newVehicle.Name"/>
+            <InputText id="Name" class="form-control" placeholder="BMW M2 Competition 3.0" @bind-Value="newVehicle.Name"/>
         </div>
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Type of vehicle</label>
-            <InputText id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.Type"/>
+            <label for="Type" class="form-check-label">Type of vehicle</label>
+            <InputText id="Type" class="form-control" placeholder="Sporty" @bind-Value="newVehicle.Type"/>
         </div>
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Price per day</label>
-            <InputNumber id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.PricePerDay"/>
+            <label for="PricePerday" class="form-check-label">Price per day</label>
+            <InputNumber id="PricePerDay" class="form-control" placeholder="300" @bind-Value="newVehicle.PricePerDay"/>
         </div>
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Number of seats</label>
-            <InputNumber id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.SeatsCount"/>
+            <label for="NumberOfSeats" class="form-check-label">Number of seats</label>
+            <InputNumber id="NumberOfSeats" class="form-control" placeholder="4" @bind-Value="newVehicle.SeatsCount"/>
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Automatic</label>
-            <InputNumber id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.IsAutomatic"/>
+            <label for="IsAutomatic" class="form-check-label">Automatic</label>
+            <InputCheckbox id="IsAutomatic" class="form-control" @bind-Value="newVehicle.IsAutomatic"/>
         </div>
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Power in KW</label>
-            <InputNumber id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.PowerKw"/>
+            <label for="PowerKw" class="form-check-label">Power in KW</label>
+            <InputNumber id="PowerKw" class="form-control" placeholder="300" @bind-Value="newVehicle.PowerKw"/>
         </div>
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Fuel type</label>
-            <InputText id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.FuelType"/>
+            <label for="FuelType" class="form-check-label">Fuel type</label>
+            <InputText id="FuelType" class="form-control" placeholder="Petrol" @bind-Value="newVehicle.FuelType"/>
         </div>
         <div class="form-group col-md-6">
-            <label for="Model" class="form-check-label">Deposit</label>
-            <InputNumber id="Model" class="form-control" placeholder="Vehicle model" @bind-Value="newVehicle.Deposit"/>
+            <label for="Deposit" class="form-check-label">Deposit</label>
+            <InputNumber id="Deposit" class="form-control" placeholder="3000" @bind-Value="newVehicle.Deposit"/>
         </div>
     </div>
     <DataAnnotationsValidator/> <ValidationSummary/>
@@ -61,18 +62,16 @@
 
     private void AddNewVehicle()
     {
-        vehicleService.CreateVehicleAsync(new Vehicle
-        {
-            Id = -1,
-            Name = newVehicle.Name,
-            Type = newVehicle.Type,
-            PricePerDay = newVehicle.PricePerDay,
-            SeatsCount = newVehicle.SeatsCount,
-            IsAutomatic = newVehicle.IsAutomatic,
-            PowerKw = newVehicle.PowerKw,
-            FuelType = newVehicle.FuelType,
-            Deposit = newVehicle.Deposit
-        });
+        vehicleService.CreateVehicleAsync(
+            newVehicle.Name, newVehicle.Type, newVehicle.PricePerDay, newVehicle.SeatsCount,
+            newVehicle.IsAutomatic, newVehicle.PowerKw, newVehicle.FuelType, newVehicle.Deposit);
+        
+        OpenVehicles();
+    }
+
+    private void OpenVehicles()
+    {
+        NavigationManager.NavigateTo("/vehicles");
     }
 
 }

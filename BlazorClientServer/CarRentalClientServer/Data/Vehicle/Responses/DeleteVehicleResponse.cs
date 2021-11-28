@@ -2,6 +2,6 @@
 {
     public class DeleteVehicleResponse
     {
-        public string DeleteVehicle { get; set; }
+        public bool DeleteVehicle { get; set; }
     }
 }

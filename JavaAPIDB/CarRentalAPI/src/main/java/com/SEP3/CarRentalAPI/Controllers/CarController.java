@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Deprecated
 @RestController
 public class CarController
 {

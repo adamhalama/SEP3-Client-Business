@@ -10,10 +10,10 @@ namespace CarRentalLogicServer.APIConsumer
         Task<Car> CreateCarAsync(Car car);
         
         //Vehicles
-        Task<string> GetVehiclesAsync();
-        Task<string> GetVehicleByIdAsync(int id);
-        Task<string> CreateVehicleAsync(string vehicle);
-        Task<string> UpdateVehicleAsync(string vehicle, int id);
+        Task<List<Vehicle>> GetVehiclesAsync();
+        Task<Vehicle> GetVehicleByIdAsync(int id);
+        Task<Vehicle> CreateVehicleAsync(Vehicle vehicle);
+        Task<Vehicle> UpdateVehicleAsync(Vehicle vehicle);
         Task<bool> DeleteVehicleAsync(int id);
         
 
