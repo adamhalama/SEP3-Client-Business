@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace CarRentalLogicServer.Models.REST
+namespace CarRentalLogicServer.Models
 {
     public class Vehicle
     {

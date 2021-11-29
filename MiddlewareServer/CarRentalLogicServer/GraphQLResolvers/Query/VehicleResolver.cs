@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
+using CarRentalLogicServer.Models;
 using CarRentalLogicServer.Models.REST;
 using HotChocolate;
 using HotChocolate.Types;
@@ -12,14 +13,14 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
     [ExtendObjectType(Name = "Query")]
     public class VehicleResolver
     {
-        public IList<Vehicle> GetAllVehicles([Service] ICarService carService)
+        public IList<Vehicle> GetAllVehicles([Service] IVehicleService vehicleService)
         {
-            return carService.GetVehiclesAsync().Result;
+            return vehicleService.GetVehiclesAsync().Result;
         }
 
-        public async Task<Vehicle> GetVehicle([Service] ICarService carService, int id)
+        public async Task<Vehicle> GetVehicle([Service] IVehicleService vehicleService, int id)
         {
-            return await carService.GetVehicleByIdAsync(id);
+            return await vehicleService.GetVehicleByIdAsync(id);
         }
     }
 }

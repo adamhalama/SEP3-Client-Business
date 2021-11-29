@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
+using CarRentalLogicServer.APIConsumer.ClientFactory;
 using CarRentalLogicServer.GraphQLResolvers.Mutation;
 using CarRentalLogicServer.GraphQLResolvers.Query;
 using Microsoft.AspNetCore.Builder;
@@ -19,14 +20,22 @@ namespace CarRentalLogicServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ICarService, WebCarService>();
+            // Interfaces
+            services.AddScoped<ICustomerService, CustomerWebService>();
+            services.AddScoped<IEmployeeService, EmployeeWebService>();
+            services.AddScoped<IReservationService, ReservationWebService>();
+            services.AddScoped<IVehicleService, VehicleWebService>();
             
+            //Httpclient factory - needed to make sure all the WebService classes have the same client
+            services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
             
             services
                 .AddGraphQLServer()
                 .AddQueryType(q => q.Name("Query"))
+                .AddType<CustomerResolver>()
+                .AddType<EmployeeResolver>()
+                .AddType<ReservationResolver>()
                 .AddType<VehicleResolver>()
-                .AddType<CarResolver>() // todo gonna be removed
                 .AddMutationType(m => m.Name("Mutation"))
                 .AddType<VehicleMutationResolver>()
                 ;

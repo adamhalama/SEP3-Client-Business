@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\GraphQL" />
+    <Folder Include="APIConsumer\Vehicle" />
   </ItemGroup>
 
 </Project>

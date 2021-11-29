@@ -5,67 +5,30 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using CarRentalLogicServer.Models;
 using CarRentalLogicServer.Models.REST;
+using HotChocolate;
+using IHttpClientFactory = CarRentalLogicServer.APIConsumer.ClientFactory.IHttpClientFactory;
 
 namespace CarRentalLogicServer.APIConsumer
-{
-    public class WebCarService : ICarService
+{ 
+    public class VehicleWebService : IVehicleService
     {
         private string uri = "http://localhost:8080/api";
 
         private readonly HttpClient client;
 
-        private IList<Car> cars;
-
-        public WebCarService()
+        public VehicleWebService([Service] IHttpClientFactory clientFactory)
         {
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
-
-            client = new HttpClient(clientHandler);
+            client = clientFactory.GetHttpClient();
         }
-
-        public async Task<IList<Car>> GetCarsAsync()
-        {
-            HttpResponseMessage response = await client.GetAsync(uri + "/cars");
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
-            }
-
-            string message = await response.Content.ReadAsStringAsync();
-            List<Car> result = JsonSerializer.Deserialize<List<Car>>(message);
-            return result;
-        }
-
-        public async Task<Car> CreateCarAsync(Car car)
-        {
-            string carAsJson = JsonSerializer.Serialize(car);
-            HttpContent content = new StringContent(carAsJson,
-                Encoding.UTF8,
-                "application/json");
-            HttpResponseMessage response = await client.PostAsync(uri + "/cars", content);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
-            }
-
-            string message = await response.Content.ReadAsStringAsync();
-            Car result = JsonSerializer.Deserialize<Car>(message);
-            return result;
-        }
-
-        //  VEHICLES
-
+        
         public async Task<List<Vehicle>> GetVehiclesAsync()
         {
             HttpResponseMessage response = await client.GetAsync(uri + "/vehicles");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+                throw new Exception(response.ReasonPhrase);
             }
 
             string message = await response.Content.ReadAsStringAsync();
@@ -78,7 +41,7 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.GetAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+                throw new Exception(response.ReasonPhrase);
             }
 
             var message = await response.Content.ReadAsStringAsync();
@@ -97,7 +60,7 @@ namespace CarRentalLogicServer.APIConsumer
             
             HttpResponseMessage response = await client.PostAsync(uri + "/vehicles", content);
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+                throw new Exception(response.ReasonPhrase);
 
             string message = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<Vehicle>(message);
@@ -112,7 +75,7 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.PostAsync(uri + "/vehicles", content);
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+                throw new Exception(response.ReasonPhrase);
             }
 
             string message = await response.Content.ReadAsStringAsync();
@@ -145,7 +108,7 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Error, {response.StatusCode}, {response.ReasonPhrase}");
+                throw new Exception(response.ReasonPhrase);
             }
             else
             {
