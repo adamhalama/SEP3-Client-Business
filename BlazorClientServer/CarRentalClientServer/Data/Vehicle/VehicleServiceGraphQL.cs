@@ -101,10 +101,15 @@ namespace CarRentalClientServer.Data
                     new JsonSerializerOptions {WriteIndented = true}));
 
                 var graphQLResponse = await graphQlClient.SendQueryAsync<VehicleResponse>(request);
-                //showing serialized response
-                Console.WriteLine("serialised response:");
-                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
-                    new JsonSerializerOptions {WriteIndented = true}));
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                {
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.Message);
+                    }
+                    throw new Exception(errors[1].Message);
+                }
                 return graphQLResponse.Data.Vehicle;
             }
             catch (Exception e)
@@ -163,21 +168,20 @@ namespace CarRentalClientServer.Data
                 Console.WriteLine(JsonSerializer.Serialize(request,
                     new JsonSerializerOptions {WriteIndented = true}));
                 var graphQLResponse = await graphQlClient.SendQueryAsync<CreateVehicleResponse>(request);
-                //showing serialized response
-                Console.WriteLine("serialised response:");
-                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
-                    new JsonSerializerOptions {WriteIndented = true}));
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                {
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.Message);
+                    }
+                    throw new Exception(errors[1].Message);
+                }
                 return graphQLResponse.Data.CreateVehicle;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-
-                if (e.InnerException != null)
-                {
-                    Console.WriteLine(e.InnerException.Message);
-                }
-
                 throw;
             }
         }
@@ -249,7 +253,7 @@ namespace CarRentalClientServer.Data
                         deposit
                     }
                 }",
-                OperationName = "CreateVehicle",
+                OperationName = "UpdateVehicle",
                 Variables = new
                 {
                     vehicleInput = new Vehicle
@@ -301,11 +305,11 @@ namespace CarRentalClientServer.Data
             {
                 Query = @"
                 mutation
-                DeleteVehicle($id : Int)
+                DeleteVehicle($id : Int!)
                 {
                     deleteVehicle(id : $id)
                 }",
-                OperationName = "UpdateVehicle",
+                OperationName = "DeleteVehicle",
                 Variables =  new { id }
             };
             try
@@ -330,7 +334,7 @@ namespace CarRentalClientServer.Data
                 Console.WriteLine(e.Message);
                 if (e.InnerException != null)
                 {
-                    Console.WriteLine(e.InnerException.Message);
+                    Console.WriteLine(e.InnerException.Message  );
                 }
 
                 throw;
