@@ -5,6 +5,19 @@ namespace CarRentalClientServer.Models
 {
     public class Vehicle
     {
+        public Vehicle(long id, string name, string type, int pricePerDay, int seatsCount, bool isAutomatic, int powerKw, string fuelType, int deposit)
+        {
+            Id = id;
+            Name = name;
+            Type = type;
+            PricePerDay = pricePerDay;
+            SeatsCount = seatsCount;
+            IsAutomatic = isAutomatic;
+            PowerKw = powerKw;
+            FuelType = fuelType;
+            Deposit = deposit;
+        }
+
         [JsonPropertyName("id")] public long Id { get; set; }
         [JsonPropertyName("name")] [NotNull] public string Name { get; set; }
         [NotNull] [JsonPropertyName("type")] public string Type { get; set; }
@@ -15,7 +28,11 @@ namespace CarRentalClientServer.Models
         [NotNull] [JsonPropertyName("fuelType")] public string FuelType { get; set; } 
         [JsonPropertyName("deposit")] public int Deposit { get; set; }
 
-        
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Type)}: {Type}, {nameof(PricePerDay)}: {PricePerDay}, {nameof(SeatsCount)}: {SeatsCount}, {nameof(IsAutomatic)}: {IsAutomatic}, {nameof(PowerKw)}: {PowerKw}, {nameof(FuelType)}: {FuelType}, {nameof(Deposit)}: {Deposit}";
+        }
+
         //old legacy class
 
         /*[JsonPropertyName("id")] public int Id { get; set; }

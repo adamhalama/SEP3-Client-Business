@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -108,18 +109,18 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception(response.ReasonPhrase);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new Exception("Not found");
+                }
+                throw new Exception(response.StatusCode.ToString());
             }
             else
             {
                 var isDeletedMap =
                     JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
-                if (isDeletedMap == null)
-                {
-                    return false;
-                }
-
-                return isDeletedMap["deleted"];
+                // the server sends a map with a deleted keyword and a bool saying if the delete was successful or not
+                return isDeletedMap != null && isDeletedMap["deleted"];
             }
         }
     }

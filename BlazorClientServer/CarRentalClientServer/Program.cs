@@ -16,17 +16,47 @@ namespace CarRentalClientServer
         public static void Main(string[] args)
         {
             
-            /*
             do
             {
                 IVehicleService vehicleService = new VehicleServiceGraphQL();
-                Console.WriteLine(vehicleService.GetVehicleAsync(1).Result.Name);
-                var vehicles = vehicleService.GetVehiclesAsync().Result;
-                vehicleService.CreateVehicleAsync(
-                    "BMW M2 Competition 3.0", "Coupe", 300, 
-                    4, false, 300, "Petrol", 3000);
+
+                try
+                {
+                    // Console.WriteLine(vehicleService.GetVehicleAsync(1).Result.ToString());
+                    var vehicles = vehicleService.GetVehiclesAsync().Result;
+                    foreach (var vehicle in vehicles)
+                    {
+                        Console.WriteLine(vehicle.ToString());
+                    }
+                    /*vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                    vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                    vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                    vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                        */
+
+                    /*
+                    vehicleService.UpdateVehicleAsync(new Vehicle(1, "Updated jebo", "Coupe", 300,
+                        4, false, 300, "Petrol", 3000));
+                        */
+
+                    Console.WriteLine(vehicleService.DeleteVehicleAsync(10).Result);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                
+
             } while (Console.ReadLine() != "x");
-            */
+            
             
             
             CreateHostBuilder(args).Build().Run();
