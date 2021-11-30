@@ -1,0 +1,115 @@
+﻿@using CarRentalClientServer.Models
+@inject NavigationManager NavMgr
+
+<Bar Breakpoint="Breakpoint.Desktop"
+     Background="Background.Light"
+     ThemeContrast="ThemeContrast.Light">
+    <BarBrand>
+
+    </BarBrand>
+    <BarToggler />
+    <BarMenu>
+        <BarEnd>
+            <BarItem>
+                <BarLink To="/">Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>Support</BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem>Contact us</BarDropdownItem>
+                        <BarDropdownDivider />
+                        <BarDropdownItem>About us</BarDropdownItem>
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+            @if (!isLogin)
+            {
+                <BarItem>
+                    <Button Color="Color.Primary">Sign up</Button>
+                    <Button Color="Color.Secondary" Clicked="@ShowModalL">Log in</Button>
+                </BarItem>
+            }
+            else
+            {
+                <BarItem>
+                    <BarDropdown>
+                        <BarDropdownToggle>@user.Email</BarDropdownToggle>
+                        <BarDropdownMenu>
+                            <BarDropdownItem Clicked="@AccountClicked">Account page</BarDropdownItem>
+                            <BarDropdownItem Clicked="@LogOut">Log out</BarDropdownItem>
+                        </BarDropdownMenu>
+                    </BarDropdown>
+                </BarItem>
+
+            }
+
+        </BarEnd>
+    </BarMenu>
+</Bar>
+
+<Modal @ref="modalL">
+    <Validations Mode="ValidationMode.Auto" Model="@user">
+
+        <ModalContent Size="ModalSize.Small" Centered>
+            <ModalHeader>
+                <ModalTitle>Login</ModalTitle>
+                <CloseButton />
+            </ModalHeader>
+            <ModalBody>
+                <Validation>
+                    <Field>
+                        <FieldLabel>Email</FieldLabel>
+                        <TextEdit Placeholder="Enter your username(email) here" @bind-Text="@user.Email" />
+                            <ValidationError />
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field>
+                        <FieldLabel>Password</FieldLabel>
+                        <TextEdit Role="TextRole.Password" Placeholder="Enter pssword" @bind-Text="@user.Password"/>
+                            <ValidationError />
+                    </Field>
+                </Validation>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideModalL">Cancel</Button>
+                <Button Color="Color.Primary" Clicked="@Login">Login</Button>
+            </ModalFooter>
+        </ModalContent>
+
+    </Validations>
+</Modal>
+
+@code {
+    private Modal modalL;
+    Customer user = new Customer();
+    private bool isLogin = false;
+
+    private Task ShowModalL()
+    {
+        return modalL.Show();
+    }
+
+    private Task HideModalL()
+    {
+        return modalL.Hide();
+    }
+
+    private Task Login()
+    {
+        isLogin = true;
+        return modalL.Hide(); //add validate login
+    }
+
+    private void LogOut()
+    {
+        isLogin = false;
+        //maybe add parts remove the authentication
+    }
+
+    private void AccountClicked()
+    {
+        NavMgr.NavigateTo("/ProfileC");
+    }
+}
