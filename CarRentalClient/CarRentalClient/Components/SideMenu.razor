@@ -1,0 +1,50 @@
+﻿<Bar Mode="BarMode.VerticalInline"
+     CollapseMode="BarCollapseMode.Small"
+     Breakpoint="Breakpoint.Desktop"
+     NavigationBreakpoint="Breakpoint.Tablet"
+     ThemeContrast="ThemeContrast.Dark">
+    <BarBrand>
+        <BarItem>
+            <BarLink To="/">
+                <BarIcon IconName="customLogo" />
+                Rent a car !
+            </BarLink>
+        </BarItem>
+    </BarBrand>
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="/">
+                    <BarIcon IconName="IconName.Home" />
+                    Home
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="/AvailCars">
+                    <BarIcon IconName="IconName.Car" />
+                    Find a car
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="/ProfileC">
+                    <BarIcon IconName="IconName.User" />
+                    Account
+                </BarLink>
+            </BarItem>
+            <BarLink To="/AllCars">
+                <BarIcon IconName="IconName.ListUl" />
+                Car list(Staff only)
+            </BarLink>
+            <BarLink To="/ProfileE">
+                <BarIcon IconName="IconName.UserTie" />
+                Account(Staff only)
+            </BarLink>
+        </BarStart>
+    </BarMenu>
+</Bar>
+
+@code {
+    RenderFragment customLogo =
+    @<img src="Img/Logo.png" style="width:50px; height:50px" />
+    ;
+}
