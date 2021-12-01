@@ -26,22 +26,18 @@ public class VehicleController
         return repository.findAll();
     }
 
-
-
     @GetMapping("/vehicles/{id}")
     public ResponseEntity<Vehicle> getVehicleById(@PathVariable(value = "id") Long vehicleId)
             throws ResourceNotFoundException
     {
         Vehicle vehicle = repository.findById(vehicleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + vehicleId));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found for this id :: " + vehicleId));
         return ResponseEntity.ok().body(vehicle);
     }
 
     @PostMapping("/vehicles")
     public Vehicle createVehicle(@Valid @RequestBody Vehicle vehicle)
     {
-        System.out.println("Creating vehicle");
-        System.out.println(vehicle.toString());
         vehicle.setId(-1);
         return repository.save(vehicle);
     }
@@ -72,7 +68,9 @@ public class VehicleController
         Vehicle vehicle = repository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found for this id :: " + vehicleId));
 
-        repository.delete(vehicle);
+
+        System.out.println("Deleting id" + vehicleId);
+        repository.deleteById(vehicleId);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;

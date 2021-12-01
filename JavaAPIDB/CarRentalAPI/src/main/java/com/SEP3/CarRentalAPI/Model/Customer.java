@@ -1,9 +1,14 @@
 package com.SEP3.CarRentalAPI.Model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "customer")
+@SQLDelete(sql = "UPDATE customer SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Customer
 {
     private long id;
@@ -12,6 +17,8 @@ public class Customer
     private String password;
     private String address;
     private String licenceNumber;
+
+    private boolean deleted = Boolean.FALSE;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,6 +67,16 @@ public class Customer
     }
     public void setLicenceNumber(String licenceNumber) {
         this.licenceNumber = licenceNumber;
+    }
+
+    @Column(name = "deleted")
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
     }
 
     @Override

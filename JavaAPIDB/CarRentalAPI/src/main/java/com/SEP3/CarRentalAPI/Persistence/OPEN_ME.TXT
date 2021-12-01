@@ -1,2 +1,0 @@
-Create a "CarList.bin" file in this folder.(Persistence)
-Right click -> New -> file -> CarList.bin
