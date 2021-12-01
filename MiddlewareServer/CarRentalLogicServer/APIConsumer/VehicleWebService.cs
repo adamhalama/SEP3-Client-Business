@@ -109,11 +109,7 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    throw new Exception("Not found");
-                }
-                throw new Exception(response.StatusCode.ToString());
+                throw new Exception($"{response.StatusCode};{response.ReasonPhrase}");
             }
             else
             {

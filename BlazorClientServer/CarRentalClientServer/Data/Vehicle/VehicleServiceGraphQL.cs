@@ -108,8 +108,10 @@ namespace CarRentalClientServer.Data
                     {
                         Console.WriteLine(error.Message);
                     }
+
                     throw new Exception(errors[1].Message);
                 }
+
                 return graphQLResponse.Data.Vehicle;
             }
             catch (Exception e)
@@ -175,8 +177,10 @@ namespace CarRentalClientServer.Data
                     {
                         Console.WriteLine(error.Message);
                     }
+
                     throw new Exception(errors[1].Message);
                 }
+
                 return graphQLResponse.Data.CreateVehicle;
             }
             catch (Exception e)
@@ -256,18 +260,7 @@ namespace CarRentalClientServer.Data
                 OperationName = "UpdateVehicle",
                 Variables = new
                 {
-                    vehicleInput = new Vehicle
-                    {
-                        Id = vehicle.Id,
-                        Name = vehicle.Name,
-                        Type = vehicle.Type,
-                        PricePerDay = vehicle.PricePerDay,
-                        SeatsCount = vehicle.SeatsCount,
-                        IsAutomatic = vehicle.IsAutomatic,
-                        PowerKw = vehicle.PowerKw,
-                        FuelType = vehicle.FuelType,
-                        Deposit = vehicle.Deposit
-                    }
+                    vehicleInput = vehicle
                 }
             };
 
@@ -282,19 +275,21 @@ namespace CarRentalClientServer.Data
                 Console.WriteLine("serialised response:");
                 Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
                     new JsonSerializerOptions {WriteIndented = true}));
-                Console.WriteLine("serialised response v2:");
-                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse.Data.UpdateVehicle,
-                    new JsonSerializerOptions {WriteIndented = true}));
+
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                {
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.Message);
+                    }
+                    throw new Exception(errors[1].Message);
+                }
                 return graphQLResponse.Data.UpdateVehicle;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                if (e.InnerException != null)
-                {
-                    Console.WriteLine(e.InnerException.Message);
-                }
-
                 throw;
             }
         }
@@ -310,34 +305,38 @@ namespace CarRentalClientServer.Data
                     deleteVehicle(id : $id)
                 }",
                 OperationName = "DeleteVehicle",
-                Variables =  new { id }
+                Variables = new {id}
             };
+            GraphQLResponse<DeleteVehicleResponse> graphQLResponse = new GraphQLResponse<DeleteVehicleResponse>();
             try
             {
+                //todo remove, most of this is for testing purposes
                 //showing what was sent
                 Console.WriteLine(JsonSerializer.Serialize(request,
                     new JsonSerializerOptions {WriteIndented = true}));
 
-                var graphQLResponse = await graphQlClient.SendQueryAsync<DeleteVehicleResponse>(request);
+                graphQLResponse = await graphQlClient.SendQueryAsync<DeleteVehicleResponse>(request);
                 //showing serialized response
                 Console.WriteLine("serialised response:");
                 Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
                     new JsonSerializerOptions {WriteIndented = true}));
-                Console.WriteLine("serialised response v2:");
-                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse.Data.DeleteVehicle,
-                    new JsonSerializerOptions {WriteIndented = true}));
+                
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                {
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.Message);
+                    }
+
+                    throw new Exception(errors[1].Message);
+                }
                 
                 return graphQLResponse.Data.DeleteVehicle;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                if (e.InnerException != null)
-                {
-                    Console.WriteLine(e.InnerException.Message  );
-                }
-
-                throw;
+                throw new IndexOutOfRangeException("Item not found");
             }
         }
     }
