@@ -26,8 +26,13 @@
             @if (!isLogin)
             {
                 <BarItem>
-                    <Button Color="Color.Primary" Clicked="@ShowModalS">Sign up</Button>
-                    <Button Color="Color.Secondary" Clicked="@ShowModalL">Log in</Button>
+                    <Tooltip Text="Don't have account? Create one!" Placement="TooltipPlacement.Bottom">
+                        <Button Color="Color.Primary" Clicked="@ShowModalS">Sign up</Button>
+                    </Tooltip>
+                    <Tooltip Text="Already have account? Login and find a suitable car!" Placement="TooltipPlacement.Bottom">
+                        <Button Color="Color.Secondary" Clicked="@ShowModalL">Log in</Button>
+                    </Tooltip>
+
                 </BarItem>
             }
             else

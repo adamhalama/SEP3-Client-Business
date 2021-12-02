@@ -143,6 +143,7 @@
     Customer customer = new Customer();
     private Modal modalProfileE;
     private Modal modalPassword;
+    [Inject] INotificationService NotificationService { get; set; }
 
     private Task ShowEdit()
     {
@@ -156,6 +157,7 @@
 
     private Task SaveChange()
     {
+        NotificationService.Info("Change saved!");
         //Save change part
         return modalProfileE.Hide();
 
@@ -173,6 +175,7 @@
 
     private Task SavePasswordChange()
     {
+        NotificationService.Info("Password changed!");
         //Save password part
         return modalPassword.Hide();
     }
