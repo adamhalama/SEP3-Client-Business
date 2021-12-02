@@ -5,6 +5,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Data\Customer\Responses\**" />
+      <Compile Remove="Data\Employee\Responses\**" />
+      <Content Remove="Data\Customer\Responses\**" />
+      <Content Remove="Data\Employee\Responses\**" />
+      <EmbeddedResource Remove="Data\Customer\Responses\**" />
+      <EmbeddedResource Remove="Data\Employee\Responses\**" />
+      <None Remove="Data\Customer\Responses\**" />
+      <None Remove="Data\Employee\Responses\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Blazorise.Bootstrap" Version="0.9.5.1" />
       <PackageReference Include="Blazorise.DataGrid" Version="0.9.5.1" />
       <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.5.1" />
@@ -15,11 +26,6 @@
       <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="4.0.1" />
       <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="4.0.1" />
       <PackageReference Include="GraphQL.Primitives" Version="4.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Data\Customer\Responses" />
-      <Folder Include="Data\Employee\Responses" />
     </ItemGroup>
 
 </Project>
