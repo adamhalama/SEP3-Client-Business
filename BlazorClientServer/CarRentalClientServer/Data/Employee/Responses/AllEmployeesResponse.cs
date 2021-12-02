@@ -3,8 +3,8 @@ using CarRentalClientServer.Models;
 
 namespace CarRentalClientServer.Data.Responses
 {
-    public class AllReservationsResponse
+    public class AllEmployeesResponse
     {
-        public List<Reservation> AllReservations { get; set; }
+        public List<Employee> AllEmployees { get; set; }
     }
 }

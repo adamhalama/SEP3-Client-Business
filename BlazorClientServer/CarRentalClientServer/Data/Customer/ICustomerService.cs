@@ -7,9 +7,9 @@ namespace CarRentalClientServer.Data
     public interface ICustomerService
     {
         Task<IList<Customer>> GetCustomersAsync();
-        Task<Customer> GetCustomerAsync(int id);
-        Task<Customer> CreateCustomerAsync(Customer customer);
+        Task<Customer> GetCustomerAsync(long id);
+        Task<Customer> CreateCustomerAsync(string name, string email, string password, string address, string licenceNumber);
         Task<Customer> UpdateCustomerAsync(Customer customer);
-        Task<bool> DeleteCustomerAsync(int id);
+        Task<bool> DeleteCustomerAsync(long id);
     }
 }
