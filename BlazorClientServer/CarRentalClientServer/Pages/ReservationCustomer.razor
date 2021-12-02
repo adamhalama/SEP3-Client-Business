@@ -1,7 +1,64 @@
 ﻿@page "/Reservations"
+@using CarRentalClientServer.Models
 
-<h3>ReservationCustomer</h3>
+<Div Padding="Padding.Is4"></Div>
+<Card>
+    <CardBody>
+        <Heading Size="HeadingSize.Is2">Reservation history</Heading>
+    </CardBody>
+</Card>
+
+
+<Div Padding="Padding.Is4"></Div>
+
+<Table Striped>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Id</TableHeaderCell>
+            <TableHeaderCell>Customer name</TableHeaderCell>
+            <TableHeaderCell>Car</TableHeaderCell>
+            <TableHeaderCell>Date start</TableHeaderCell>
+            <TableHeaderCell>Bill date</TableHeaderCell>
+            <TableHeaderCell>Amount</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Detail</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @for (int i = 1; i <= 20; i++)
+        {
+            var index = i.ToString();
+
+            <TableRow @key="@index">
+                <TableRowHeader>@index</TableRowHeader>
+                <TableRowCell>Item</TableRowCell>
+                <TableRowCell>Item</TableRowCell>
+                <TableRowCell>Item</TableRowCell>
+                <TableRowCell>Item</TableRowCell>
+                <TableRowCell>Item</TableRowCell>
+                <TableRowCell>Item</TableRowCell>
+                <TableRowCell>Link</TableRowCell>
+            </TableRow>
+        }
+    </TableBody>
+</Table>
+
+<Modal @ref="modalInfo">
+    <ModalHeader>
+        <ModalTitle>Reservation info</ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+        <Fields>
+            <Field>
+                
+            </Field>
+        </Fields>
+    </ModalBody>
+</Modal>
 
 @code {
+    private Modal modalInfo;
+    Customer user = new Customer();
+
 
 }

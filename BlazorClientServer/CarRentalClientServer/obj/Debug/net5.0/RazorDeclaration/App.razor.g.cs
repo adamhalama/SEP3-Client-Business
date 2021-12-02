@@ -90,6 +90,13 @@ using Blazorise;
 #line hidden
 #nullable disable
 #nullable restore
+#line 12 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
+using Blazorise.DataGrid;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 1 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\App.razor"
 using CarRentalClientServer.Layouts;
 

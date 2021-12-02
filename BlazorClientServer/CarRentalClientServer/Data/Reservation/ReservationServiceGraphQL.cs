@@ -6,9 +6,10 @@ namespace CarRentalClientServer.Data
 {
     public abstract class ReservationServiceGraphQL : IReservationService
     {
-        public Task<IList<Reservation>> GetReservationsAsync()
+        public async Task<IList<Reservation>> GetReservationsAsync()
         {
-            throw new System.NotImplementedException();
+            List<Reservation> reservations = new List<Reservation>();
+            return reservations;
         }
 
         public Task<Reservation> GetReservationAsync(int id)

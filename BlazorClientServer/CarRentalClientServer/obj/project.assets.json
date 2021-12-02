@@ -41,6 +41,26 @@
           "buildMultiTargeting/Blazorise.Bootstrap.props": {}
         }
       },
+      "Blazorise.DataGrid/0.9.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Blazorise": "0.9.5.1",
+          "Microsoft.AspNetCore.Components": "5.0.12",
+          "Microsoft.AspNetCore.Components.Web": "5.0.12"
+        },
+        "compile": {
+          "lib/net5.0/Blazorise.DataGrid.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Blazorise.DataGrid.dll": {}
+        },
+        "build": {
+          "buildTransitive/Blazorise.DataGrid.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Blazorise.DataGrid.props": {}
+        }
+      },
       "Blazorise.Icons.FontAwesome/0.9.5.1": {
         "type": "package",
         "dependencies": {
@@ -513,6 +533,28 @@
         "staticwebassets/blazorise.bootstrap.min.css",
         "staticwebassets/modal.js",
         "staticwebassets/tooltip.js"
+      ]
+    },
+    "Blazorise.DataGrid/0.9.5.1": {
+      "sha512": "U7TCUNQkH1dzKeJxmguI/5VwYX6Hs1UgInnVUzo2hasU07YNHZvYKCF0HTtmp0SL17J2Du1L8BihIB4pd0q+qQ==",
+      "type": "package",
+      "path": "blazorise.datagrid/0.9.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Blazorise.png",
+        "LICENSE.md",
+        "blazorise.datagrid.0.9.5.1.nupkg.sha512",
+        "blazorise.datagrid.nuspec",
+        "build/Blazorise.DataGrid.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "buildMultiTargeting/Blazorise.DataGrid.props",
+        "buildTransitive/Blazorise.DataGrid.props",
+        "lib/net5.0/Blazorise.DataGrid.dll",
+        "lib/net5.0/Blazorise.DataGrid.xml",
+        "lib/net6.0/Blazorise.DataGrid.dll",
+        "lib/net6.0/Blazorise.DataGrid.xml",
+        "staticwebassets/datagrid.js"
       ]
     },
     "Blazorise.Icons.FontAwesome/0.9.5.1": {
@@ -1310,6 +1352,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Blazorise.Bootstrap >= 0.9.5.1",
+      "Blazorise.DataGrid >= 0.9.5.1",
       "Blazorise.Icons.FontAwesome >= 0.9.5.1",
       "GraphQL.Client >= 4.0.1",
       "GraphQL.Client.Abstractions >= 4.0.1",
@@ -1360,6 +1403,10 @@
         "targetAlias": "net5.0",
         "dependencies": {
           "Blazorise.Bootstrap": {
+            "target": "Package",
+            "version": "[0.9.5.1, )"
+          },
+          "Blazorise.DataGrid": {
             "target": "Package",
             "version": "[0.9.5.1, )"
           },
@@ -1414,7 +1461,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.2.21505.57\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
