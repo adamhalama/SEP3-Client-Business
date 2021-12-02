@@ -17,9 +17,9 @@
                 <BarDropdown>
                     <BarDropdownToggle>Support</BarDropdownToggle>
                     <BarDropdownMenu>
-                        <BarDropdownItem>Contact us</BarDropdownItem>
+                        <BarDropdownItem Clicked="@ContactClicked">Contact us</BarDropdownItem>
                         <BarDropdownDivider />
-                        <BarDropdownItem>About us</BarDropdownItem>
+                        <BarDropdownItem Clicked="@AboutClicked">About us</BarDropdownItem>
                     </BarDropdownMenu>
                 </BarDropdown>
             </BarItem>
@@ -200,5 +200,15 @@
     private void AccountClicked()
     {
         NavMgr.NavigateTo("/ProfileC");
+    }
+
+    private void ContactClicked()
+    {
+        NavMgr.NavigateTo("/ContactUs");
+    }
+
+    private void AboutClicked()
+    {
+        NavMgr.NavigateTo("/AboutUs");
     }
 }
