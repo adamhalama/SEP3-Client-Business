@@ -2,6 +2,7 @@ package com.SEP3.CarRentalAPI.Controllers;
 
 import com.SEP3.CarRentalAPI.DBRepository.EmployeeRepository;
 import com.SEP3.CarRentalAPI.Model.Employee;
+import com.SEP3.CarRentalAPI.Model.Reservation;
 import com.SEP3.CarRentalAPI.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,14 +54,13 @@ public class EmployeeController
 	}
 
 	@DeleteMapping("/employees/{id}")
-	public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") Long employeeId)
+	public Employee deleteEmployee(@PathVariable(value = "id") Long employeeId)
 			throws ResourceNotFoundException {
 		Employee employee = repository.findById(employeeId)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 
-		repository.delete(employee);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+		Employee deletedEmployee = repository.getById(employeeId);
+		repository.deleteById(employeeId);
+		return deletedEmployee;
 	}
 }

@@ -71,6 +71,11 @@ public class ReservationController
 
     @PostMapping("/reservations")
     public Reservation createReservation(@Valid @RequestBody Reservation reservation) {
+        //todo maybe the setting is unnecessary
+        reservation.setVehicle(vehicleRepository.getById(reservation.getVehicle().getId()));
+        reservation.setCustomer(customerRepository.getById(reservation.getCustomer().getId()));
+        reservation.setEmployee(employeeRepository.getById(reservation.getEmployee().getId()));
+
         return repository.save(reservation);
     }
 
@@ -100,14 +105,13 @@ public class ReservationController
     }
 
     @DeleteMapping("/reservations/{id}")
-    public Map<String, Boolean> deleteReservation(@PathVariable(value = "id") Long reservationId)
+    public Reservation deleteReservation(@PathVariable(value = "id") Long reservationId)
             throws ResourceNotFoundException {
         Reservation reservation = repository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found for this id :: " + reservationId));
 
-        repository.delete(reservation);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
+        Reservation deletedReservation = repository.getById(reservationId);
+        repository.deleteById(reservationId);
+        return deletedReservation;
     }
 }

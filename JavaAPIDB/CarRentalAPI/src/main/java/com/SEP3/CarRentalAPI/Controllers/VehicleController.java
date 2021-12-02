@@ -63,17 +63,14 @@ public class VehicleController
     }
 
     @DeleteMapping("/vehicles/{id}")
-    public Map<String, Boolean> deleteVehicle(@PathVariable(value = "id") Long vehicleId)
+    public Vehicle deleteVehicle(@PathVariable(value = "id") Long vehicleId)
             throws ResourceNotFoundException {
         Vehicle vehicle = repository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found for this id :: " + vehicleId));
 
-
-        System.out.println("Deleting id" + vehicleId);
+        Vehicle vehicleToDelete = repository.getById(vehicleId);
         repository.deleteById(vehicleId);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
+        return vehicleToDelete;
     }
 
 }

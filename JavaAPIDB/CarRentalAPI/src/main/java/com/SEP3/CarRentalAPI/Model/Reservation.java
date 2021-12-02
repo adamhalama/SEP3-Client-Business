@@ -23,7 +23,7 @@ public class Reservation
     private long dateStart;
     private long dateEnd;
     private int allowedKm;
-    private int paymentAmount;
+    private float paymentAmount;
     private long billDate;
     private boolean isPaid;
 
@@ -138,10 +138,10 @@ public class Reservation
     }
 
     @Column(name = "payment_amount", nullable = false)
-    public int getPaymentAmount() {
+    public float getPaymentAmount() {
         return paymentAmount;
     }
-    public void setPaymentAmount(int paymentAmount) {
+    public void setPaymentAmount(float paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
