@@ -36,7 +36,7 @@ namespace CarRentalLogicServer.APIConsumer
             // return message;
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        public async Task<Employee> GetEmployeeByIdAsync(long id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/employees/{id}");
             if (!response.IsSuccessStatusCode)
@@ -103,24 +103,17 @@ namespace CarRentalLogicServer.APIConsumer
             //todo maybe add a successful return
         }
 
-        public async Task<bool> DeleteEmployeeAsync(int id)
+        public async Task<Employee> DeleteEmployeeAsync(long id)
         {
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/employees/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(response.ReasonPhrase);
             }
-            else
-            {
-                var isDeletedMap =
-                    JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
-                if (isDeletedMap == null)
-                {
-                    return false;
-                }
-
-                return isDeletedMap["deleted"];
-            }
+            
+            var deleteEmployee =
+                JsonSerializer.Deserialize<Employee>(response.Content.ReadAsStringAsync().Result);
+            return deleteEmployee;
         }
     }
 }

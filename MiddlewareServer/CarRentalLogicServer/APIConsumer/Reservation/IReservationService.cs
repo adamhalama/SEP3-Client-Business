@@ -11,9 +11,9 @@ namespace CarRentalLogicServer.APIConsumer
         Task<List<Reservation>> GetReservationsByEmployeeAsync(long employeeId);
         
         Task<List<Reservation>> GetReservationsAsync();
-        Task<Reservation> GetReservationByIdAsync(int id);
+        Task<Reservation> GetReservationByIdAsync(long id);
         Task<Reservation> CreateReservationAsync(Reservation reservation);
         Task<Reservation> UpdateReservationAsync(Reservation reservation);
-        Task<bool> DeleteReservationAsync(int id);
+        Task<Reservation> DeleteReservationAsync(long id);
     }
 }

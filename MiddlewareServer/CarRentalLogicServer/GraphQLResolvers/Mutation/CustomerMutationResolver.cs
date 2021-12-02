@@ -20,7 +20,7 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
             return await customerService.UpdateCustomerAsync(customer);
         }
 
-        public async Task<bool> DeleteCustomer([Service] ICustomerService customerService, int id)
+        public async Task<Customer> DeleteCustomer([Service] ICustomerService customerService, long id)
         {
             return await customerService.DeleteCustomerAsync(id);
         }

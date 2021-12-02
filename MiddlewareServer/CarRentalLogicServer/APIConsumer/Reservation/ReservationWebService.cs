@@ -77,7 +77,7 @@ namespace CarRentalLogicServer.APIConsumer
         
         
 
-        public async Task<Reservation> GetReservationByIdAsync(int id)
+        public async Task<Reservation> GetReservationByIdAsync(long id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/reservations/{id}");
             if (!response.IsSuccessStatusCode)
@@ -140,7 +140,7 @@ namespace CarRentalLogicServer.APIConsumer
             return JsonSerializer.Deserialize<Reservation>(message);
         }
 
-        public async Task<bool> DeleteReservationAsync(int id)
+        public async Task<Reservation> DeleteReservationAsync(long id)
         {
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/reservations/{id}");
             if (!response.IsSuccessStatusCode)
@@ -148,14 +148,9 @@ namespace CarRentalLogicServer.APIConsumer
                 throw new Exception(response.ReasonPhrase);
             }
 
-            var isDeletedMap =
-                JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
-            if (isDeletedMap == null)
-            {
-                return false;
-            }
-
-            return isDeletedMap["deleted"];
+            var deletedReservation =
+                JsonSerializer.Deserialize<Reservation>(response.Content.ReadAsStringAsync().Result);
+            return deletedReservation;
         }
     }
 }
