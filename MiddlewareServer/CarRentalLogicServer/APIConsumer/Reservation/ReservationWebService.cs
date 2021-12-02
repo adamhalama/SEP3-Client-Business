@@ -35,6 +35,47 @@ namespace CarRentalLogicServer.APIConsumer
             return JsonSerializer.Deserialize<List<Reservation>>(message);
             // return message;
         }
+        
+        public async Task<List<Reservation>> GetReservationsByVehicleAsync(long vehicleId)
+        {
+            HttpResponseMessage response = await client.GetAsync(uri + $"/reservations/vehicle/{vehicleId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+
+            string message = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<Reservation>>(message);
+            // return message;
+        }
+        
+        public async Task<List<Reservation>> GetReservationsByCustomerAsync(long customerId)
+        {
+            HttpResponseMessage response = await client.GetAsync(uri + $"/reservations/customer/{customerId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+
+            string message = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<Reservation>>(message);
+            // return message;
+        }
+
+        public async Task<List<Reservation>> GetReservationsByEmployeeAsync(long employeeId)
+        {
+            HttpResponseMessage response = await client.GetAsync(uri + $"/reservations/employee/{employeeId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+
+            string message = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<Reservation>>(message);
+            // return message;
+        }
+        
+        
 
         public async Task<Reservation> GetReservationByIdAsync(int id)
         {

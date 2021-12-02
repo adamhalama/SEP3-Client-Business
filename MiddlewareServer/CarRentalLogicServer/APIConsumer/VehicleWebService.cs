@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
-using CarRentalLogicServer.Models.REST;
 using HotChocolate;
 using IHttpClientFactory = CarRentalLogicServer.APIConsumer.ClientFactory.IHttpClientFactory;
 
@@ -100,8 +99,6 @@ namespace CarRentalLogicServer.APIConsumer
                 string message = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<Vehicle>(message);
             }
-
-            //todo maybe add a successful return
         }
 
         public async Task<bool> DeleteVehicleAsync(int id)

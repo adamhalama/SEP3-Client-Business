@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
-using CarRentalLogicServer.Models.REST;
 
 namespace CarRentalLogicServer.APIConsumer
 {

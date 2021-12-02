@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
-using CarRentalLogicServer.Models.REST;
 using HotChocolate;
 using HotChocolate.Types;
 
