@@ -5,14 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Data\Customer\Responses\**" />
-      <Compile Remove="Data\Employee\Responses\**" />
-      <Content Remove="Data\Customer\Responses\**" />
-      <Content Remove="Data\Employee\Responses\**" />
-      <EmbeddedResource Remove="Data\Customer\Responses\**" />
-      <EmbeddedResource Remove="Data\Employee\Responses\**" />
-      <None Remove="Data\Customer\Responses\**" />
-      <None Remove="Data\Employee\Responses\**" />
+      <Compile Include="Data\Customer\Responses\AllCustomersResponse.cs" />
+      <Compile Include="Data\Employee\Responses\AllEmployeesResponse.cs" />
     </ItemGroup>
 
     <ItemGroup>
