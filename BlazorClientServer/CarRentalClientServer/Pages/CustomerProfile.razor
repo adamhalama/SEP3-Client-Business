@@ -1,7 +1,12 @@
 ﻿@page "/ProfileC"
 @using CarRentalClientServer.Models
 
-<Div Padding="Padding.Is4"></Div>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Profile</JumbotronTitle>
+    <JumbotronSubtitle>
+        Account detail for customer.
+    </JumbotronSubtitle>
+</Jumbotron>
 <Figure Flex="Flex.JustifyContent.Center">
     <FigureImage Source="Img/UserIconBig.png" AlternateText="UserIcon" />
 </Figure>
@@ -11,28 +16,20 @@
             <CardBody Flex="Flex.JustifyContent.Center">
                 <Fields>
                     <Field ColumnSize="ColumnSize.Is6.OnDesktop">
-                        <Inline>
                             <Heading Size="HeadingSize.Is5">Name:</Heading>
                             <Paragraph>@customer.Name</Paragraph>
-                        </Inline>
                     </Field>
                     <Field ColumnSize="ColumnSize.Is6.OnDesktop">
-                        <Inline>
                             <Heading Size="HeadingSize.Is5">Email(Account):</Heading>
                             <Paragraph>@customer.Email</Paragraph>
-                        </Inline>
                     </Field>
                     <Field ColumnSize="ColumnSize.Is6.OnDesktop">
-                        <Inline>
                             <Heading Size="HeadingSize.Is5">Address:</Heading>
                             <Paragraph>@customer.Address</Paragraph>
-                        </Inline>
                     </Field>
                     <Field ColumnSize="ColumnSize.Is6.OnDesktop">
-                        <Inline>
                             <Heading Size="HeadingSize.Is5">Licence number:</Heading>
                             <Paragraph>@customer.LicenceNumber</Paragraph>
-                        </Inline>
                     </Field>
                     <Field ColumnSize="ColumnSize.Is6.OnDesktop">
                         <Button Color="Color.Info" Size="Size.Medium" Clicked="@ShowEdit">Edit profile</Button>
@@ -140,7 +137,15 @@
 </Modal>
 
 @code {
-    Customer customer = new Customer();
+    Customer customer = new Customer()
+    {
+        Id = 2,
+        Name = "TEST CUSTOMER",
+        Password = "TEST",
+        Address = "TEST ADDRESS",
+        LicenceNumber = "TEST NUMBER",
+        Email = "CUSTOMER@TEST.COM"
+    };
     private Modal modalProfileE;
     private Modal modalPassword;
     [Inject] INotificationService NotificationService { get; set; }
