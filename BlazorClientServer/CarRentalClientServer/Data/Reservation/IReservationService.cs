@@ -7,9 +7,18 @@ namespace CarRentalClientServer.Data
     public interface IReservationService
     {
         Task<IList<Reservation>> GetReservationsAsync();
-        Task<Reservation> GetReservationAsync(int id);
-        Task<Reservation> CreateReservationAsync(Reservation reservation);
+        Task<Reservation> GetReservationAsync(long id);
+
+        Task<IList<Reservation>> GetReservationsByVehicleAsync(long id);
+
+        Task<IList<Reservation>> ReservationsByCustomerAsync(long id);
+        Task<IList<Reservation>> GetReservationsByEmployeeAsync(long id);
+        
+
+        Task<Reservation> CreateReservationAsync(long vehicleId, long customerId, long employeeId, int securityDeposit,
+            long dateCreated, long dateStart, long dateEnd, int allowedKm, float paymentAmount, long billDate, bool isPaid);
+
         Task<Reservation> UpdateReservationAsync(Reservation reservation);
-        Task<bool> DeleteReservationAsync(int id);
+        Task<bool> DeleteReservationAsync(long id);
     }
 }

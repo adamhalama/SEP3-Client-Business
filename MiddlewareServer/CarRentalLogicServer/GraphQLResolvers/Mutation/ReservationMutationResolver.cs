@@ -20,9 +20,9 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
             return await reservationService.UpdateReservationAsync(reservation);
         }
 
-        public async Task<bool> DeleteReservation([Service] IReservationService reservationService, int id)
+        public async Task<Reservation> DeleteReservation([Service] IReservationService reservationService, long id)
         {
             return await reservationService.DeleteReservationAsync(id);
-        }
+        } 
     }
 }

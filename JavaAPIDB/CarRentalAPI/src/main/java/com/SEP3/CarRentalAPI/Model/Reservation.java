@@ -1,23 +1,33 @@
 package com.SEP3.CarRentalAPI.Model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "reservation")
+@SQLDelete(sql = "UPDATE reservation SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Reservation
 {
     private long id;
-    private int vehicleId;
-    private int customerId;
-    private int employeeId;
+//    private long vehicleId;
+//    private long customerId;
+//    private long employeeId;
+    private Vehicle vehicle;
+    private Customer customer;
+    private Employee employee;
     private int securityDeposit;
     private long dateCreated;
     private long dateStart;
     private long dateEnd;
     private int allowedKm;
-    private int paymentAmount;
+    private float paymentAmount;
     private long billDate;
     private boolean isPaid;
+
+    private boolean deleted = Boolean.FALSE;
 
 
     @Id
@@ -29,8 +39,42 @@ public class Reservation
         this.id = id;
     }
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "vehicle_id", nullable = true, updatable = true)
+    public Vehicle getVehicle()
+    {
+        return vehicle;
+    }
+    public void setVehicle(Vehicle vehicle)
+    {
+        this.vehicle = vehicle;
+    }
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "customer_id", nullable = true, updatable = true)
+    public Customer getCustomer()
+    {
+        return customer;
+    }
+    public void setCustomer(Customer customer)
+    {
+        this.customer = customer;
+    }
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "employee_id", nullable = true, updatable = true)
+    public Employee getEmployee()
+    {
+        return employee;
+    }
+    public void setEmployee(Employee employee)
+    {
+        this.employee = employee;
+    }
+
+    /*@OneToOne(mappedBy = "reservation")
     @Column(name = "vehicle_id", nullable = false)
-    public int getVehicleId() {
+    public long getVehicleId() {
         return vehicleId;
     }
     public void setVehicleId(int vehicleId) {
@@ -38,20 +82,20 @@ public class Reservation
     }
 
     @Column(name = "customer_id", nullable = false)
-    public int getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(long customerId) {
         this.customerId = customerId;
     }
 
     @Column(name = "employee_id", nullable = true)
-    public int getEmployeeId() {
+    public long getEmployeeId() {
         return employeeId;
     }
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(long employeeId) {
         this.employeeId = employeeId;
-    }
+    }*/
     
     @Column(name = "security_deposit", nullable = false)
     public int getSecurityDeposit() {
@@ -94,10 +138,10 @@ public class Reservation
     }
 
     @Column(name = "payment_amount", nullable = false)
-    public int getPaymentAmount() {
+    public float getPaymentAmount() {
         return paymentAmount;
     }
-    public void setPaymentAmount(int paymentAmount) {
+    public void setPaymentAmount(float paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
@@ -117,7 +161,37 @@ public class Reservation
         this.isPaid = isPaid;
     }
 
+    @Column(name = "deleted")
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
     @Override
+    public String toString()
+    {
+        return "Reservation{" +
+                "id=" + id +
+                ", vehicle=" + vehicle +
+                ", customer=" + customer +
+                ", employee=" + employee +
+                ", securityDeposit=" + securityDeposit +
+                ", dateCreated=" + dateCreated +
+                ", dateStart=" + dateStart +
+                ", dateEnd=" + dateEnd +
+                ", allowedKm=" + allowedKm +
+                ", paymentAmount=" + paymentAmount +
+                ", billDate=" + billDate +
+                ", isPaid=" + isPaid +
+                ", deleted=" + deleted +
+                '}';
+    }
+
+    /*@Override
     public String toString()
     {
         return "Reservation{" +
@@ -134,5 +208,7 @@ public class Reservation
                 ", billDate=" + billDate +
                 ", isPaid=" + isPaid +
                 '}';
-    }
+    }*/
+
+
 }

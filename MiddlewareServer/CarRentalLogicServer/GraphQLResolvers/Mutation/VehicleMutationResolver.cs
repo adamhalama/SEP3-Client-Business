@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
-using CarRentalLogicServer.Models.REST;
 using HotChocolate;
 using HotChocolate.Types;
 
@@ -22,7 +22,7 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
             return await vehicleService.UpdateVehicleAsync(vehicle);
         }
 
-        public async Task<bool> DeleteVehicle([Service] IVehicleService vehicleService, int id)
+        public async Task<Vehicle> DeleteVehicle([Service] IVehicleService vehicleService, long id)
         {
             return await vehicleService.DeleteVehicleAsync(id);
         }

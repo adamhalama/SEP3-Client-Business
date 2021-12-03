@@ -1,7 +1,9 @@
-﻿namespace CarRentalClientServer.Data.Responses
+﻿using CarRentalClientServer.Models;
+
+namespace CarRentalClientServer.Data.Responses
 {
     public class DeleteVehicleResponse
     {
-        public bool DeleteVehicle { get; set; }
+        public Vehicle DeleteVehicle { get; set; }
     }
 }

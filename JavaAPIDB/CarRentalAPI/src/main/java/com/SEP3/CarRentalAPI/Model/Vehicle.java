@@ -1,9 +1,14 @@
 package com.SEP3.CarRentalAPI.Model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "vehicle")
+@SQLDelete(sql = "UPDATE vehicle SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class Vehicle
 {
     private long id;
@@ -15,6 +20,8 @@ public class Vehicle
     private int powerKw;
     private String fuelType;
     private int deposit;
+
+    private boolean deleted = Boolean.FALSE;
 
     public Vehicle()
     {
@@ -84,6 +91,7 @@ public class Vehicle
         this.seatsCount = seatsCount;
     }
 
+
     @Column(name = "is_automatic", nullable = true)
     public boolean isAutomatic()
     {
@@ -122,6 +130,16 @@ public class Vehicle
     public void setDeposit(int deposit)
     {
         this.deposit = deposit;
+    }
+
+    @Column(name = "deleted")
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
     }
 
     public String toString()

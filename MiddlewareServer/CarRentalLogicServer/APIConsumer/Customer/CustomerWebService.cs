@@ -35,7 +35,7 @@ namespace CarRentalLogicServer.APIConsumer
             // return message;
         }
 
-        public async Task<Customer> GetCustomerByIdAsync(int id)
+        public async Task<Customer> GetCustomerByIdAsync(long id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/customers/{id}");
             if (!response.IsSuccessStatusCode)
@@ -98,22 +98,16 @@ namespace CarRentalLogicServer.APIConsumer
             return JsonSerializer.Deserialize<Customer>(message);
         }
 
-        public async Task<bool> DeleteCustomerAsync(int id)
+        public async Task<Customer> DeleteCustomerAsync(long id)
         {
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/customers/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(response.ReasonPhrase);
             }
-
-            var isDeletedMap =
-                JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
-            if (isDeletedMap == null)
-            {
-                return false;
-            }
-
-            return isDeletedMap["deleted"];
+            var deletedCustomer =
+                JsonSerializer.Deserialize<Customer>(response.Content.ReadAsStringAsync().Result);
+            return deletedCustomer;
         }
     }
 }

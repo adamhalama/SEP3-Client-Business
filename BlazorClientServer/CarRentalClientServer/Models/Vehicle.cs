@@ -5,6 +5,16 @@ namespace CarRentalClientServer.Models
 {
     public class Vehicle
     {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("name")] public string Name { get; set; }
+        [JsonPropertyName("type")] public string Type { get; set; }
+        [JsonPropertyName("pricePerDay")] public int PricePerDay { get; set; }
+        [JsonPropertyName("seatsCount")] public int SeatsCount { get; set; }
+        [JsonPropertyName("isAutomatic")] public bool IsAutomatic { get; set; }
+        [JsonPropertyName("powerKw")] public int PowerKw { get; set; }
+        [JsonPropertyName("fuelType")] public string FuelType { get; set; }
+        [JsonPropertyName("deposit")] public int Deposit { get; set; }
+
         public Vehicle(long id, string name, string type, int pricePerDay, int seatsCount, bool isAutomatic, int powerKw, string fuelType, int deposit)
         {
             Id = id;
@@ -18,20 +28,11 @@ namespace CarRentalClientServer.Models
             Deposit = deposit;
         }
 
-        [JsonPropertyName("id")] public long Id { get; set; }
-        [JsonPropertyName("name")] [NotNull] public string Name { get; set; }
-        [NotNull] [JsonPropertyName("type")] public string Type { get; set; }
-        [JsonPropertyName("pricePerDay")] public int PricePerDay { get; set; }
-        [NotNull] [JsonPropertyName("seatsCount")] public int SeatsCount { get; set; }
-        [JsonPropertyName("isAutomatic")] public bool IsAutomatic { get; set; }
-        [JsonPropertyName("powerKw")] public int PowerKw { get; set; }
-        [NotNull] [JsonPropertyName("fuelType")] public string FuelType { get; set; } 
-        [JsonPropertyName("deposit")] public int Deposit { get; set; }
-
         public override string ToString()
         {
             return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Type)}: {Type}, {nameof(PricePerDay)}: {PricePerDay}, {nameof(SeatsCount)}: {SeatsCount}, {nameof(IsAutomatic)}: {IsAutomatic}, {nameof(PowerKw)}: {PowerKw}, {nameof(FuelType)}: {FuelType}, {nameof(Deposit)}: {Deposit}";
         }
+
 
         //old legacy class
 

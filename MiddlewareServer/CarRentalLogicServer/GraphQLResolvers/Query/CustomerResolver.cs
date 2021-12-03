@@ -17,7 +17,7 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
             return customerService.GetCustomersAsync().Result;
         }
 
-        public async Task<Customer> GetCustomer([Service] ICustomerService customerService, int id)
+        public async Task<Customer> GetCustomer([Service] ICustomerService customerService, long id)
         {
             return await customerService.GetCustomerByIdAsync(id);
         }

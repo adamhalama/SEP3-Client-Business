@@ -7,9 +7,9 @@ namespace CarRentalClientServer.Data
     public interface IEmployeeService
     {
         Task<IList<Employee>> GetEmployeesAsync();
-        Task<Employee> GetEmployeeAsync(int id);
-        Task<Employee> CreateEmployeeAsync(Employee employee);
+        Task<Employee> GetEmployeeAsync(long id);
+        Task<Employee> CreateEmployeeAsync(string name, string email, string password, int clearanceLevel);
         Task<Employee> UpdateEmployeeAsync(Employee employee);
-        Task<bool> DeleteEmployeeAsync(int id);
+        Task<bool> DeleteEmployeeAsync(long id);
     }
 }

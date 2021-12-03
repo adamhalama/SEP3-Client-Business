@@ -8,8 +8,4 @@
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="APIConsumer\Vehicle" />
-  </ItemGroup>
-
 </Project>

@@ -1,34 +1,230 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
+using CarRentalClientServer.Data.Responses;
 using CarRentalClientServer.Models;
+using GraphQL;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace CarRentalClientServer.Data
 {
     public class EmployeeServiceGraphQL : IEmployeeService
     {
-        public Task<IList<Employee>> GetEmployeesAsync()
+        private GraphQLHttpClient graphQlClient
+            = new("https://localhost:5010/graphql", new NewtonsoftJsonSerializer());
+
+        public async Task<IList<Employee>> GetEmployeesAsync()
         {
-            throw new System.NotImplementedException();
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                query
+                AllEmployees
+                {
+                    allEmployees
+                    {
+                        id
+                        name
+                        email
+                        address
+                        clearanceLevel
+                    }
+                }",
+                OperationName = "AllEmployees"
+            };
+
+            try
+            {
+                var graphQLResponse = await graphQlClient.SendQueryAsync<AllEmployeesResponse>(request);
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+
+                return graphQLResponse.Data.AllEmployees;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
-        public Task<Employee> GetEmployeeAsync(int id)
+        public async Task<Employee> GetEmployeeAsync(long id)
         {
-            throw new System.NotImplementedException();
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                query
+                Employee($id : Long!)
+                {
+                    employee(id: $id)
+                    {
+                        id
+                        name
+                        email
+                        address
+                        clearanceLevel
+                    }
+                }
+            ",
+                OperationName = "Employee",
+                Variables = new {id = id}
+            };
+
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
+                    new JsonSerializerOptions {WriteIndented = true}));
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<EmployeeResponse>(request);
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+
+                return graphQLResponse.Data.Employee;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                if (e.InnerException != null)
+                    Console.WriteLine(e.InnerException.Message);
+
+                throw;
+            }
         }
 
-        public Task<Employee> CreateEmployeeAsync(Employee employee)
+        //method not using Json
+        public async Task<Employee> CreateEmployeeAsync(string name, string email, string password, int clearanceLevel)
         {
-            throw new System.NotImplementedException();
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                mutation CreateEmployee($employeeInput: EmployeeInput) 
+                {
+                    createEmployee(employee: $employeeInput) 
+                    {
+                        id
+                        name
+                        email
+                        address
+                        clearanceLevel
+                    }
+                }",
+                OperationName = "CreateEmployee",
+                Variables = new
+                {
+                    employeeInput = new Employee
+                    {
+                        Id = -1,
+                        Name = name,
+                        Email = email,
+                        Password = password,
+                        ClearanceLevel = clearanceLevel
+                    }
+                }
+            };
+            try
+            {
+                var graphQLResponse = await graphQlClient.SendQueryAsync<CreateEmployeeResponse>(request);
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+
+                return graphQLResponse.Data.CreateEmployee;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
-        public Task<Employee> UpdateEmployeeAsync(Employee employee)
+        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
-            throw new System.NotImplementedException();
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                mutation
+                UpdateEmployee($employeeInput : EmployeeInput)
+                {
+                    updateEmployee(employee: $employeeInput)
+                    {
+                        id
+                        name
+                        email
+                        address
+                        clearanceLevel
+                    }
+                }",
+                OperationName = "UpdateEmployee",
+                Variables = new
+                {
+                    employeeInput = employee
+                }
+            };
+
+            try
+            {
+                //showing what was sent
+                Console.WriteLine(JsonSerializer.Serialize(request,
+                    new JsonSerializerOptions {WriteIndented = true}));
+
+                var graphQLResponse = await graphQlClient.SendQueryAsync<UpdateEmployeeResponse>(request);
+                //showing serialized response
+                Console.WriteLine("serialised response:");
+                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
+                    new JsonSerializerOptions {WriteIndented = true}));
+
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+
+                return graphQLResponse.Data.UpdateEmployee;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
-        public Task<bool> DeleteEmployeeAsync(int id)
+        public async Task<bool> DeleteEmployeeAsync(long id)
         {
-            throw new System.NotImplementedException();
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                mutation
+                DeleteEmployee($id : Long!)
+                {
+                    deleteEmployee(id : $id)
+                    {
+                        id
+                        name
+                        email
+                        address
+                        clearanceLevel
+                    }
+                }",
+                OperationName = "DeleteEmployee",
+                Variables = new {id}
+            };
+            try
+            {
+                var graphQLResponse = await graphQlClient.SendQueryAsync<DeleteEmployeeResponse>(request);
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+
+                return graphQLResponse.Data.DeleteEmployee != null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }

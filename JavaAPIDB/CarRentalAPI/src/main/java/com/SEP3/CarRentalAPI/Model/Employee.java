@@ -1,9 +1,14 @@
 package com.SEP3.CarRentalAPI.Model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "employee")
+@SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Employee
 {
 
@@ -12,6 +17,8 @@ public class Employee
 	private String email;
 	private String password;
 	private String clearanceLevel;
+
+	private boolean deleted = Boolean.FALSE;
 	
 	public Employee() {
 		
@@ -41,7 +48,7 @@ public class Employee
 		this.name = firstName;
 	}
 
-	@Column(name = "email", nullable = false)
+	@Column(name = "email", nullable = false, unique = true)
 	public String getEmail() {
 		return email;
 	}
@@ -63,6 +70,16 @@ public class Employee
 	}
 	public void setClearanceLevel(String clearanceLevel) {
 		this.clearanceLevel = clearanceLevel;
+	}
+
+	@Column(name = "deleted")
+	public boolean isDeleted()
+	{
+		return deleted;
+	}
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	@Override

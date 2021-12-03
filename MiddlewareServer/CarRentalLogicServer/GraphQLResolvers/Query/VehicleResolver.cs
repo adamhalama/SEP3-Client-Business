@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
-using CarRentalLogicServer.Models.REST;
 using HotChocolate;
 using HotChocolate.Types;
 
@@ -18,7 +17,7 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
             return vehicleService.GetVehiclesAsync().Result;
         }
 
-        public async Task<Vehicle> GetVehicle([Service] IVehicleService vehicleService, int id)
+        public async Task<Vehicle> GetVehicle([Service] IVehicleService vehicleService, long id)
         {
             return await vehicleService.GetVehicleByIdAsync(id);
         }

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
-using CarRentalLogicServer.Models.REST;
 using HotChocolate;
 using IHttpClientFactory = CarRentalLogicServer.APIConsumer.ClientFactory.IHttpClientFactory;
 
@@ -37,7 +34,7 @@ namespace CarRentalLogicServer.APIConsumer
             // return message;
         }
 
-        public async Task<Vehicle> GetVehicleByIdAsync(int id)
+        public async Task<Vehicle> GetVehicleByIdAsync(long id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
@@ -93,34 +90,30 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.PutAsync($"{uri}/vehicles/{vehicle.Id}", content);
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"{response.StatusCode};{response.ReasonPhrase}");
+                throw new IndexOutOfRangeException($"{response.StatusCode}");
             }
             else
             {
                 string message = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<Vehicle>(message);
             }
-
-            //todo maybe add a successful return
         }
 
-        public async Task<bool> DeleteVehicleAsync(int id)
+        public async Task<Vehicle> DeleteVehicleAsync(long id)
         {
             HttpResponseMessage response = await client.DeleteAsync($"{uri}/vehicles/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    throw new Exception("Not found");
-                }
-                throw new Exception(response.StatusCode.ToString());
+                throw new IndexOutOfRangeException($"{response.StatusCode}");
             }
             else
             {
-                var isDeletedMap =
+                /*var isDeletedMap =
                     JsonSerializer.Deserialize<Dictionary<string, bool>>(response.Content.ReadAsStringAsync().Result);
                 // the server sends a map with a deleted keyword and a bool saying if the delete was successful or not
-                return isDeletedMap != null && isDeletedMap["deleted"];
+                return isDeletedMap != null && isDeletedMap["deleted"];*/
+                var deletedVehicle = JsonSerializer.Deserialize<Vehicle>(response.Content.ReadAsStringAsync().Result);
+                return deletedVehicle;
             }
         }
     }

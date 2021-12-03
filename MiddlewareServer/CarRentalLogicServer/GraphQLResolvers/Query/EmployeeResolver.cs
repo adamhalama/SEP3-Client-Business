@@ -17,7 +17,7 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
             return employeeService.GetEmployeesAsync().Result;
         }
 
-        public async Task<Employee> GetEmployee([Service] IEmployeeService employeeService, int id)
+        public async Task<Employee> GetEmployee([Service] IEmployeeService employeeService, long id)
         {
             return await employeeService.GetEmployeeByIdAsync(id);
         }
