@@ -88,10 +88,6 @@ namespace CarRentalClientServer.Data
 
             try
             {
-                //showing what was sent
-                Console.WriteLine(JsonSerializer.Serialize(request,
-                    new JsonSerializerOptions {WriteIndented = true}));
-
                 var graphQLResponse = await graphQlClient.SendQueryAsync<VehicleResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
@@ -102,9 +98,6 @@ namespace CarRentalClientServer.Data
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                if (e.InnerException != null)
-                    Console.WriteLine(e.InnerException.Message);
-
                 throw;
             }
         }
@@ -237,7 +230,7 @@ namespace CarRentalClientServer.Data
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
                     ErrorHandling.HandleGraphQLReturnErrors(errors);
-                
+
                 return graphQLResponse.Data.DeleteVehicle != null;
             }
             catch (Exception e)
