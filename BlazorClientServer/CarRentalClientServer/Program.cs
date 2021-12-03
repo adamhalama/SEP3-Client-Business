@@ -15,6 +15,7 @@ namespace CarRentalClientServer
     {
         public static void Main(string[] args)
         {
+          /*
             do
             {
                 IVehicleService vehicleService = new VehicleServiceGraphQL();
@@ -53,7 +54,7 @@ namespace CarRentalClientServer
                     Console.WriteLine(e);
                 }
             } while (Console.ReadLine() != "x");
-
+              */
 
             CreateHostBuilder(args).Build().Run();
         }

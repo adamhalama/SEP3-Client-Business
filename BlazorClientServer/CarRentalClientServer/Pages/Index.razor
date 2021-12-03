@@ -1,8 +1,100 @@
-@page "/"
+﻿@page "/"
 
-<h1>Hello, world!</h1>
+<Div Padding="Padding.Is4"></Div>
+<Heading Size="HeadingSize.Is2" Flex="Flex.JustifyContent.Center">
+    Want to rent a car to travel ? Find it now !
+</Heading>
 
-Welcome to your new app.
+<Field Horizontal Flex="Flex.JustifyContent.Center">
+    <Card Style="@customCardStyle">
+        <CardBody Flex="Flex.JustifyContent.Center">
+            <Row>
+                <Column ColumnSize="ColumnSize.IsFull">
+                    <Fields>
+                        <Column ColumnSize="ColumnSize.IsAuto">
+                            <FieldLabel>Start date:</FieldLabel>
+                            <Addons>
+                                <Addon AddonType="AddonType.Body">
+                                    <DatePicker @ref="@startDate" TValue="DateTime?" />
+                                </Addon>
+                                <Addon AddonType="AddonType.End">
+                                    <Button Color="Color.Light" Clicked="@(()=>startDate.ToggleAsync())">
+                                        <Icon Name="IconName.CalendarDay" />
+                                    </Button>
+                                </Addon>
+                            </Addons>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.IsAuto">
+                            <FieldLabel>End date:</FieldLabel>
+                            <Addons>
+                                <Addon AddonType="AddonType.Body">
+                                    <DatePicker @ref="@endDate" TValue="DateTime?" />
+                                </Addon>
+                                <Addon AddonType="AddonType.End">
+                                    <Button Color="Color.Light" Clicked="@(()=>endDate.ToggleAsync())">
+                                        <Icon Name="IconName.CalendarDay" />
+                                    </Button>
+                                </Addon>
+                            </Addons>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.IsAuto">
+                            <FieldLabel>Search!</FieldLabel> <!--Remove later-->
+                            <Addons>
+                                <Addon AddonType="AddonType.End">
+                                    <Button Color="Color.Dark" Clicked="@SearchButtonClicked">
+                                        <Icon Name="IconName.Search" />
+                                    </Button>
+                                </Addon>
+                            </Addons>
+                        </Column>
+                    </Fields>
+                </Column>
+            </Row>
+        </CardBody>
+    </Card>
+</Field>
 
+<Div Padding="Padding.Is5"></Div>
+<Div Padding="Padding.Is4"></Div>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<CardDeck>
+    <Card Margin="Margin.Is4.FromBottom">
+        <CardImage Source="Img/CarRent.png" Alt="Placeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="5">Quick</CardTitle>
+            <CardText>
+                You can get your car quickly and easily. We provide cars with good conditions.
+            </CardText>
+        </CardBody>
+    </Card>
+    <Card Margin="Margin.Is4.FromBottom">
+        <CardImage Source="Img/Payment.png" Alt="Placeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="5">Easy to pay</CardTitle>
+            <CardText>
+                We support many ways for you to pay. You can pay through bank cards or mobile phone.
+            </CardText>
+        </CardBody>
+    </Card>
+    <Card Margin="Margin.Is4.FromBottom">
+        <CardImage Source="Img/Travel.png" Alt="Placeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="5">Travel</CardTitle>
+            <CardText>
+                Enjoy your trip! If you have any questions, please contact us.
+            </CardText>
+        </CardBody>
+    </Card>
+</CardDeck>
+
+@code {
+    DatePicker<DateTime?> startDate;
+    DatePicker<DateTime?> endDate;
+    string customCardStyle = $"width: 1100px";
+
+    Task SearchButtonClicked()
+    {
+        //search a car
+        return null;
+    }
+}

@@ -1,0 +1,215 @@
+﻿@using CarRentalClientServer.Models
+@inject NavigationManager NavMgr
+
+<Bar Breakpoint="Breakpoint.Desktop"
+     Background="Background.Light"
+     ThemeContrast="ThemeContrast.Light"
+     Shadow="Shadow.Default">
+    <BarBrand>
+
+    </BarBrand>
+    <BarToggler />
+    <BarMenu>
+        <BarEnd>
+            <BarItem>
+                <BarLink To="/">Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>Support</BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem Clicked="@ContactClicked">Contact us</BarDropdownItem>
+                        <BarDropdownDivider />
+                        <BarDropdownItem Clicked="@AboutClicked">About us</BarDropdownItem>
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+            @if (!isLogin)
+            {
+                <BarItem>
+                    <Tooltip Text="Don't have account? Create one!" Placement="TooltipPlacement.Bottom">
+                        <Button Color="Color.Primary" Clicked="@ShowModalS">Sign up</Button>
+                    </Tooltip>
+                    <Tooltip Text="Already have account? Login and find a suitable car!" Placement="TooltipPlacement.Bottom">
+                        <Button Color="Color.Secondary" Clicked="@ShowModalL">Log in</Button>
+                    </Tooltip>
+
+                </BarItem>
+            }
+            else
+            {
+                <BarItem>
+                    <BarDropdown>
+                        <BarDropdownToggle>@user.Email</BarDropdownToggle>
+                        <BarDropdownMenu>
+                            <BarDropdownItem Clicked="@AccountClicked">Account page</BarDropdownItem>
+                            <BarDropdownItem Clicked="@LogOut">Log out</BarDropdownItem>
+                        </BarDropdownMenu>
+                    </BarDropdown>
+                </BarItem>
+
+            }
+
+        </BarEnd>
+    </BarMenu>
+</Bar>
+
+<Modal @ref="modalL">
+    <Validations Mode="ValidationMode.Auto" Model="@user">
+
+        <ModalContent Size="ModalSize.Small" Centered>
+            <ModalHeader>
+                <ModalTitle>Login</ModalTitle>
+                <CloseButton />
+            </ModalHeader>
+            <ModalBody>
+                <Validation>
+                    <Field>
+                        <FieldLabel>Email</FieldLabel>
+                        <TextEdit Placeholder="Enter your username(email) here" @bind-Text="@user.Email" />
+                        <ValidationError />
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field>
+                        <FieldLabel>Password</FieldLabel>
+                        <TextEdit Role="TextRole.Password" Placeholder="Enter pssword" @bind-Text="@user.Password" />
+                        <ValidationError />
+                    </Field>
+                </Validation>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideModalL">Cancel</Button>
+                <Button Color="Color.Primary" Clicked="@Login">Login</Button>
+            </ModalFooter>
+        </ModalContent>
+
+    </Validations>
+</Modal>
+
+<Modal @ref="modalS">
+    <ModalContent Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Sign up</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Validations Mode="ValidationMode.Auto" Model="@newUser">
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Full Name</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="First and last name" @bind-Text="@newUser.Name">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Email</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="Enter email" @bind-Text="@newUser.Email">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Password</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@newUser.Password">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@newUser.Password">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModalS">Cancel</Button>
+            <Button Color="Color.Primary" Clicked="@SignUp">Sign up</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    private Modal modalL;
+    private Modal modalS;
+    Customer user = new Customer();
+    Customer newUser = new Customer();
+    private bool isLogin = false;
+
+    private Task ShowModalL()
+    {
+        return modalL.Show();
+    }
+
+    private Task HideModalL()
+    {
+        return modalL.Hide();
+    }
+
+    private Task ShowModalS()
+    {
+        return modalS.Show();
+    }
+
+    private Task HideModalS()
+    {
+        return modalS.Hide();
+    }
+
+    private Task SignUp()
+    {
+        isLogin = true;
+        //create new user and save
+        return modalS.Hide();
+    }
+
+    private Task Login()
+    {
+        isLogin = true;
+        return modalL.Hide(); //add validate login
+    }
+
+    private void LogOut()
+    {
+        isLogin = false;
+        //maybe add parts remove the authentication
+    }
+
+    private void AccountClicked()
+    {
+        NavMgr.NavigateTo("/ProfileC");
+    }
+
+    private void ContactClicked()
+    {
+        NavMgr.NavigateTo("/ContactUs");
+    }
+
+    private void AboutClicked()
+    {
+        NavMgr.NavigateTo("/AboutUs");
+    }
+}

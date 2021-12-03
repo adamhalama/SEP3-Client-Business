@@ -5,6 +5,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Data\Customer\Responses\**" />
+      <Compile Remove="Data\Employee\Responses\**" />
+      <Content Remove="Data\Customer\Responses\**" />
+      <Content Remove="Data\Employee\Responses\**" />
+      <EmbeddedResource Remove="Data\Customer\Responses\**" />
+      <EmbeddedResource Remove="Data\Employee\Responses\**" />
+      <None Remove="Data\Customer\Responses\**" />
+      <None Remove="Data\Employee\Responses\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Blazorise.Bootstrap" Version="0.9.5.1" />
+      <PackageReference Include="Blazorise.DataGrid" Version="0.9.5.1" />
+      <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.5.1" />
       <PackageReference Include="GraphQL.Client" Version="4.0.1" />
       <PackageReference Include="GraphQL.Client.Abstractions" Version="4.0.1" />
       <PackageReference Include="GraphQL.Client.Abstractions.Websocket" Version="4.0.1" />

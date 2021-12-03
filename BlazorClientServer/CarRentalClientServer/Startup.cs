@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CarRentalClientServer.Data;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 
 namespace CarRentalClientServer
 {
@@ -28,8 +31,15 @@ namespace CarRentalClientServer
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            
+
             services.AddScoped<IVehicleService, VehicleServiceGraphQL>();
+            services
+      .AddBlazorise(options =>
+      {
+          options.ChangeTextOnKeyPress = true; // optional
+      })
+      .AddBootstrapProviders()
+      .AddFontAwesomeIcons();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
