@@ -1,0 +1,139 @@
+﻿<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light" ThemeContrast="ThemeContrast.Light" Shadow="Shadow.Small">
+    <BarMenu>
+        <BarStart>
+            <Button Color="Color.None" Clicked="@ShowSedan">
+                <img src="/Img/Sedan.png" style="width:40% " />
+                <p style="position:center">Sedan</p>
+            </Button>
+            <Button Color="Color.None" Clicked="@ShowLuxury">
+                <img src="/Img/Luxury.png" style="width:40% " />
+                <p style="position:center">Luxury</p>
+            </Button>
+            <Button Color="Color.None" Clicked="@ShowSUV">
+                <img src="/Img/SUV.png" style="width:40% " />
+                <p style="position:center">SUV</p>
+            </Button>
+            <Button Color="Color.None" Clicked="@ShowMPV">
+                <img src="/Img/MPV.png" style="width:40% " />
+                <p style="position:center">MPV</p>
+            </Button>
+        </BarStart>
+    </BarMenu>
+</Bar>
+
+<Modal @ref="sedanModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Sedan</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Paragraph>
+                A sedan is a passenger car in a three-box configuration with separate compartments for engine, passenger, and cargo.
+            </Paragraph>
+            <Paragraph>Can carry up to 5 people. Suitable for family travel.</Paragraph>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@HideSedan">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="luxuryModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Sedan</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Paragraph>
+                A luxury car is a car that provides increased levels of comfort, equipment, amenities, quality, performance, and status compared to regular cars for an increased price.
+            </Paragraph>
+            <Paragraph>Can carry up to 5 people. Suitable for high-end travel.</Paragraph>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@HideLuxury">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="suvModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>SUV</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Paragraph>
+                A sport utility vehicle or SUV is a car classification that combines elements of road-going passenger cars with features from off-road vehicles, such as raised ground clearance and four-wheel drive.
+            </Paragraph>
+            <Paragraph>Can carry up to 7 people. Suitable for field trips.</Paragraph>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@HideSUV">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="mpvModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>MPV</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Paragraph>
+                Minivan (sometimes called simply as van) is a North American car classification for vehicles designed to transport passengers in the rear seating row(s), with reconfigurable seats in two or three rows.
+            </Paragraph>
+            <Paragraph>Can carry up to 8 people. Suitable for business travel or family travel.</Paragraph>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@HideMPV">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+        private Modal sedanModal;
+    private Modal luxuryModal;
+    private Modal suvModal;
+    private Modal mpvModal;
+
+        private Task ShowSedan()
+    {
+        return sedanModal.Show();
+    }
+    private Task HideSedan()
+    {
+        return sedanModal.Hide();
+    }
+
+    private Task ShowLuxury()
+    {
+        return luxuryModal.Show();
+    }
+    private Task HideLuxury()
+    {
+        return luxuryModal.Hide();
+    }
+
+    private Task ShowSUV()
+    {
+        return suvModal.Show();
+    }
+    private Task HideSUV()
+    {
+        return suvModal.Hide();
+    }
+
+    private Task ShowMPV()
+    {
+        return mpvModal.Show();
+    }
+    private Task HideMPV()
+    {
+        return mpvModal.Hide();
+    }
+
+
+}

@@ -5,9 +5,6 @@
      Background="Background.Light"
      ThemeContrast="ThemeContrast.Light"
      Shadow="Shadow.Default">
-    <BarBrand>
-
-    </BarBrand>
     <BarToggler />
     <BarMenu>
         <BarEnd>
@@ -184,6 +181,11 @@
         isLogin = true;
         //create new user and save
         return modalS.Hide();
+    }
+
+    private void ChangeLoginStatus(bool signUp)
+    {
+        this.isLogin = signUp;
     }
 
     private Task Login()

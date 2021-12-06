@@ -44,6 +44,10 @@
               "target": "Package",
               "version": "[0.9.5.1, )"
             },
+            "Blazorise.Components": {
+              "target": "Package",
+              "version": "[0.9.5.2, )"
+            },
             "Blazorise.DataGrid": {
               "target": "Package",
               "version": "[0.9.5.1, )"

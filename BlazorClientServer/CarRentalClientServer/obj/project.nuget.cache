@@ -1,13 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "oEsq2sHFg7Romb2jCQ99NfthafsoaWxn5BZ8PFo6EuYB+xmmeXrGvn6arjrmpCqpCqkapOA6UdmcXohFHsA8qg==",
+  "dgSpecHash": "BFUHCvTYF/fiXDe8FnLaPk6K54h0XND3abXKt6bcDflksQxxfr8O0cbOXcU+sQceUuyi9dI51k2TVGDV2H+iWA==",
   "success": true,
   "projectFilePath": "C:\\Users\\fhuur\\OneDrive\\JavaClasses\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fhuur\\.nuget\\packages\\blazorise\\0.9.5.1\\blazorise.0.9.5.1.nupkg.sha512",
+    "C:\\Users\\fhuur\\.nuget\\packages\\blazorise\\0.9.5.2\\blazorise.0.9.5.2.nupkg.sha512",
     "C:\\Users\\fhuur\\.nuget\\packages\\blazorise.bootstrap\\0.9.5.1\\blazorise.bootstrap.0.9.5.1.nupkg.sha512",
+    "C:\\Users\\fhuur\\.nuget\\packages\\blazorise.components\\0.9.5.2\\blazorise.components.0.9.5.2.nupkg.sha512",
     "C:\\Users\\fhuur\\.nuget\\packages\\blazorise.datagrid\\0.9.5.1\\blazorise.datagrid.0.9.5.1.nupkg.sha512",
     "C:\\Users\\fhuur\\.nuget\\packages\\blazorise.icons.fontawesome\\0.9.5.1\\blazorise.icons.fontawesome.0.9.5.1.nupkg.sha512",
+    "C:\\Users\\fhuur\\.nuget\\packages\\blazorise.snackbar\\0.9.5.2\\blazorise.snackbar.0.9.5.2.nupkg.sha512",
     "C:\\Users\\fhuur\\.nuget\\packages\\graphql\\4.6.1\\graphql.4.6.1.nupkg.sha512",
     "C:\\Users\\fhuur\\.nuget\\packages\\graphql-parser\\7.2.0\\graphql-parser.7.2.0.nupkg.sha512",
     "C:\\Users\\fhuur\\.nuget\\packages\\graphql.client\\4.0.1\\graphql.client.4.0.1.nupkg.sha512",

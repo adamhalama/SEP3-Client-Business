@@ -33,6 +33,10 @@ namespace CarRentalClientServer.Models
             return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Type)}: {Type}, {nameof(PricePerDay)}: {PricePerDay}, {nameof(SeatsCount)}: {SeatsCount}, {nameof(IsAutomatic)}: {IsAutomatic}, {nameof(PowerKw)}: {PowerKw}, {nameof(FuelType)}: {FuelType}, {nameof(Deposit)}: {Deposit}";
         }
 
+        public Vehicle()
+        {
+
+        }
 
         //old legacy class
 
@@ -47,8 +51,5 @@ namespace CarRentalClientServer.Models
         //     this.Model = model;
         // }*/
 
-        public Vehicle()
-        {
-        }
     }
 }

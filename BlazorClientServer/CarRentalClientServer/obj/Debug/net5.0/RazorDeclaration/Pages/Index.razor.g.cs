@@ -96,6 +96,20 @@ using Blazorise.DataGrid;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 13 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
+using Blazorise.Components;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 2 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
+using CarRentalClientServer.Models;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/")]
     public partial class Index : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -105,21 +119,151 @@ using Blazorise.DataGrid;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 90 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
+#line 194 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
        
     DatePicker<DateTime?> startDate;
     DatePicker<DateTime?> endDate;
+    private bool isSearched = false;
     string customCardStyle = $"width: 1100px";
+    private Vehicle selectedVehicle;
 
-    Task SearchButtonClicked()
+    private string typeFilter;
+    private string seatFilter;
+
+    private bool TypeFilter(object itemValue, object searchValue)
+    {
+        if (searchValue is string statusFilter)
+        {
+            return statusFilter == "*" || statusFilter == itemValue?.ToString();
+        }
+        return true;
+    }
+
+    private bool SeatFilter(object seatValue, object seatSearchValue)
+    {
+        if (seatSearchValue is string statusFilter)
+        {
+            return statusFilter == "*" || statusFilter == seatValue?.ToString();
+        }
+        return true;
+    }
+
+
+    private List<Vehicle> vehicleListTest = new()
+        {
+            new()
+            {
+                Id = 1,
+                Name = "CAR1",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 2,
+                Name = "CAR2",
+                Type = "Sedan",
+                PricePerDay = 400,
+                SeatsCount = 2,
+                IsAutomatic = false,
+                PowerKw = 400,
+                FuelType = "92",
+                Deposit = 800,
+            },
+            new()
+            {
+                Id = 3,
+                Name = "CAR3",
+                Type = "SUV",
+                PricePerDay = 200,
+                SeatsCount = 5,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "95",
+                Deposit = 700,
+            },
+            new()
+            {
+                Id = 4,
+                Name = "CAR4",
+                Type = "MPV",
+                PricePerDay = 340,
+                SeatsCount = 8,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "Diesel",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 5,
+                Name = "CAR5",
+                Type = "SUV",
+                PricePerDay = 600,
+                SeatsCount = 4,
+                IsAutomatic = false,
+                PowerKw = 500,
+                FuelType = "Diesel",
+                Deposit = 1000,
+            },
+            new()
+            {
+                Id = 6,
+                Name = "CAR6",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "92",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 7,
+                Name = "CAR7",
+                Type = "Luxury",
+                PricePerDay = 730,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 430,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 8,
+                Name = "CAR8 OLD",
+                Type = "MPV",
+                PricePerDay = 360,
+                SeatsCount = 8,
+                IsAutomatic = false,
+                PowerKw = 250,
+                FuelType = "Diesel",
+                Deposit = 500,
+            }
+        };
+
+    private void SearchButtonClicked()
     {
         //search a car
-        return null;
+        this.isSearched = true;
+    }
+
+    private void BookCarClicked(long id)
+    {
+        NavMgr.NavigateTo($"/Book/{id}");
     }
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavMgr { get; set; }
     }
 }
 #pragma warning restore 1591

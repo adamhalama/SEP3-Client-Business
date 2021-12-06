@@ -11,46 +11,7 @@
 
 <Div Padding="Padding.Is4"></Div>
 
-<DataGrid TItem="ReservationTest" Data="@listTest"
-          @bind-SelectedRow="@selectedReserve" Responsive
-          Filterable FilterMethod="DataGridFilterMethod.StartsWith">
-          <!--Add filter for employee name and ca rname, remove filter for amount-->
-    <DataGridColumns>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false />
-        <!--customer name-->
-        <!--employee name-->
-        <!--vehicle name-->
-        <DataGridDateColumn TItem="ReservationTest" Field="@nameof(ReservationTest.DateStart)" DisplayFormat="{0:dd.MM.yyyy}" Caption="Date start" Filterable=false />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.BillDate)" Caption="Bill date" Filterable=false />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.PaymentAmount)" Caption="Amount" />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.IsPaid)" Caption="Status" CustomFilter="@StatusCustomerFilter">
-            <FilterTemplate>
-                <Select TValue="string" SelectedValue="@selectedStatusFilter" SelectedValueChanged="@(value => {selectedStatusFilter = value;context.TriggerFilterChange( selectedStatusFilter); })">
-                    <SelectItem TValue="string" Value="@("*")">All</SelectItem>
-                    <SelectItem TValue="bool" Value="@(true)">Paid</SelectItem>
-                    <SelectItem TValue="bool" Value="@(false)">Not paid</SelectItem>
-                </Select>
-            </FilterTemplate>
-
-            <DisplayTemplate>
-                @{
-                    var isPaid = (context as ReservationTest)?.IsPaid;
-                    @if (isPaid == true)
-                    {
-                        @("Paid")
-                    }
-                    else
-                    {
-                        @("Not paid or canceled")
-                    }
-                }
-            </DisplayTemplate>
-        </DataGridColumn>
-    </DataGridColumns>
-    <DetailRowTemplate>
-        @{
-            var reservationId = (context as ReservationTest).Id;
-            <Card>
+<Card>
                 <CardHeader>
                     <CardTitle>Detail</CardTitle>
                 </CardHeader>
@@ -113,8 +74,43 @@
                     </Fields>
                 </CardBody>
             </Card>
-        }
-    </DetailRowTemplate>
+
+<DataGrid TItem="ReservationTest" Data="@listTest"
+          @bind-SelectedRow="@selectedReserve" Responsive
+          Filterable FilterMethod="DataGridFilterMethod.StartsWith">
+          <!--Add filter for employee name and ca rname, remove filter for amount-->
+    <DataGridColumns>
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false />
+        <!--customer name-->
+        <!--employee name-->
+        <!--vehicle name-->
+        <DataGridDateColumn TItem="ReservationTest" Field="@nameof(ReservationTest.DateStart)" DisplayFormat="{0:dd.MM.yyyy}" Caption="Date start" Filterable=false />
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.BillDate)" Caption="Bill date" Filterable=false />
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.PaymentAmount)" Caption="Amount" />
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.IsPaid)" Caption="Status" CustomFilter="@StatusCustomerFilter">
+            <FilterTemplate>
+                <Select TValue="string" SelectedValue="@selectedStatusFilter" SelectedValueChanged="@(value => {selectedStatusFilter = value;context.TriggerFilterChange( selectedStatusFilter); })">
+                    <SelectItem TValue="string" Value="@("*")">All</SelectItem>
+                    <SelectItem TValue="bool" Value="@(true)">Paid</SelectItem>
+                    <SelectItem TValue="bool" Value="@(false)">Not paid</SelectItem>
+                </Select>
+            </FilterTemplate>
+
+            <DisplayTemplate>
+                @{
+                    var isPaid = (context as ReservationTest)?.IsPaid;
+                    @if (isPaid == true)
+                    {
+                        @("Paid")
+                    }
+                    else
+                    {
+                        @("Not paid or canceled")
+                    }
+                }
+            </DisplayTemplate>
+        </DataGridColumn>
+    </DataGridColumns>
 </DataGrid>
 
 @code {
