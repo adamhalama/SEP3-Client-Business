@@ -75,23 +75,23 @@
     </CardBody>
 </Card>
 
-<Divider />
+<Divider/>
 
 <DataGrid TItem="ReservationTest" Data="@listTest"
           @bind-SelectedRow="@selectedReserve" Responsive
           Filterable FilterMethod="DataGridFilterMethod.StartsWith">
     <!--Add filter for employee name and ca rname, remove filter for amount-->
     <DataGridColumns>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false />
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false/>
         <!--customer name-->
         <!--employee name-->
         <!--vehicle name-->
-        <DataGridDateColumn TItem="ReservationTest" Field="@nameof(ReservationTest.DateStart)" DisplayFormat="{0:dd.MM.yyyy}" Caption="Date start" Filterable=false />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.BillDate)" Caption="Bill date" Filterable=false />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.PaymentAmount)" Caption="Amount" />
+        <DataGridDateColumn TItem="ReservationTest" Field="@nameof(ReservationTest.DateStart)" DisplayFormat="{0:dd.MM.yyyy}" Caption="Date start" Filterable=false/>
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.BillDate)" Caption="Bill date" Filterable=false/>
+        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.PaymentAmount)" Caption="Amount"/>
         <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.IsPaid)" Caption="Status" CustomFilter="@StatusCustomerFilter">
             <FilterTemplate>
-                <Select TValue="string" SelectedValue="@selectedStatusFilter" SelectedValueChanged="@(value => {selectedStatusFilter = value;context.TriggerFilterChange( selectedStatusFilter); })">
+                <Select TValue="string" SelectedValue="@selectedStatusFilter" SelectedValueChanged="@(value => {selectedStatusFilter = value;context.TriggerFilterChange(selectedStatusFilter); })">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                     <SelectItem TValue="bool" Value="@(true)">Paid</SelectItem>
                     <SelectItem TValue="bool" Value="@(false)">Not paid</SelectItem>
@@ -130,6 +130,7 @@
     private ReservationTest selectedReserve;
 
     string selectedStatusFilter;
+
     private bool StatusCustomerFilter(object itemValue, object searchValue)
     {
         if (searchValue is string statusFilter)
@@ -140,91 +141,91 @@
     }
 
     private List<ReservationTest> listTest = new()
+    {
+        new()
         {
-            new()
-            {
-                Id = 1,
-                VehicleId = 2,
-                CustomerId = 2,
-                EmployeeId = 3,
-                SecurityDeposit = 500,
-                DateCreated = 1627870693,
-                DateStart = 1627957093,
-                DateEnd = 1628216293,
-                AllowedKm = 1500,
-                PaymentAmount = 3400,
-                BillDate = 1627870950,
-                IsPaid = true
-            },
-            new()
-            {
-                Id = 2,
-                VehicleId = 2,
-                CustomerId = 2,
-                EmployeeId = 3,
-                SecurityDeposit = 500,
-                DateCreated = 1627870693,
-                DateStart = 1627957093,
-                DateEnd = 1628216293,
-                AllowedKm = 1500,
-                PaymentAmount = 5900,
-                BillDate = 1627871800,
-                IsPaid = false
-            },
-            new()
-            {
-                Id = 3,
-                VehicleId = 2,
-                CustomerId = 2,
-                EmployeeId = 3,
-                SecurityDeposit = 500,
-                DateCreated = 1627870693,
-                DateStart = 1627957093,
-                DateEnd = 1628216293,
-                AllowedKm = 1500,
-                PaymentAmount = 4660,
-                BillDate = 1627870950,
-                IsPaid = true
-            }
-        };
+            Id = 1,
+            VehicleId = 2,
+            CustomerId = 2,
+            EmployeeId = 3,
+            SecurityDeposit = 500,
+            DateCreated = 1627870693,
+            DateStart = 1627957093,
+            DateEnd = 1628216293,
+            AllowedKm = 1500,
+            PaymentAmount = 3400,
+            BillDate = 1627870950,
+            IsPaid = true
+        },
+        new()
+        {
+            Id = 2,
+            VehicleId = 2,
+            CustomerId = 2,
+            EmployeeId = 3,
+            SecurityDeposit = 500,
+            DateCreated = 1627870693,
+            DateStart = 1627957093,
+            DateEnd = 1628216293,
+            AllowedKm = 1500,
+            PaymentAmount = 5900,
+            BillDate = 1627871800,
+            IsPaid = false
+        },
+        new()
+        {
+            Id = 3,
+            VehicleId = 2,
+            CustomerId = 2,
+            EmployeeId = 3,
+            SecurityDeposit = 500,
+            DateCreated = 1627870693,
+            DateStart = 1627957093,
+            DateEnd = 1628216293,
+            AllowedKm = 1500,
+            PaymentAmount = 4660,
+            BillDate = 1627870950,
+            IsPaid = true
+        }
+    };
 
     private List<CustomerTest> customerTestList = new()
+    {
+        new()
         {
-            new()
-            {
-                Id = 1,
-                Name = "AB"
-            },
-            new()
-            {
-                Id = 2,
-                Name = "DD"
-            },
-            new()
-            {
-                Id = 3,
-                Name = "EE"
-            }
-        };
+            Id = 1,
+            Name = "AB"
+        },
+        new()
+        {
+            Id = 2,
+            Name = "DD"
+        },
+        new()
+        {
+            Id = 3,
+            Name = "EE"
+        }
+    };
 
     private List<CarTest> carTestList = new()
+    {
+        new()
         {
-            new()
-            {
-                Id = 1,
-                Name = "CAR1"
-            },
-            new()
-            {
-                Id = 2,
-                Name = "CAR2"
-            },
-            new()
-            {
-                Id = 3,
-                Name = "CAR3"
-            }
-        };
+            Id = 1,
+            Name = "CAR1"
+        },
+        new()
+        {
+            Id = 2,
+            Name = "CAR2"
+        },
+        new()
+        {
+            Id = 3,
+            Name = "CAR3"
+        }
+    };
 
     public class ReservationTest
     {
@@ -253,4 +254,5 @@
         public int Id { get; set; }
         public string Name { get; set; }
     }
+
 }

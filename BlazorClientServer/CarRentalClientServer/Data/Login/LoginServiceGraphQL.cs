@@ -13,7 +13,7 @@ namespace CarRentalClientServer.Data
         private GraphQLHttpClient graphQlClient
             = new("https://localhost:5010/graphql", new NewtonsoftJsonSerializer());
         
-        public async Task<UserLogin> LoginUser(UserLogin credentials)
+        public async Task<UserLogin> ValidateUser(string email, string password)
         {
             var request = new GraphQLRequest
             {
@@ -31,7 +31,8 @@ namespace CarRentalClientServer.Data
                     }
                 }",
                 OperationName = "LoginUser",
-                Variables = new { userLogin = credentials }
+                Variables = new { userLogin = new UserLogin()
+                    {Email = email, Password = password} }
             };
             try
             {

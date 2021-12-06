@@ -31,8 +31,12 @@ namespace CarRentalClientServer
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-
-            services.AddScoped<IVehicleService, VehicleServiceGraphQL>();
+ 
+            services.AddSingleton<IVehicleService, VehicleServiceGraphQL>();
+            services.AddSingleton<ICustomerService, CustomerServiceGraphQL>();
+            services.AddSingleton<IEmployeeService, EmployeeServiceGraphQL>();
+            services.AddSingleton<IReservationService, ReservationServiceGraphQL>();
+            services.AddSingleton<ILoginService, LoginServiceGraphQL>();
             services
       .AddBlazorise(options =>
       {

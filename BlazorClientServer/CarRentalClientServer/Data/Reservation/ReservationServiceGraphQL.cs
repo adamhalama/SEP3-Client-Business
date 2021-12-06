@@ -10,7 +10,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace CarRentalClientServer.Data
 {
-    public abstract class ReservationServiceGraphQL : IReservationService
+    public class ReservationServiceGraphQL : IReservationService
     {
         private GraphQLHttpClient graphQlClient
             = new("https://localhost:5010/graphql", new NewtonsoftJsonSerializer());
