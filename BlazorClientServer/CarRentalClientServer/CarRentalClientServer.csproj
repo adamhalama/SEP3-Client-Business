@@ -5,15 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Data\Customer\Responses\AllCustomersResponse.cs" />
-      <Compile Remove="Data\Employee\Responses\AllEmployeesResponse.cs" />
-      <Compile Include="Data\Customer\Responses\AllCustomersResponse.cs" />
-      <Compile Include="Data\Employee\Responses\AllEmployeesResponse.cs" />
+      <Compile Remove="wwwroot\**" />
+      <Compile Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Blazorise.Bootstrap" Version="0.9.5.1" />
-      <PackageReference Include="Blazorise.Components" Version="0.9.5.2" />
       <PackageReference Include="Blazorise.DataGrid" Version="0.9.5.1" />
       <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.5.1" />
       <PackageReference Include="GraphQL.Client" Version="4.0.1" />
@@ -23,6 +20,13 @@
       <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="4.0.1" />
       <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="4.0.1" />
       <PackageReference Include="GraphQL.Primitives" Version="4.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Pages\ForBoth" />
+        <Folder Include="Pages\ForCustomers" />
+        <Folder Include="Pages\ForEmployees" />
+        <Folder Include="Pages\MenuBarComponents" />
     </ItemGroup>
 
 </Project>

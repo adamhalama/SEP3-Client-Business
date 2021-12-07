@@ -5,8 +5,7 @@ import com.SEP3.CarRentalAPI.DBRepository.EmployeeRepository;
 import com.SEP3.CarRentalAPI.Model.Customer;
 import com.SEP3.CarRentalAPI.Model.Employee;
 import com.SEP3.CarRentalAPI.Model.UserLogin;
-import com.SEP3.CarRentalAPI.exception.UserNotFoundException;
-import com.SEP3.CarRentalAPI.exception.WrongPasswordException;
+import com.SEP3.CarRentalAPI.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,10 +20,11 @@ public class LoginController
 {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
     private CustomerRepository customerRepository;
 
     @PostMapping("/login")
-    public UserLogin login(@Valid @RequestBody UserLogin userLogin) throws UserNotFoundException, WrongPasswordException
+    public UserLogin login(@Valid @RequestBody UserLogin userLogin) throws ResourceNotFoundException
     {
         //Checking if the email belongs to an employee
         Employee employee = employeeRepository.findByEmail(userLogin.getEmail());
@@ -44,8 +44,8 @@ public class LoginController
             {
                 return new UserLogin(true, customer.getId(), false);
             }
-            throw new WrongPasswordException("Wrong password");
+            throw new ResourceNotFoundException("Wrong password");
         }
-        throw new UserNotFoundException("User with this email not found:" + userLogin.getEmail());
+        throw new ResourceNotFoundException("User with this email not found:" + userLogin.getEmail());
     }
 }

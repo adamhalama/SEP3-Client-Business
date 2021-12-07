@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using CarRentalClientServer.Data;
 
 namespace CarRentalClientServer.Models
 {
@@ -16,5 +17,26 @@ namespace CarRentalClientServer.Models
         [JsonPropertyName("paymentAmount")] public float PaymentAmount { get; set; }
         [JsonPropertyName("billDate")] public long BillDate { get; set; }
         [JsonPropertyName("isPaid")] public bool IsPaid { get; set; }
+
+        public string GetDateCreatedFormat()
+        {
+            return DateTimeConversions.GetDateFormat(DateCreated);
+        }
+        
+        public string GetDateStartFormat()
+        {
+            return DateTimeConversions.GetTimeAndDateFormat(DateStart);
+        }
+        
+        public string GetDateEndFormat()
+        {
+            return DateTimeConversions.GetTimeAndDateFormat(DateEnd);
+        }
+        
+        public string GetBillDateFormat()
+        {
+            return DateTimeConversions.GetDateFormat(BillDate);
+        }
+        
     }
 }

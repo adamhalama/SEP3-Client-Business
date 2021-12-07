@@ -23,7 +23,14 @@ namespace CarRentalClientServer.Data
         {
             var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             
-            return dateTime.AddMilliseconds(timestamp).ToString("HH:mm dd/MM/yyyy");
+            return dateTime.AddMilliseconds(timestamp).ToString("HH:mm dd-MM-yyyy");
+        }
+        
+        public static string GetDateFormat(long timestamp)
+        {
+            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            
+            return dateTime.AddMilliseconds(timestamp).ToString("dd-MM-yyyy");
         }
         
     }

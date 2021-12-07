@@ -10,7 +10,7 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     [ExtendObjectType(Name = "Mutation")]
     public class LoginMutationResolver
     {
-        public UserLogin GetAllReservations([Service] ILoginService loginService, UserLogin credentials)
+        public UserLogin ValidateUser([Service] ILoginService loginService, UserLogin credentials)
         {
             return loginService.LoginAsync(credentials).Result;
         } 

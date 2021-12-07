@@ -5,6 +5,6 @@ namespace CarRentalClientServer.Data
 {
     public interface ILoginService
     {
-        Task<UserLogin> LoginUser(UserLogin credentials);
+        Task<UserLogin> ValidateUser(string email, string password);
     }
 }

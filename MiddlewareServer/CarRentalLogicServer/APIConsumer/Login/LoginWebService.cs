@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -29,7 +30,7 @@ namespace CarRentalLogicServer.APIConsumer.Login
             
             HttpResponseMessage response = await client.PostAsync(uri + "/login", content);
             if (!response.IsSuccessStatusCode)
-                throw new Exception(response.ReasonPhrase);
+                throw new Exception(response.StatusCode + "");
 
             string message = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<UserLogin>(message);

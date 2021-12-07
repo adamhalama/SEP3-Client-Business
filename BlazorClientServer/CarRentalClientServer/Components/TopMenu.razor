@@ -1,11 +1,19 @@
 ﻿@using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Authentification
+
 @inject NavigationManager NavMgr
+@inject ICustomerService customerService;
+@inject AuthenticationStateProvider authenticationStateProvider
 
 <Bar Breakpoint="Breakpoint.Desktop"
      Background="Background.Light"
      ThemeContrast="ThemeContrast.Light"
      Shadow="Shadow.Default">
-    <BarToggler />
+    <BarBrand>
+
+    </BarBrand>
+    <BarToggler/>
     <BarMenu>
         <BarEnd>
             <BarItem>
@@ -16,7 +24,7 @@
                     <BarDropdownToggle>Support</BarDropdownToggle>
                     <BarDropdownMenu>
                         <BarDropdownItem Clicked="@ContactClicked">Contact us</BarDropdownItem>
-                        <BarDropdownDivider />
+                        <BarDropdownDivider/>
                         <BarDropdownItem Clicked="@AboutClicked">About us</BarDropdownItem>
                     </BarDropdownMenu>
                 </BarDropdown>
@@ -25,10 +33,10 @@
             {
                 <BarItem>
                     <Tooltip Text="Don't have account? Create one!" Placement="TooltipPlacement.Bottom">
-                        <Button Color="Color.Primary" Clicked="@ShowModalS">Sign up</Button>
+                        <Button Color="Color.Primary" Clicked="@ShowModalSignUp">Sign up</Button>
                     </Tooltip>
                     <Tooltip Text="Already have account? Login and find a suitable car!" Placement="TooltipPlacement.Bottom">
-                        <Button Color="Color.Secondary" Clicked="@ShowModalL">Log in</Button>
+                        <Button Color="Color.Secondary" Clicked="@ShowModalLogin">Log in</Button>
                     </Tooltip>
 
                 </BarItem>
@@ -37,46 +45,46 @@
             {
                 <BarItem>
                     <BarDropdown>
-                        <BarDropdownToggle>@user.Email</BarDropdownToggle>
+                        <BarDropdownToggle>@loginCredentials.Email</BarDropdownToggle>
                         <BarDropdownMenu>
                             <BarDropdownItem Clicked="@AccountClicked">Account page</BarDropdownItem>
                             <BarDropdownItem Clicked="@LogOut">Log out</BarDropdownItem>
                         </BarDropdownMenu>
                     </BarDropdown>
                 </BarItem>
-
             }
 
         </BarEnd>
     </BarMenu>
 </Bar>
 
-<Modal @ref="modalL">
-    <Validations Mode="ValidationMode.Auto" Model="@user">
+<Modal @ref="modalLogin">
+    <Validations Mode="ValidationMode.Auto" Model="@loginCredentials">
 
         <ModalContent Size="ModalSize.Small" Centered>
             <ModalHeader>
                 <ModalTitle>Login</ModalTitle>
-                <CloseButton />
+                <CloseButton/>
             </ModalHeader>
             <ModalBody>
                 <Validation>
                     <Field>
                         <FieldLabel>Email</FieldLabel>
-                        <TextEdit Placeholder="Enter your username(email) here" @bind-Text="@user.Email" />
-                        <ValidationError />
+                        <TextEdit Placeholder="Enter your email" @bind-Text="@loginCredentials.Email"/>
+                        <ValidationError/>
                     </Field>
                 </Validation>
                 <Validation>
                     <Field>
                         <FieldLabel>Password</FieldLabel>
-                        <TextEdit Role="TextRole.Password" Placeholder="Enter pssword" @bind-Text="@user.Password" />
-                        <ValidationError />
+                        <TextEdit Role="TextRole.Password" Placeholder="Enter password" @bind-Text="@loginCredentials.Password"/>
+                        <ValidationError/>
                     </Field>
                 </Validation>
             </ModalBody>
             <ModalFooter>
-                <Button Color="Color.Secondary" Clicked="@HideModalL">Cancel</Button>
+                <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabelLogin</Label>
+                <Button Color="Color.Secondary" Clicked="@HideModalLogin">Cancel</Button>
                 <Button Color="Color.Primary" Clicked="@Login">Login</Button>
             </ModalFooter>
         </ModalContent>
@@ -84,11 +92,11 @@
     </Validations>
 </Modal>
 
-<Modal @ref="modalS">
+<Modal @ref="modalSignUp">
     <ModalContent Size="ModalSize.Large">
         <ModalHeader>
             <ModalTitle>Sign up</ModalTitle>
-            <CloseButton />
+            <CloseButton/>
         </ModalHeader>
         <ModalBody>
             <Validations Mode="ValidationMode.Auto" Model="@newUser">
@@ -98,7 +106,7 @@
                         <FieldBody ColumnSize="ColumnSize.Is10">
                             <TextEdit Placeholder="First and last name" @bind-Text="@newUser.Name">
                                 <Feedback>
-                                    <ValidationError />
+                                    <ValidationError/>
                                 </Feedback>
                             </TextEdit>
                         </FieldBody>
@@ -110,7 +118,31 @@
                         <FieldBody ColumnSize="ColumnSize.Is10">
                             <TextEdit Placeholder="Enter email" @bind-Text="@newUser.Email">
                                 <Feedback>
-                                    <ValidationError />
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Address</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="Address" @bind-Text="@newUser.Address">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Driving Licence</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="Licence Number" @bind-Text="@newUser.LicenceNumber">
+                                <Feedback>
+                                    <ValidationError/>
                                 </Feedback>
                             </TextEdit>
                         </FieldBody>
@@ -122,84 +154,137 @@
                         <FieldBody ColumnSize="ColumnSize.Is10">
                             <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@newUser.Password">
                                 <Feedback>
-                                    <ValidationError />
+                                    <ValidationError/>
                                 </Feedback>
                             </TextEdit>
                         </FieldBody>
                     </Field>
                 </Validation>
-                <Validation>
-                    <Field Horizontal="true">
-                        <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
-                        <FieldBody ColumnSize="ColumnSize.Is10">
-                            <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@newUser.Password">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </FieldBody>
-                    </Field>
-                </Validation>
-            </Validations>
+                </Validations>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is10">
+                    <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@rePassword">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Secondary" Clicked="@HideModalS">Cancel</Button>
-            <Button Color="Color.Primary" Clicked="@SignUp">Sign up</Button>
+            <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabelSignUp</Label>
+            <Button Color="Color.Secondary" Clicked="@HideModalSignUp">Cancel</Button>
+            <Button Color="Color.Primary" Clicked="@SignUpAsync">Sign up</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
 
 @code {
-    private Modal modalL;
-    private Modal modalS;
-    Customer user = new Customer();
-    Customer newUser = new Customer();
+    private string bottomLabelSignUp = "";
+    private string bottomLabelLogin = "";
+    private Modal modalLogin;
+    private Modal modalSignUp;
+
+    private Customer loginCredentials = new Customer();
+    private Customer newUser = new Customer();
+
+    private string rePassword;
+
     private bool isLogin = false;
 
-    private Task ShowModalL()
+    protected override Task OnInitializedAsync()
     {
-        return modalL.Show();
+        return base.OnInitializedAsync();
     }
 
-    private Task HideModalL()
+    
+
+    private async Task SignUpAsync()
     {
-        return modalL.Hide();
+        Console.WriteLine("sign up clicked");
+        bottomLabelSignUp = "";
+        if (!rePassword.Equals(newUser.Password))
+        {
+            bottomLabelSignUp = "Repeated password is wrong";
+            return;
+        }
+        try
+        {
+            var createdCustomer = await customerService.CreateCustomerAsync
+                (newUser.Name, newUser.Email, newUser.Password, newUser.Address, newUser.LicenceNumber);
+            if (createdCustomer != null)
+            {
+                bottomLabelSignUp = "Customer account created successfully";
+                await modalSignUp.Hide();
+                newUser = new Customer();
+            }
+        }
+        catch (Exception e)
+        {
+            bottomLabelSignUp = "Error occured while signing up";
+            Console.WriteLine(e);
+        }
     }
 
-    private Task ShowModalS()
+    private async Task Login()
     {
-        return modalS.Show();
-    }
-
-    private Task HideModalS()
-    {
-        return modalS.Hide();
-    }
-
-    private Task SignUp()
-    {
-        isLogin = true;
-        //create new user and save
-        return modalS.Hide();
-    }
-
-    private void ChangeLoginStatus(bool signUp)
-    {
-        this.isLogin = signUp;
-    }
-
-    private Task Login()
-    {
-        isLogin = true;
-        return modalL.Hide(); //add validate login
+        bottomLabelLogin = "";
+        try
+        {
+            await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin(loginCredentials.Email, loginCredentials.Password);
+            //if something goes wrong this should throw and exc, so the following code wont get executed if the user wasnt validated successfully
+            isLogin = true;
+            await modalLogin.Hide(); //add validate login
+            loginCredentials.Password = "";
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Equals("NotFound"))
+            {
+                bottomLabelLogin = "Login not successful: This combination of email and password is incorrect";
+            }
+            bottomLabelLogin = $"Login not successful: {e.Message}";
+            Console.WriteLine(e);
+        }
+        
     }
 
     private void LogOut()
     {
-        isLogin = false;
-        //maybe add parts remove the authentication
+        try
+        {
+            ((CustomAuthenticationStateProvider) authenticationStateProvider).Logout();
+            isLogin = false;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
+    private Task ShowModalLogin()
+    {
+        bottomLabelLogin = "";
+        return modalLogin.Show();
+    }
+
+    private Task HideModalLogin()
+    {
+        return modalLogin.Hide();
+    }
+
+    private Task ShowModalSignUp()
+    {
+        bottomLabelSignUp = "";
+        return modalSignUp.Show();
+    }
+
+    private Task HideModalSignUp()
+    {
+        return modalSignUp.Hide();
+    }
+    
     private void AccountClicked()
     {
         NavMgr.NavigateTo("/ProfileC");
@@ -214,4 +299,5 @@
     {
         NavMgr.NavigateTo("/AboutUs");
     }
+
 }
