@@ -16,7 +16,7 @@ public class Employee
 	private String name;
 	private String email;
 	private String password;
-	private String clearanceLevel;
+	private int clearanceLevel;
 
 	private boolean deleted = Boolean.FALSE;
 	
@@ -24,7 +24,7 @@ public class Employee
 		
 	}
 	
-	public Employee(String name, String password, String email, String clearanceLevel) {
+	public Employee(String name, String password, String email, int clearanceLevel) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -65,10 +65,10 @@ public class Employee
 	}
 
 	@Column(name = "clearance_level", nullable = false)
-	public String getClearanceLevel() {
+	public int getClearanceLevel() {
 		return clearanceLevel;
 	}
-	public void setClearanceLevel(String clearanceLevel) {
+	public void setClearanceLevel(int clearanceLevel) {
 		this.clearanceLevel = clearanceLevel;
 	}
 

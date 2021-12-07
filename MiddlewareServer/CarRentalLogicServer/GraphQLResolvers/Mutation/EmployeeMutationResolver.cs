@@ -12,7 +12,8 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     {
         public async Task<Employee> CreateEmployee([Service] IEmployeeService employeeService, Employee employee)
         {
-            return await employeeService.CreateEmployeeAsync(employee);
+            var emp = await employeeService.CreateEmployeeAsync(employee);
+            return emp;
         }
 
         public async Task<Employee> UpdateEmployee([Service] IEmployeeService employeeService, Employee employee)

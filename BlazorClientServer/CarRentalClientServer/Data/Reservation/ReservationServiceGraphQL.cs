@@ -51,7 +51,6 @@ namespace CarRentalClientServer.Data
                           id
                           name
                           email
-                          address
                           clearanceLevel
                         }
                         securityDeposit
@@ -112,7 +111,6 @@ namespace CarRentalClientServer.Data
                           id
                           name
                           email
-                          address
                           clearanceLevel
                         }
                         securityDeposit
@@ -177,7 +175,6 @@ namespace CarRentalClientServer.Data
                           id
                           name
                           email
-                          address
                           clearanceLevel
                         }
                         securityDeposit
@@ -311,7 +308,6 @@ namespace CarRentalClientServer.Data
                           id
                           name
                           email
-                          address
                           clearanceLevel
                         }
                         securityDeposit
@@ -468,7 +464,6 @@ namespace CarRentalClientServer.Data
                           id
                           name
                           email
-                          address
                           clearanceLevel
                         }
                         securityDeposit

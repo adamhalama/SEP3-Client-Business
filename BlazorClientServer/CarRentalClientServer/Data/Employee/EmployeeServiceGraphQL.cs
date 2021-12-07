@@ -102,14 +102,14 @@ namespace CarRentalClientServer.Data
             var request = new GraphQLRequest
             {
                 Query = @"
-                mutation CreateEmployee($employeeInput: EmployeeInput) 
+                mutation CreateEmployee($employeeInput: EmployeeInput)
                 {
-                    createEmployee(employee: $employeeInput) 
+                    createEmployee(employee: $employeeInput)
                     {
                         id
                         name
                         email
-                        address
+                        password
                         clearanceLevel
                     }
                 }",

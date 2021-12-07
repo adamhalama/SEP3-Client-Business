@@ -18,6 +18,13 @@ namespace CarRentalClientServer.Data
 
             return (long)timeSpan.TotalSeconds * 1000;
         }
+        
+        public static long DateTimeToUnix(DateTime dateTime)
+        {
+            TimeSpan timeSpan = dateTime - new DateTime(1970, 1, 1, 0, 0, 0);
+
+            return (long)timeSpan.TotalSeconds;
+        }
 
         public static DateTime GetDateTime(long timestamp)
         {
