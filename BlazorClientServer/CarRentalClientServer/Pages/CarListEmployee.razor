@@ -1,5 +1,7 @@
 ﻿@page "/AllCars"
+@using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
+@inject IVehicleService VehicleData
 
 <Jumbotron>
     <JumbotronTitle Size="JumbotronTitleSize.Is3">Whole car list</JumbotronTitle>
@@ -190,6 +192,12 @@
     private Vehicle selectedVehicle;
     private string typeFilter;
     private string seatFilter;
+    private IList<Vehicle> vehicles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        vehicles = await VehicleData.GetVehiclesAsync();
+    }
 
     private bool TypeFilter(object itemValue, object searchValue)
     {
