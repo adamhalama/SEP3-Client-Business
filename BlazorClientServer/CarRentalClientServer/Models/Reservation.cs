@@ -25,12 +25,12 @@ namespace CarRentalClientServer.Models
         
         public string GetDateStartFormat()
         {
-            return DateTimeConversions.GetTimeAndDateFormat(DateStart);
+            return DateTimeConversions.GetDateTimeFormat(DateStart);
         }
         
         public string GetDateEndFormat()
         {
-            return DateTimeConversions.GetTimeAndDateFormat(DateEnd);
+            return DateTimeConversions.GetDateTimeFormat(DateEnd);
         }
         
         public string GetBillDateFormat()

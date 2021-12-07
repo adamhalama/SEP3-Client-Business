@@ -256,6 +256,7 @@
         {
             ((CustomAuthenticationStateProvider) authenticationStateProvider).Logout();
             isLogin = false;
+            NavMgr.NavigateTo("/");
         }
         catch (Exception e)
         {

@@ -19,7 +19,13 @@ namespace CarRentalClientServer.Data
             return (long)timeSpan.TotalSeconds * 1000;
         }
 
-        public static string GetTimeAndDateFormat(long timestamp)
+        public static DateTime GetDateTime(long timestamp)
+        {
+            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return dateTime.AddMilliseconds(timestamp);
+        }
+
+        public static string GetDateTimeFormat(long timestamp)
         {
             var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             
