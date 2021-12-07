@@ -17,12 +17,8 @@
     </CardHeader>
     <CardBody>
         <Fields>
-            <Field>
-                <FieldLabel>Customer name</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.CustomerId"></NumericEdit>
-                </FieldBody>
-            </Field>
+            
+
             <!--customer name-->
             <!--employee name-->
             <!--vehicle name-->
@@ -42,25 +38,25 @@
             <Field>
                 <FieldLabel>Date created</FieldLabel>
                 <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.DateCreated"></NumericEdit>
+                    <DateEdit TValue="DateTime?" ReadOnly @bind-Date="@selectedReserve?.DateCreated" />
                 </FieldBody>
             </Field>
             <Field>
                 <FieldLabel>Date start</FieldLabel>
                 <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.DateStart"></NumericEdit>
+                    <DateEdit TValue="DateTime?" ReadOnly @bind-Date="@selectedReserve?.DateStart" />
                 </FieldBody>
             </Field>
             <Field>
                 <FieldLabel>Date end</FieldLabel>
                 <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.DateEnd"></NumericEdit>
+                    <DateEdit TValue="DateTime?" ReadOnly @bind-Date="@selectedReserve?.DateEnd" />
                 </FieldBody>
             </Field>
             <Field>
                 <FieldLabel>Bill date</FieldLabel>
                 <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.BillDate"></NumericEdit>
+                    <DateEdit TValue="DateTime?" ReadOnly @bind-Date="@selectedReserve?.BillDate" />
                 </FieldBody>
             </Field>
 
@@ -77,19 +73,19 @@
 
 <Divider/>
 
-<DataGrid TItem="ReservationTest" Data="@listTest"
+<DataGrid TItem="ReservationFormatted" Data="@reservations"
           @bind-SelectedRow="@selectedReserve" Responsive
           Filterable FilterMethod="DataGridFilterMethod.StartsWith">
     <!--Add filter for employee name and ca rname, remove filter for amount-->
     <DataGridColumns>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="Id" Filterable=false/>
         <!--customer name-->
         <!--employee name-->
         <!--vehicle name-->
-        <DataGridDateColumn TItem="ReservationTest" Field="@nameof(ReservationTest.DateStart)" DisplayFormat="{0:dd.MM.yyyy}" Caption="Date start" Filterable=false/>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.BillDate)" Caption="Bill date" Filterable=false/>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.PaymentAmount)" Caption="Amount"/>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.IsPaid)" Caption="Status" CustomFilter="@StatusCustomerFilter">
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateStart)"  Caption="Date start" Filterable=false/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.BillDate)" Caption="Bill date" Filterable=false/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.PaymentAmount)" Caption="Amount"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.IsPaid)" Caption="Status" CustomFilter="@StatusCustomerFilter">
             <FilterTemplate>
                 <Select TValue="string" SelectedValue="@selectedStatusFilter" SelectedValueChanged="@(value => {selectedStatusFilter = value;context.TriggerFilterChange(selectedStatusFilter); })">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
@@ -100,7 +96,7 @@
 
             <DisplayTemplate>
                 @{
-                    var isPaid = (context as ReservationTest)?.IsPaid;
+                    var isPaid = (context as ReservationFormatted)?.IsPaid;
                     @if (isPaid == true)
                     {
                         @("Paid")
@@ -121,9 +117,14 @@
     //connect to the database
 
     //test parts below, delete after connection finished
-    private ReservationTest selectedReserve;
+    private ReservationFormatted selectedReserve;
 
     string selectedStatusFilter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TransferReservations();
+    }
 
     private bool StatusCustomerFilter(object itemValue, object searchValue)
     {
@@ -134,56 +135,7 @@
         return true;
     }
 
-    private List<ReservationTest> listTest = new()
-    {
-        new()
-        {
-            Id = 1,
-            VehicleId = 2,
-            CustomerId = 2,
-            EmployeeId = 3,
-            SecurityDeposit = 500,
-            DateCreated = 1627870693,
-            DateStart = 1627957093,
-            DateEnd = 1628216293,
-            AllowedKm = 1500,
-            PaymentAmount = 3400,
-            BillDate = 1627870950,
-            IsPaid = true
-        },
-        new()
-        {
-            Id = 2,
-            VehicleId = 2,
-            CustomerId = 2,
-            EmployeeId = 3,
-            SecurityDeposit = 500,
-            DateCreated = 1627870693,
-            DateStart = 1627957093,
-            DateEnd = 1628216293,
-            AllowedKm = 1500,
-            PaymentAmount = 5900,
-            BillDate = 1627871800,
-            IsPaid = false
-        },
-        new()
-        {
-            Id = 3,
-            VehicleId = 2,
-            CustomerId = 2,
-            EmployeeId = 3,
-            SecurityDeposit = 500,
-            DateCreated = 1627870693,
-            DateStart = 1627957093,
-            DateEnd = 1628216293,
-            AllowedKm = 1500,
-            PaymentAmount = 4660,
-            BillDate = 1627870950,
-            IsPaid = true
-        }
-    };
-
-    private List<CustomerTest> customerTestList = new()
+    private List<Customer> customerTestList = new()
     {
         new()
         {
@@ -202,51 +154,161 @@
         }
     };
 
-    private List<CarTest> carTestList = new()
+    private List<Vehicle> vehicleListTest = new()
+        {
+            new()
+            {
+                Id = 1,
+                Name = "CAR1",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 2,
+                Name = "CAR2",
+                Type = "Sedan",
+                PricePerDay = 400,
+                SeatsCount = 2,
+                IsAutomatic = false,
+                PowerKw = 400,
+                FuelType = "92",
+                Deposit = 800,
+            },
+            new()
+            {
+                Id = 3,
+                Name = "CAR3",
+                Type = "SUV",
+                PricePerDay = 200,
+                SeatsCount = 5,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "95",
+                Deposit = 700,
+            },
+            new()
+            {
+                Id = 4,
+                Name = "CAR4",
+                Type = "MPV",
+                PricePerDay = 340,
+                SeatsCount = 8,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "Diesel",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 5,
+                Name = "CAR5",
+                Type = "SUV",
+                PricePerDay = 600,
+                SeatsCount = 4,
+                IsAutomatic = false,
+                PowerKw = 500,
+                FuelType = "Diesel",
+                Deposit = 1000,
+            },
+            new()
+            {
+                Id = 6,
+                Name = "CAR6",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "92",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 7,
+                Name = "CAR7",
+                Type = "Luxury",
+                PricePerDay = 730,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 430,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 8,
+                Name = "CAR8 OLD",
+                Type = "MPV",
+                PricePerDay = 360,
+                SeatsCount = 8,
+                IsAutomatic = false,
+                PowerKw = 250,
+                FuelType = "Diesel",
+                Deposit = 500,
+            }
+        };
+
+
+    private List<Reservation> listTest = new()
     {
         new()
         {
             Id = 1,
-            Name = "CAR1"
+
+            SecurityDeposit = 500,
+            DateCreated = 1627870693,
+            DateStart = 1627957093,
+            DateEnd = 1628216293,
+            AllowedKm = 1500,
+            PaymentAmount = 3400,
+            BillDate = 1627870950,
+            IsPaid = true
         },
         new()
         {
             Id = 2,
-            Name = "CAR2"
+
+
+            SecurityDeposit = 500,
+            DateCreated = 1627870693,
+            DateStart = 1627957093,
+            DateEnd = 1628216293,
+            AllowedKm = 1500,
+            PaymentAmount = 5900,
+            BillDate = 1627871800,
+            IsPaid = false
         },
         new()
         {
             Id = 3,
-            Name = "CAR3"
+
+
+            SecurityDeposit = 500,
+            DateCreated = 1627870693,
+            DateStart = 1627957093,
+            DateEnd = 1628216293,
+            AllowedKm = 1500,
+            PaymentAmount = 4660,
+            BillDate = 1627870950,
+            IsPaid = true
         }
     };
 
-    public class ReservationTest
-    {
-        public long Id { get; set; }
-        public long VehicleId { get; set; }
-        public long CustomerId { get; set; }
-        public long EmployeeId { get; set; }
-        public int SecurityDeposit { get; set; }
-        public long DateCreated { get; set; }
-        public long DateStart { get; set; }
-        public long DateEnd { get; set; }
-        public int AllowedKm { get; set; }
-        public int PaymentAmount { get; set; }
-        public long BillDate { get; set; }
-        public bool IsPaid { get; set; }
-    }
+    private List<ReservationFormatted> reservations = new List<ReservationFormatted>();
 
-    public class CustomerTest
+    private void TransferReservations()
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class CarTest
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        foreach (var r in listTest)
+        {
+            ReservationFormatted rfn = new ReservationFormatted(r);
+            reservations.Add(rfn);
+        }
     }
 
 }

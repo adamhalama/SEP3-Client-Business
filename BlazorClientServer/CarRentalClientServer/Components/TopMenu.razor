@@ -198,8 +198,6 @@
         return base.OnInitializedAsync();
     }
 
-    
-
     private async Task SignUpAsync()
     {
         Console.WriteLine("sign up clicked");
@@ -256,7 +254,6 @@
         {
             ((CustomAuthenticationStateProvider) authenticationStateProvider).Logout();
             isLogin = false;
-            NavMgr.NavigateTo("/");
         }
         catch (Exception e)
         {
