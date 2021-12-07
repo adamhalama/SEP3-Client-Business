@@ -97,6 +97,13 @@ using Blazorise.DataGrid;
 #line hidden
 #nullable disable
 #nullable restore
+#line 13 "C:\Users\janad\OneDrive\Adam\Dokumenty\GitHub\SEP3\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
+using Blazorise.Components;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 1 "C:\Users\janad\OneDrive\Adam\Dokumenty\GitHub\SEP3\SEP3\BlazorClientServer\CarRentalClientServer\App.razor"
 using CarRentalClientServer.Layouts;
 

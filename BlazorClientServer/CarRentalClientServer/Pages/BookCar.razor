@@ -1,0 +1,358 @@
+﻿@page "/Book/{Id:long}"
+@inject NavigationManager NavMgr
+@using CarRentalClientServer.Models
+
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Book car</JumbotronTitle>
+    <JumbotronSubtitle>
+        <h6>Car id is : @Id</h6>
+    </JumbotronSubtitle>
+</Jumbotron>
+<Steps>
+    <Step Name="1" Completed="true">
+        <Marker>
+            <Icon Name="IconName.Check" />
+        </Marker>
+        <Caption>Search</Caption>
+    </Step>
+    <Step Name="2" Completed="true">Book</Step>
+    <Step Name="3">
+        <Marker>
+            <Icon Name="IconName.Flag" />
+        </Marker>
+        <Caption>
+            Finish
+        </Caption>
+    </Step>
+</Steps>
+
+<Row>
+    <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
+        <Card>
+            <CardHeader>
+                <CardTitle>Booking info</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Vehicle Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit ReadOnly Text="@vehicleBook.Name"></TextEdit>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Type</FieldLabel>
+                        <TextEdit ReadOnly Text="@vehicleBook.Type"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Price per day</FieldLabel>
+                        <NumericEdit ReadOnly Value="@vehicleBook.PricePerDay"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Seat</FieldLabel>
+                        <NumericEdit ReadOnly Value="@vehicleBook.SeatsCount"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Automatic ?</FieldLabel>
+                        <TextEdit ReadOnly Text="@vehicleBook.IsAutomatic.ToString()"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Power (kw)</FieldLabel>
+                        <NumericEdit ReadOnly Value="@vehicleBook.PowerKw"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Fuel type</FieldLabel>
+                        <TextEdit ReadOnly Text="@vehicleBook.FuelType"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Deposit</FieldLabel>
+                        <NumericEdit ReadOnly Value="@vehicleBook.Deposit"></NumericEdit>
+                    </Field>
+                </Fields>
+
+                <Fields>
+                    <Field>
+                        <FieldLabel>Customer name</FieldLabel>
+                        <TextEdit ReadOnly Text="@customerTest.Name"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Email</FieldLabel>
+                        <TextEdit ReadOnly Text="@customerTest.Email"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Address</FieldLabel>
+                        <TextEdit ReadOnly Text="@customerTest.Address"></TextEdit>
+                    </Field>
+
+                </Fields>
+            </CardBody>
+        </Card>
+    </Column>
+
+    <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
+        <Card>
+            <CardHeader>
+                <CardTitle>Price</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Inline>
+                    <Heading TextColor="TextColor.Success">Total: </Heading>
+                    <!--add total amount number-->
+                </Inline>
+            </CardBody>
+        </Card>
+    </Column>
+</Row>
+
+<Row>
+    <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
+        <Card>
+            <CardHeader>
+                <CardTitle>Select time</CardTitle>
+            </CardHeader>
+
+            <CardBody>
+                <Row>
+                    <Column>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Take car time</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Fields>
+                                    <Field>
+                                        <FieldLabel>Start</FieldLabel>
+                                        <SelectList TItem="MySelectModel"
+                                                    TValue="int"
+                                                    Data="@hourData"
+                                                    TextField="@((item)=>item.MyTextField)"
+                                                    ValueField="@((item)=>item.MyValueField)"
+                                                    SelectedValue="@hourSelect"
+                                                    SelectedValueChanged="@MyListValueChangedHandler"
+                                                    DefaultItemText="Hour start" />
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel>End</FieldLabel>
+                                        <SelectList TItem="MySelectModel"
+                                                    TValue="int"
+                                                    Data="@minuteData"
+                                                    TextField="@((item)=>item.MyTextField)"
+                                                    ValueField="@((item)=>item.MyValueField)"
+                                                    SelectedValue="@minuteSelect"
+                                                    SelectedValueChanged="@MyListValueChangedHandler"
+                                                    DefaultItemText="Hour start" />
+                                    </Field>
+                                </Fields>
+                            </CardBody>
+                        </Card>
+                    </Column>
+
+                    <Column>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Return time</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Fields>
+                                    <Field>
+                                        <FieldLabel>Start</FieldLabel>
+                                        <SelectList TItem="MySelectModel"
+                                                    TValue="int"
+                                                    Data="@hourData"
+                                                    TextField="@((item)=>item.MyTextField)"
+                                                    ValueField="@((item)=>item.MyValueField)"
+                                                    SelectedValue="@hourSelect"
+                                                    SelectedValueChanged="@MyListValueChangedHandler"
+                                                    DefaultItemText="Hour start" />
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel>End</FieldLabel>
+                                        <SelectList TItem="MySelectModel"
+                                                    TValue="int"
+                                                    Data="@minuteData"
+                                                    TextField="@((item)=>item.MyTextField)"
+                                                    ValueField="@((item)=>item.MyValueField)"
+                                                    SelectedValue="@minuteSelect"
+                                                    SelectedValueChanged="@MyListValueChangedHandler"
+                                                    DefaultItemText="Hour start" />
+                                    </Field>
+                                </Fields>
+                            </CardBody>
+                        </Card>
+                    </Column>
+                </Row>
+            </CardBody>
+        </Card>
+    </Column>
+</Row>
+
+<Div Flex="Flex.JustifyContent.End.OnDesktop">
+    <Button Color="Color.Primary" Clicked="FinishClicked">Finish</Button>
+    <Button Color="Color.Secondary" Clicked="CancelClicked">Cancel</Button>
+</Div>
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+    public class MySelectModel
+    {
+        public int MyValueField { get; set; }
+        public string MyTextField { get; set; }
+    }
+
+    private Vehicle vehicleBook;
+
+    static string[] Hours = { "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
+    static string[] Minutes = { "00", "15", "30", "45" };
+    IEnumerable<MySelectModel> hourData = Enumerable.Range(1, Hours.Length).Select(x => new MySelectModel { MyTextField = Hours[x - 1], MyValueField = x });
+    IEnumerable<MySelectModel> minuteData = Enumerable.Range(1, Minutes.Length).Select(x => new MySelectModel { MyTextField = Minutes[x - 1], MyValueField = x });
+
+    int hourSelect { get; set; } = 3;
+    int minuteSelect { get; set; } = 3;
+
+    void MyListValueChangedHandler(int newValue)
+    {
+        hourSelect = newValue;
+        minuteSelect = newValue;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        foreach (var v in vehicleTestList)
+        {
+            if (Id == v.Id)
+            {
+                vehicleBook = v;
+                break;
+            }
+        }
+    }
+
+    private void FinishClicked()
+    {
+        //save all the changes
+        NavMgr.NavigateTo("/BookFinish");
+    }
+
+    private void CancelClicked()
+    {
+        NavMgr.NavigateTo("/");
+    }
+
+    private long TotalAmount()
+    {
+        //add days calculation later
+        return vehicleBook.PricePerDay * 2 + vehicleBook.Deposit;
+    }
+
+    public List<Vehicle> vehicleTestList = new()
+        {
+            new()
+            {
+                Id = 1,
+                Name = "CAR1",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 2,
+                Name = "CAR2",
+                Type = "Sedan",
+                PricePerDay = 400,
+                SeatsCount = 2,
+                IsAutomatic = false,
+                PowerKw = 400,
+                FuelType = "92",
+                Deposit = 800,
+            },
+            new()
+            {
+                Id = 3,
+                Name = "CAR3",
+                Type = "SUV",
+                PricePerDay = 200,
+                SeatsCount = 5,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "95",
+                Deposit = 700,
+            },
+            new()
+            {
+                Id = 4,
+                Name = "CAR4",
+                Type = "MPV",
+                PricePerDay = 340,
+                SeatsCount = 8,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "Diesel",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 5,
+                Name = "CAR5",
+                Type = "SUV",
+                PricePerDay = 600,
+                SeatsCount = 4,
+                IsAutomatic = false,
+                PowerKw = 500,
+                FuelType = "Diesel",
+                Deposit = 1000,
+            },
+            new()
+            {
+                Id = 6,
+                Name = "CAR6",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "92",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 7,
+                Name = "CAR7",
+                Type = "Luxury",
+                PricePerDay = 730,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 430,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 8,
+                Name = "CAR8 OLD",
+                Type = "MPV",
+                PricePerDay = 360,
+                SeatsCount = 8,
+                IsAutomatic = false,
+                PowerKw = 250,
+                FuelType = "Diesel",
+                Deposit = 500,
+            }
+        };
+
+    private Customer customerTest = new()
+        {
+            Id = 1,
+            Name = "TEST",
+            Email = "TEST@TESTEMAIL.COM",
+            Password = "TEST",
+            Address = "TEST ADDRESS",
+            LicenceNumber = "TEST TEST 0001",
+        };
+}

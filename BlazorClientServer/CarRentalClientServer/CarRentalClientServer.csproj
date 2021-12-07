@@ -23,56 +23,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="wwwroot\**" />
-      <EmbeddedResource Remove="obj\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="wwwroot\**" />
-      <None Remove="obj\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="wwwroot\**" />
-      <Content Remove="obj\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\FONT-LICENSE" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\ICON-LICENSE" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\README.md" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\AdamGitIcon.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\CarRent.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\FelixIcon.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\FullLogo.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\JerryIcon.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\Logo.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\Luxury.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\MPV.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\Payment.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\Sedan.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\SUV.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\TeamLogo.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\Travel.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\UserIconBig.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\Img\Vehicle\icons.jpg" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Pages\ForBoth" />
-      <Folder Include="Pages\ForCustomers" />
-      <Folder Include="Pages\ForEmployees" />
-      <Folder Include="Pages\MenuBarComponents" />
+        <Folder Include="Pages\ForBoth" />
+        <Folder Include="Pages\ForCustomers" />
+        <Folder Include="Pages\ForEmployees" />
+        <Folder Include="Pages\MenuBarComponents" />
     </ItemGroup>
 
 </Project>

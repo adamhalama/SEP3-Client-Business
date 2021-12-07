@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net5.0": {
-      "Blazorise/0.9.5.1": {
+      "Blazorise/0.9.5.2": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Components": "5.0.12",
@@ -41,6 +41,21 @@
           "buildMultiTargeting/Blazorise.Bootstrap.props": {}
         }
       },
+      "Blazorise.Components/0.9.5.2": {
+        "type": "package",
+        "dependencies": {
+          "Blazorise": "0.9.5.2",
+          "Blazorise.Snackbar": "0.9.5.2",
+          "Microsoft.AspNetCore.Components": "5.0.12",
+          "Microsoft.AspNetCore.Components.Web": "5.0.12"
+        },
+        "compile": {
+          "lib/net5.0/Blazorise.Components.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Blazorise.Components.dll": {}
+        }
+      },
       "Blazorise.DataGrid/0.9.5.1": {
         "type": "package",
         "dependencies": {
@@ -73,6 +88,26 @@
         },
         "runtime": {
           "lib/net5.0/Blazorise.Icons.FontAwesome.dll": {}
+        }
+      },
+      "Blazorise.Snackbar/0.9.5.2": {
+        "type": "package",
+        "dependencies": {
+          "Blazorise": "0.9.5.2",
+          "Microsoft.AspNetCore.Components": "5.0.12",
+          "Microsoft.AspNetCore.Components.Web": "5.0.12"
+        },
+        "compile": {
+          "lib/net5.0/Blazorise.Snackbar.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Blazorise.Snackbar.dll": {}
+        },
+        "build": {
+          "buildTransitive/Blazorise.Snackbar.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Blazorise.Snackbar.props": {}
         }
       },
       "GraphQL/4.6.1": {
@@ -465,16 +500,16 @@
     }
   },
   "libraries": {
-    "Blazorise/0.9.5.1": {
-      "sha512": "/0B7n+LdlgduyHK/mvbPNptb0IU4FnDIL++u8GdIvcAF2UbT8PP5GfiWMhSmu0srXUbmXFfU75b2msHehqEEZg==",
+    "Blazorise/0.9.5.2": {
+      "sha512": "dI2ZRxOWWFwK9BepYcBWR8gXrF8UkTNJj1RE2PB1S/vvlQ7yDP9lgI0g3/t5IxF/lQDFxSe/RZnfzpw3FwLvgA==",
       "type": "package",
-      "path": "blazorise/0.9.5.1",
+      "path": "blazorise/0.9.5.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Blazorise.png",
         "LICENSE.md",
-        "blazorise.0.9.5.1.nupkg.sha512",
+        "blazorise.0.9.5.2.nupkg.sha512",
         "blazorise.nuspec",
         "build/Blazorise.props",
         "build/Microsoft.AspNetCore.StaticWebAssets.props",
@@ -535,6 +570,23 @@
         "staticwebassets/tooltip.js"
       ]
     },
+    "Blazorise.Components/0.9.5.2": {
+      "sha512": "L1/uMzcX25xi+WH0Jgs7s21gpTtTjeGhtqZSUtIaEYqBgxh6LaWUnQ54DWaq1FupHuD49EqfJ2ydctn2L4Qj8A==",
+      "type": "package",
+      "path": "blazorise.components/0.9.5.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Blazorise.png",
+        "LICENSE.md",
+        "blazorise.components.0.9.5.2.nupkg.sha512",
+        "blazorise.components.nuspec",
+        "lib/net5.0/Blazorise.Components.dll",
+        "lib/net5.0/Blazorise.Components.xml",
+        "lib/net6.0/Blazorise.Components.dll",
+        "lib/net6.0/Blazorise.Components.xml"
+      ]
+    },
     "Blazorise.DataGrid/0.9.5.1": {
       "sha512": "U7TCUNQkH1dzKeJxmguI/5VwYX6Hs1UgInnVUzo2hasU07YNHZvYKCF0HTtmp0SL17J2Du1L8BihIB4pd0q+qQ==",
       "type": "package",
@@ -570,6 +622,28 @@
         "blazorise.icons.fontawesome.nuspec",
         "lib/net5.0/Blazorise.Icons.FontAwesome.dll",
         "lib/net6.0/Blazorise.Icons.FontAwesome.dll"
+      ]
+    },
+    "Blazorise.Snackbar/0.9.5.2": {
+      "sha512": "QAW3HJ2qwCKgym3jFErTCeTW+8aPJear0jjrPgHA5Rbic4clUgwJKStQ0iuKNx3GTKGSwYkU4x1nToVVEmyXWw==",
+      "type": "package",
+      "path": "blazorise.snackbar/0.9.5.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Blazorise.png",
+        "LICENSE.md",
+        "blazorise.snackbar.0.9.5.2.nupkg.sha512",
+        "blazorise.snackbar.nuspec",
+        "build/Blazorise.Snackbar.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "buildMultiTargeting/Blazorise.Snackbar.props",
+        "buildTransitive/Blazorise.Snackbar.props",
+        "lib/net5.0/Blazorise.Snackbar.dll",
+        "lib/net5.0/Blazorise.Snackbar.xml",
+        "lib/net6.0/Blazorise.Snackbar.dll",
+        "lib/net6.0/Blazorise.Snackbar.xml",
+        "staticwebassets/blazorise.snackbar.css"
       ]
     },
     "GraphQL/4.6.1": {
@@ -1352,6 +1426,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Blazorise.Bootstrap >= 0.9.5.1",
+      "Blazorise.Components >= 0.9.5.2",
       "Blazorise.DataGrid >= 0.9.5.1",
       "Blazorise.Icons.FontAwesome >= 0.9.5.1",
       "GraphQL.Client >= 4.0.1",
@@ -1403,6 +1478,10 @@
           "Blazorise.Bootstrap": {
             "target": "Package",
             "version": "[0.9.5.1, )"
+          },
+          "Blazorise.Components": {
+            "target": "Package",
+            "version": "[0.9.5.2, )"
           },
           "Blazorise.DataGrid": {
             "target": "Package",

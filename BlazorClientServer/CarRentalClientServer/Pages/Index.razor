@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using CarRentalClientServer.Models
+@inject NavigationManager NavMgr
 
 <Div Padding="Padding.Is4"></Div>
 <Heading Size="HeadingSize.Is2" Flex="Flex.JustifyContent.Center">
@@ -54,8 +56,108 @@
     </Card>
 </Field>
 
-<Div Padding="Padding.Is5"></Div>
-<Div Padding="Padding.Is4"></Div>
+<Div Padding="Padding.Is4">
+    @if (isSearched)
+    {
+        <CarRentalClientServer.Components.CarInfo />
+        <Steps>
+            <Step Name="1" Completed="true">Search</Step>
+            <Step Name="2">Book</Step>
+            <Step Name="3">
+                <Marker>
+                    <Icon Name="IconName.Flag" />
+                </Marker>
+                <Caption>
+                    Finish
+                </Caption>
+            </Step>
+        </Steps>
+
+        <h3>Matched cars</h3>
+        <Card>
+            <CardHeader>
+                <CardTitle>Deatil</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit ReadOnly Text="@selectedVehicle?.Name"></TextEdit>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Type</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle?.Type"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Price per day</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.PricePerDay"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Seat</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.SeatsCount"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Automatic ?</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle?.IsAutomatic.ToString()"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Power (kw)</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.PowerKw"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Fuel type</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle?.FuelType"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Deposit</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.Deposit"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <Button Color="Color.Primary" Clicked="@(() => BookCarClicked(selectedVehicle.Id))">Book this car</Button>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+
+        <Divider />
+
+        <DataGrid TItem="Vehicle" Data="vehicleListTest" SelectionMode="DataGridSelectionMode.Single"
+              @bind-SelectedRow="@selectedVehicle" Responsive Filterable FilterMethod="DataGridFilterMethod.Contains">
+            <DataGridColumns>
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" />
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" CustomFilter="@TypeFilter">
+                    <FilterTemplate>
+                        <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange( typeFilter);})">
+                            <SelectItem TValue="string" Value="@("*")">All</SelectItem>
+                            <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
+                            <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
+                            <SelectItem TValue="string" Value="@("SUV")">SUV</SelectItem>
+                            <SelectItem TValue="string" Value="@("MPV")">MPV</SelectItem>
+                        </Select>
+                    </FilterTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable=false />
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
+                    <FilterTemplate>
+                        <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange( seatFilter );})">
+                            <SelectItem TValue="string" Value="@("*")">All</SelectItem>
+                            <SelectItem TValue="int" Value="@(2)">2</SelectItem>
+                            <SelectItem TValue="int" Value="@(4)">4</SelectItem>
+                            <SelectItem TValue="int" Value="@(5)">5</SelectItem>
+                            <SelectItem TValue="int" Value="@(6)">6</SelectItem>
+                            <SelectItem TValue="int" Value="@(7)">7</SelectItem>
+                            <SelectItem TValue="int" Value="@(8)">8</SelectItem>
+                        </Select>
+                    </FilterTemplate>
+                </DataGridColumn>
+            </DataGridColumns>
+        </DataGrid>
+    
+    }
+</Div>
+
 
 <CardDeck>
     <Card Margin="Margin.Is4.FromBottom">
@@ -87,14 +189,145 @@
     </Card>
 </CardDeck>
 
+
+
 @code {
     DatePicker<DateTime?> startDate;
     DatePicker<DateTime?> endDate;
+    private bool isSearched = false;
     string customCardStyle = $"width: 1100px";
+    private Vehicle selectedVehicle;
 
-    Task SearchButtonClicked()
+    private string typeFilter;
+    private string seatFilter;
+
+    private bool TypeFilter(object itemValue, object searchValue)
+    {
+        if (searchValue is string statusFilter)
+        {
+            return statusFilter == "*" || statusFilter == itemValue?.ToString();
+        }
+        return true;
+    }
+
+    private bool SeatFilter(object seatValue, object seatSearchValue)
+    {
+        if (seatSearchValue is string statusFilter)
+        {
+            return statusFilter == "*" || statusFilter == seatValue?.ToString();
+        }
+        return true;
+    }
+
+
+    private List<Vehicle> vehicleListTest = new()
+        {
+            new()
+            {
+                Id = 1,
+                Name = "CAR1",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 2,
+                Name = "CAR2",
+                Type = "Sedan",
+                PricePerDay = 400,
+                SeatsCount = 2,
+                IsAutomatic = false,
+                PowerKw = 400,
+                FuelType = "92",
+                Deposit = 800,
+            },
+            new()
+            {
+                Id = 3,
+                Name = "CAR3",
+                Type = "SUV",
+                PricePerDay = 200,
+                SeatsCount = 5,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "95",
+                Deposit = 700,
+            },
+            new()
+            {
+                Id = 4,
+                Name = "CAR4",
+                Type = "MPV",
+                PricePerDay = 340,
+                SeatsCount = 8,
+                IsAutomatic = true,
+                PowerKw = 300,
+                FuelType = "Diesel",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 5,
+                Name = "CAR5",
+                Type = "SUV",
+                PricePerDay = 600,
+                SeatsCount = 4,
+                IsAutomatic = false,
+                PowerKw = 500,
+                FuelType = "Diesel",
+                Deposit = 1000,
+            },
+            new()
+            {
+                Id = 6,
+                Name = "CAR6",
+                Type = "Sedan",
+                PricePerDay = 100,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 250,
+                FuelType = "92",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 7,
+                Name = "CAR7",
+                Type = "Luxury",
+                PricePerDay = 730,
+                SeatsCount = 4,
+                IsAutomatic = true,
+                PowerKw = 430,
+                FuelType = "95",
+                Deposit = 500,
+            },
+            new()
+            {
+                Id = 8,
+                Name = "CAR8 OLD",
+                Type = "MPV",
+                PricePerDay = 360,
+                SeatsCount = 8,
+                IsAutomatic = false,
+                PowerKw = 250,
+                FuelType = "Diesel",
+                Deposit = 500,
+            }
+        };
+
+    private void SearchButtonClicked()
     {
         //search a car
-        return null;
+        this.isSearched = true;
+    }
+
+    private void BookCarClicked(long id)
+    {
+        NavMgr.NavigateTo($"/Book/{id}");
     }
 }

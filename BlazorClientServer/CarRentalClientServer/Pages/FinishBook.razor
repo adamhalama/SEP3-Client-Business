@@ -1,0 +1,50 @@
+﻿@page "/BookFinish"
+@inject NavigationManager NavMgr
+
+<Div Padding="Padding.Is4"></Div>
+<Steps>
+    <Items>
+        <Step Name="1" Completed>
+            <Marker>
+                <Icon Name="IconName.Check" />
+            </Marker>
+            <Caption>Search</Caption>
+        </Step>
+        <Step Name="2" Completed>
+            <Marker>
+                <Icon Name="IconName.Check" />
+            </Marker>
+            <Caption>Book</Caption>
+        </Step>
+        <Step Name="3" Completed>
+            <Marker>
+                <Icon Name="IconName.Flag" />
+            </Marker>
+            <Caption>
+                Finish
+            </Caption>
+        </Step>
+    </Items>
+</Steps>
+
+<Div Padding="Padding.Is4"></Div>
+
+<Column ColumnSize="ColumnSize.IsFull.OnMobile.IsFull.OnTablet">
+    <Div Flex="Flex.JustifyContent.Center">
+        <Card>
+            <CardBody>
+                <Icon Name="IconName.CheckCircle" IconSize="IconSize.x8" Flex="Flex.JustifyContent.Center" />
+                <DisplayHeading Size="DisplayHeadingSize.Is3" Flex="Flex.JustifyContent.Center">Finish !</DisplayHeading>
+                <Button Color="Color.Primary" Clicked="BackClicked" Flex="Flex.JustifyContent.Center">Back to home page</Button>
+            </CardBody>
+        </Card>
+    </Div>
+</Column>
+
+
+@code {
+    private void BackClicked()
+    {
+        NavMgr.NavigateTo("/");
+    }
+}
