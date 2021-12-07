@@ -11,7 +11,7 @@ using Microsoft.JSInterop;
 
 namespace CarRentalClientServer.Authentification
 {
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
+    public class CustomAuthenticationStateProvider : AuthenticationStateProvider/*, IAuthentication*/
     {
         private readonly IJSRuntime jsRuntime;
         private readonly ILoginService loginService;
@@ -20,10 +20,12 @@ namespace CarRentalClientServer.Authentification
 
         private UserLogin cachedUser;
 
-        public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, ILoginService loginService)
+        public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, ILoginService loginService, IEmployeeService employeeService, ICustomerService customerService)
         {
             this.jsRuntime = jsRuntime;
             this.loginService = loginService;
+            this.employeeService = employeeService;
+            this.customerService = customerService;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -59,7 +61,7 @@ namespace CarRentalClientServer.Authentification
                 UserLogin user = await loginService.ValidateUser(email, password);
                 identity = await SetupClaimsForUser(user);
                 string serialisedData = JsonSerializer.Serialize(user);
-                jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
+                await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
                 cachedUser = user;
             }
             catch (Exception e)

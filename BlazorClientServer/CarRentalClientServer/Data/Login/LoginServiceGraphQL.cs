@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using CarRentalClientServer.Data.Responses;
 using CarRentalClientServer.Models;
@@ -19,9 +20,9 @@ namespace CarRentalClientServer.Data
             {
                 Query = @"
                 mutation
-                LoginUser($userLogin : LoginUserInput!)
+                ValidateUser($credentials : UserLoginInput!)
                 {
-                    loginUser(userLogin : $userLogin)
+                    validateUser(credentials : $credentials)
                     {
                         isSuccessful
                         userId
@@ -30,18 +31,23 @@ namespace CarRentalClientServer.Data
                         password
                     }
                 }",
-                OperationName = "LoginUser",
-                Variables = new { userLogin = new UserLogin()
-                    {Email = email, Password = password} }
+                OperationName = "ValidateUser",
+                Variables = new { credentials = new UserLogin()
+                {
+                    Email = email, Password = password,
+                    IsSuccessful = false,
+                    UserId = 0,
+                    IsEmployee = false
+                } }
             };
             try
             {
-                var graphQLResponse = await graphQlClient.SendQueryAsync<LoginResponse>(request);
+                var graphQLResponse = await graphQlClient.SendQueryAsync<ValidateUserResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
                     ErrorHandling.HandleGraphQLReturnErrors(errors);
 
-                return graphQLResponse.Data.LoginUser;
+                return graphQLResponse.Data.ValidateUser;
             }
             catch (Exception e)
             {

@@ -21,26 +21,26 @@ namespace CarRentalClientServer
                 try
                 {
                     // Console.WriteLine(vehicleService.GetVehicleAsync(1).Result.ToString());
-                    /*var vehicles = vehicleService.GetVehiclesAsync().Result;
-                    foreach (var vehicle in vehicles)
-                    {
-                        Console.WriteLine(vehicle.ToString());
-                    }#1#
-                    /*vehicleService.CreateVehicleAsync(
-                        "BMW M2 Competition 3.0", "Coupe", 300, 
-                        4, false, 300, "Petrol", 3000);
-                    vehicleService.CreateVehicleAsync(
-                        "BMW M2 Competition 3.0", "Coupe", 300, 
-                        4, false, 300, "Petrol", 3000);
-                    vehicleService.CreateVehicleAsync(
-                        "BMW M2 Competition 3.0", "Coupe", 300, 
-                        4, false, 300, "Petrol", 3000);
-                    vehicleService.CreateVehicleAsync(
-                        "BMW M2 Competition 3.0", "Coupe", 300, 
-                        4, false, 300, "Petrol", 3000);#1#
+                    // var vehicles = vehicleService.GetVehiclesAsync().Result;
+                    // foreach (var vehicle in vehicles)
+                    // {
+                    //     Console.WriteLine(vehicle.ToString());
+                    // }
 
-                    /*vehicleService.UpdateVehicleAsync(new Vehicle(10, "Updated jebo", "Coupe", 300,
-                        4, false, 300, "Petrol", 3000));#1#
+                    vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                    vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                    vehicleService.CreateVehicleAsync(
+                        "BMW M2 Competition 3.0", "Coupe", 300, 
+                        4, false, 300, "Petrol", 3000);
+                    vehicleService.CreateVehicleAsync(
+                        "Updated jebo", "Coupe", 300,
+                        4, false, 300, "Petrol", 3000);
+
+                    // vehicleService.UpdateVehicleAsync(new Vehicle(10, "Updated jebo", "Coupe", 300, 4, false, 300, "Petrol", 3000));
 
                     // Console.WriteLine(vehicleService.DeleteVehicleAsync(4).Result);
                     // Console.WriteLine(vehicleService.DeleteVehicleAsync(1).Result);
@@ -52,6 +52,8 @@ namespace CarRentalClientServer
                     Console.WriteLine(e);
                 }
             } while (Console.ReadLine() != "x");*/
+            
+            
             
             CreateHostBuilder(args).Build().Run();
         }

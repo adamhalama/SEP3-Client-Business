@@ -4,8 +4,7 @@
 
 @inject NavigationManager NavMgr
 @inject ICustomerService customerService;
-@inject ILoginService loginService;
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider authenticationStateProvider
 
 <Bar Breakpoint="Breakpoint.Desktop"
      Background="Background.Light"
@@ -46,7 +45,7 @@
             {
                 <BarItem>
                     <BarDropdown>
-                        <BarDropdownToggle>@userForLogin.Email</BarDropdownToggle>
+                        <BarDropdownToggle>@loginCredentials.Email</BarDropdownToggle>
                         <BarDropdownMenu>
                             <BarDropdownItem Clicked="@AccountClicked">Account page</BarDropdownItem>
                             <BarDropdownItem Clicked="@LogOut">Log out</BarDropdownItem>
@@ -60,7 +59,7 @@
 </Bar>
 
 <Modal @ref="modalLogin">
-    <Validations Mode="ValidationMode.Auto" Model="@userForLogin">
+    <Validations Mode="ValidationMode.Auto" Model="@loginCredentials">
 
         <ModalContent Size="ModalSize.Small" Centered>
             <ModalHeader>
@@ -71,21 +70,21 @@
                 <Validation>
                     <Field>
                         <FieldLabel>Email</FieldLabel>
-                        <TextEdit Placeholder="Enter your email" @bind-Text="@userForLogin.Email"/>
+                        <TextEdit Placeholder="Enter your email" @bind-Text="@loginCredentials.Email"/>
                         <ValidationError/>
                     </Field>
                 </Validation>
                 <Validation>
                     <Field>
                         <FieldLabel>Password</FieldLabel>
-                        <TextEdit Role="TextRole.Password" Placeholder="Enter password" @bind-Text="@userForLogin.Password"/>
+                        <TextEdit Role="TextRole.Password" Placeholder="Enter password" @bind-Text="@loginCredentials.Password"/>
                         <ValidationError/>
                     </Field>
                 </Validation>
             </ModalBody>
             <ModalFooter>
                 <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabelLogin</Label>
-                <Button Color="Color.Secondary" Clicked="@HideModalL">Cancel</Button>
+                <Button Color="Color.Secondary" Clicked="@HideModalLogin">Cancel</Button>
                 <Button Color="Color.Primary" Clicked="@Login">Login</Button>
             </ModalFooter>
         </ModalContent>
@@ -187,7 +186,7 @@
     private Modal modalLogin;
     private Modal modalSignUp;
 
-    private Customer userForLogin = new Customer();
+    private Customer loginCredentials = new Customer();
     private Customer newUser = new Customer();
 
     private string rePassword;
@@ -199,25 +198,7 @@
         return base.OnInitializedAsync();
     }
 
-    private Task ShowModalLogin()
-    {
-        return modalLogin.Show();
-    }
-
-    private Task HideModalL()
-    {
-        return modalLogin.Hide();
-    }
-
-    private Task ShowModalSignUp()
-    {
-        return modalSignUp.Show();
-    }
-
-    private Task HideModalSignUp()
-    {
-        return modalSignUp.Hide();
-    }
+    
 
     private async Task SignUpAsync()
     {
@@ -251,15 +232,19 @@
         bottomLabelLogin = "";
         try
         {
-            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(this.userForLogin.Email, this.userForLogin.Password);
-            //if something goes wrong this should throw and exc, so the following code wont get executed if the user wasnt validated succesfully
+            await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin(loginCredentials.Email, loginCredentials.Password);
+            //if something goes wrong this should throw and exc, so the following code wont get executed if the user wasnt validated successfully
             isLogin = true;
             await modalLogin.Hide(); //add validate login
-            userForLogin.Password = "";
+            loginCredentials.Password = "";
         }
         catch (Exception e)
         {
-            bottomLabelLogin = "Login not successful";
+            if (e.Message.Equals("NotFound"))
+            {
+                bottomLabelLogin = "Login not successful: This combination of email and password is incorrect";
+            }
+            bottomLabelLogin = $"Login not successful: {e.Message}";
             Console.WriteLine(e);
         }
         
@@ -269,7 +254,7 @@
     {
         try
         {
-            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            ((CustomAuthenticationStateProvider) authenticationStateProvider).Logout();
             isLogin = false;
         }
         catch (Exception e)
@@ -278,6 +263,28 @@
         }
     }
 
+    private Task ShowModalLogin()
+    {
+        bottomLabelLogin = "";
+        return modalLogin.Show();
+    }
+
+    private Task HideModalLogin()
+    {
+        return modalLogin.Hide();
+    }
+
+    private Task ShowModalSignUp()
+    {
+        bottomLabelSignUp = "";
+        return modalSignUp.Show();
+    }
+
+    private Task HideModalSignUp()
+    {
+        return modalSignUp.Hide();
+    }
+    
     private void AccountClicked()
     {
         NavMgr.NavigateTo("/ProfileC");

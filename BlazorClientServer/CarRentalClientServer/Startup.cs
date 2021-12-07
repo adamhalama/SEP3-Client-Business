@@ -13,6 +13,8 @@ using CarRentalClientServer.Data;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using CarRentalClientServer.Authentification;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace CarRentalClientServer
 {
@@ -31,19 +33,22 @@ namespace CarRentalClientServer
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
- 
+
             services.AddSingleton<IVehicleService, VehicleServiceGraphQL>();
             services.AddSingleton<ICustomerService, CustomerServiceGraphQL>();
             services.AddSingleton<IEmployeeService, EmployeeServiceGraphQL>();
             services.AddSingleton<IReservationService, ReservationServiceGraphQL>();
             services.AddSingleton<ILoginService, LoginServiceGraphQL>();
+            
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
             services
-      .AddBlazorise(options =>
-      {
-          options.ChangeTextOnKeyPress = true; // optional
-      })
-      .AddBootstrapProviders()
-      .AddFontAwesomeIcons();
+                .AddBlazorise(options =>
+                {
+                    options.ChangeTextOnKeyPress = true; // optional
+                })
+                .AddBootstrapProviders()
+                .AddFontAwesomeIcons();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

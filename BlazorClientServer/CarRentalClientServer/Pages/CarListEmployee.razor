@@ -1,5 +1,7 @@
 ﻿@page "/AllCars"
 @using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+@inject IVehicleService vehicleService;
 
 <Jumbotron>
     <JumbotronTitle Size="JumbotronTitleSize.Is3">Whole car list</JumbotronTitle>
@@ -78,7 +80,7 @@
 
 <Divider />
 
-<DataGrid TItem="Vehicle" Data="vehicleListTest" SelectionMode="DataGridSelectionMode.Single"
+<DataGrid TItem="Vehicle" Data="vehicles" SelectionMode="DataGridSelectionMode.Single"
           @bind-SelectedRow="@selectedVehicle" Responsive Filterable FilterMethod="DataGridFilterMethod.Contains">
     <DataGridColumns>
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" />
@@ -190,6 +192,14 @@
     private Vehicle selectedVehicle;
     private string typeFilter;
     private string seatFilter;
+
+    private IList<Vehicle> vehicles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Task<IList<Vehicle>> getVehiclesTask = vehicleService.GetVehiclesAsync();
+        vehicles = await getVehiclesTask;
+    }
 
     private bool TypeFilter(object itemValue, object searchValue)
     {

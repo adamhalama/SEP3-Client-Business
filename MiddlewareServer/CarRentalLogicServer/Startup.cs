@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.APIConsumer.ClientFactory;
+using CarRentalLogicServer.APIConsumer.Login;
 using CarRentalLogicServer.GraphQLResolvers.Mutation;
 using CarRentalLogicServer.GraphQLResolvers.Query;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ namespace CarRentalLogicServer
             services.AddScoped<IEmployeeService, EmployeeWebService>();
             services.AddScoped<IReservationService, ReservationWebService>();
             services.AddScoped<IVehicleService, VehicleWebService>();
+            services.AddScoped<ILoginService, LoginWebService>();
 
             //Httpclient factory - needed to make sure all the WebService classes have the same client
             services

@@ -2,8 +2,8 @@
 
 namespace CarRentalClientServer.Data
 {
-    public class LoginResponse
+    public class ValidateUserResponse
     {
-        public UserLogin LoginUser { get; set; }
+        public UserLogin ValidateUser { get; set; }
     }
 }
