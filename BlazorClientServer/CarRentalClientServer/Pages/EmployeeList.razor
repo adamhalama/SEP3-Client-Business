@@ -1,0 +1,74 @@
+﻿@page "/AllEmployees"
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Models
+@inject IEmployeeService employeeService;
+
+<Div Padding="Padding.Is4"></Div>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Employee list</JumbotronTitle>
+    <JumbotronSubtitle>
+        All the employees.
+    </JumbotronSubtitle>
+</Jumbotron>
+
+<DataGrid TItem="Employee" Data="@employees" @bind-SelectedRow="@employeeSelected" Editable Responsive>
+    <DataGridCommandColumn TItem="Employee">
+    </DataGridCommandColumn>
+
+    <DataGridColumn TItem="Employee" Field="@nameof(Employee.Id)" Caption="Id" Sortable="false" Editable="false" />
+    <DataGridColumn TItem="Employee" Field="@nameof(Employee.Name)" Caption="Name" Editable />
+    <DataGridColumn TItem="Employee" Field="@nameof(Employee.Email)" Caption="Email" Editable />
+    <DataGridColumn TItem="Employee" Field="@nameof(Employee.ClearanceLevel)" Caption="Clearance level" Editable />
+    <DataGridColumn TItem="Employee" Field="@nameof(Employee.Password)" Caption="Password" Displayable="false" Editable />
+</DataGrid>
+
+
+@code {
+    private List<Employee> employees = null;
+    private Employee employeeSelected;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = new()
+            {
+                new()
+                {
+                    Id = 1,
+                    Name = "TEST1",
+                    Email = "EMPLOYEE1@TEST.COM",
+                    Password = "test1",
+                    ClearanceLevel = 1
+                },
+                new()
+                {
+                    Id = 2,
+                    Name = "TEST2",
+                    Email = "EMPLOYEE2@TEST.COM",
+                    Password = "test1",
+                    ClearanceLevel = 3
+                },
+                new()
+                {
+                    Id = 3,
+                    Name = "TEST3",
+                    Email = "EMPLOYEE3@TEST.COM",
+                    Password = "test1",
+                    ClearanceLevel = 3
+                },
+                new()
+                {
+                    Id = 4,
+                    Name = "TEST4",
+                    Email = "EMPLOYEE4@TEST.COM",
+                    Password = "test1",
+                    ClearanceLevel = 1
+                }
+            };
+    }
+
+    private void SaveSelectedEmployee()
+    {
+        employeeService.UpdateEmployeeAsync(employeeSelected);
+    }
+
+}

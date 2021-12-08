@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\janad\\OneDrive\\Adam\\Dokumenty\\GitHub\\SEP3\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj": {}
+    "C:\\Users\\fhuur\\OneDrive\\JavaClasses\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\janad\\OneDrive\\Adam\\Dokumenty\\GitHub\\SEP3\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj": {
+    "C:\\Users\\fhuur\\OneDrive\\JavaClasses\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\janad\\OneDrive\\Adam\\Dokumenty\\GitHub\\SEP3\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj",
+        "projectUniqueName": "C:\\Users\\fhuur\\OneDrive\\JavaClasses\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj",
         "projectName": "CarRentalClientServer",
-        "projectPath": "C:\\Users\\janad\\OneDrive\\Adam\\Dokumenty\\GitHub\\SEP3\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj",
-        "packagesPath": "C:\\Users\\janad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\janad\\OneDrive\\Adam\\Dokumenty\\GitHub\\SEP3\\SEP3\\BlazorClientServer\\CarRentalClientServer\\obj\\",
+        "projectPath": "C:\\Users\\fhuur\\OneDrive\\JavaClasses\\SEP3\\BlazorClientServer\\CarRentalClientServer\\CarRentalClientServer.csproj",
+        "packagesPath": "C:\\Users\\fhuur\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fhuur\\OneDrive\\JavaClasses\\SEP3\\BlazorClientServer\\CarRentalClientServer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\janad\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\fhuur\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,9 +40,13 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Blazorise": {
+              "target": "Package",
+              "version": "[0.9.5.2, )"
+            },
             "Blazorise.Bootstrap": {
               "target": "Package",
-              "version": "[0.9.5.1, )"
+              "version": "[0.9.5.2, )"
             },
             "Blazorise.Components": {
               "target": "Package",
@@ -48,11 +54,11 @@
             },
             "Blazorise.DataGrid": {
               "target": "Package",
-              "version": "[0.9.5.1, )"
+              "version": "[0.9.5.2, )"
             },
             "Blazorise.Icons.FontAwesome": {
               "target": "Package",
-              "version": "[0.9.5.1, )"
+              "version": "[0.9.5.2, )"
             },
             "GraphQL.Client": {
               "target": "Package",
@@ -101,7 +107,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

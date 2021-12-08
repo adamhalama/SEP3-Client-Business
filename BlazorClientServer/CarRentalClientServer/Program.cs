@@ -15,7 +15,7 @@ namespace CarRentalClientServer
     {
         public static async Task Main(string[] args)
         {
-            do
+            /*do
             {
                 IVehicleService vehicleService = new VehicleServiceGraphQL();
                 IEmployeeService employeeService = new EmployeeServiceGraphQL();
@@ -67,7 +67,7 @@ namespace CarRentalClientServer
                     Console.WriteLine(e);
                 }
             } while (Console.ReadLine() != "x");
-            
+            */
             
             
             CreateHostBuilder(args).Build().Run();

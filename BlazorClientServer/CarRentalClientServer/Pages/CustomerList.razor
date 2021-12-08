@@ -1,0 +1,69 @@
+﻿@page "/AllCustomers"
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Models
+@inject ICustomerService customerService;
+
+<Div Padding="Padding.Is4"></Div>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Customer list</JumbotronTitle>
+    <JumbotronSubtitle>
+        All the customers.
+    </JumbotronSubtitle>
+</Jumbotron>
+
+<DataGrid TItem="Customer" Data="@customers" @bind-SelectedRow="@customerSelected" Editable Responsive>
+    <DataGridCommandColumn TItem="Customer">
+    </DataGridCommandColumn>
+
+    <DataGridColumn TItem="Customer" Field="@nameof(Customer.Id)" Caption="Id" Sortable="false" Editable="false" />
+    <DataGridColumn TItem="Customer" Field="@nameof(Customer.Name)" Caption="Name" Editable />
+    <DataGridColumn TItem="Customer" Field="@nameof(Customer.Email)" Caption="Email" Editable />
+    <DataGridColumn TItem="Customer" Field="@nameof(Customer.Address)" Caption="Address" Editable />
+    <DataGridColumn TItem="Customer" Field="@nameof(Customer.LicenceNumber)" Caption="Licence number" Editable />
+    <DataGridColumn TItem="Customer" Field="@nameof(Customer.Password)" Caption="Password" Displayable="false" Editable />
+</DataGrid>
+
+@code {
+    private List<Customer> customers = null;
+    private Customer customerSelected;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = new()
+            {
+                new()
+                {
+                    Id = 1,
+                    Name = "TEST1",
+                    Email = "CUSTOMER1@TEST.COM",
+                    Password = "test1",
+                    Address = "TEST ADDRESS A",
+                    LicenceNumber = "LICENCE TEST1"
+                },
+                new()
+                {
+                    Id = 2,
+                    Name = "TEST2",
+                    Email = "CUSTOMER2@TEST.COM",
+                    Password = "test2",
+                    Address = "TEST ADDRESS B",
+                    LicenceNumber = "LICENCE TEST2"
+                },
+                new()
+                {
+                    Id = 3,
+                    Name = "TEST3",
+                    Email = "CUSTOMER3@TEST.COM",
+                    Password = "test3",
+                    Address = "TEST ADDRESS C",
+                    LicenceNumber = "LICENCE TEST3"
+                }
+            };
+    }
+
+    private void SaveSelectedCsutomer()
+    {
+
+        customerService.UpdateCustomerAsync(customerSelected);
+    }
+}
