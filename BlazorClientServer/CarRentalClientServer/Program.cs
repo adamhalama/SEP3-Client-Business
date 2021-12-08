@@ -48,8 +48,8 @@ namespace CarRentalClientServer
                     
                     // Console.WriteLine("Customer");
                     // customerService.CreateCustomerAsync("jebo", "jebnuty@jano.sk", "123", "V lese", "123XX");
-                    Console.WriteLine("Employee");
-                    await employeeService.CreateEmployeeAsync("admin", "admin@bruh.com", "admin", 1);
+                    // Console.WriteLine("Employee");
+                    // await employeeService.CreateEmployeeAsync("admin", "admin@bruh.com", "admin", 1);
 
                     Console.WriteLine("reservation");
                     await reservationService.CreateReservationAsync(1, 1, 1, 1000,

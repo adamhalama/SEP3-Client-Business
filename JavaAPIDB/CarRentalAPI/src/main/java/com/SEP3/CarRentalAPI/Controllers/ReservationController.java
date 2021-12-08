@@ -9,15 +9,13 @@ import com.SEP3.CarRentalAPI.Model.Employee;
 import com.SEP3.CarRentalAPI.Model.Reservation;
 import com.SEP3.CarRentalAPI.Model.Vehicle;
 import com.SEP3.CarRentalAPI.exception.ResourceNotFoundException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -33,7 +31,8 @@ public class ReservationController
     private EmployeeRepository employeeRepository;
 
     @GetMapping("/reservations/vehicle/{id}")
-    public List<Reservation> getReservationsByVehicle(@PathVariable(value = "id") Long vehicleId) throws ResourceNotFoundException {
+    public List<Reservation> getReservationsByVehicle(@PathVariable(value = "id") Long vehicleId) throws ResourceNotFoundException
+    {
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found for this id :: " + vehicleId));
@@ -41,21 +40,24 @@ public class ReservationController
     }
 
     @GetMapping("/reservations/customer/{id}")
-    public List<Reservation> getReservationsByCustomer(@PathVariable(value = "id") Long customerId) throws ResourceNotFoundException {
+    public List<Reservation> getReservationsByCustomer(@PathVariable(value = "id") Long customerId) throws ResourceNotFoundException
+    {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
         return repository.getAllByCustomer(customer);
     }
 
     @GetMapping("/reservations/employee/{id}")
-    public List<Reservation> getReservationsByEmployee(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException {
+    public List<Reservation> getReservationsByEmployee(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException
+    {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
         return repository.getAllByEmployee(employee);
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getAllReservations() {
+    public List<Reservation> getAllReservations()
+    {
         return repository.findAll();
     }
 
@@ -66,22 +68,38 @@ public class ReservationController
     {
         Reservation reservation = repository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found for this id :: " + reservationId));
-        return ResponseEntity.ok().body(reservation);
+
+        ResponseEntity<Reservation> responseEntity = ResponseEntity.ok().body(reservation);
+        return responseEntity;
     }
 
     @PostMapping("/reservations")
-    public Reservation createReservation(@Valid @RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> createReservation(@Valid @RequestBody Reservation reservation) throws ResourceNotFoundException
+    {
         //todo maybe the setting is unnecessary
         reservation.setVehicle(vehicleRepository.getById(reservation.getVehicle().getId()));
         reservation.setCustomer(customerRepository.getById(reservation.getCustomer().getId()));
         reservation.setEmployee(employeeRepository.getById(reservation.getEmployee().getId()));
 
-        return repository.save(reservation);
+        Reservation firstSavedReservation = repository.save(reservation);
+
+        Object customer = Hibernate.unproxy(firstSavedReservation.getCustomer());
+        Object employee = Hibernate.unproxy(firstSavedReservation.getEmployee());
+        Object vehicle = Hibernate.unproxy(firstSavedReservation.getVehicle());
+
+        firstSavedReservation.setCustomer((Customer) customer);
+        firstSavedReservation.setEmployee((Employee) employee);
+        firstSavedReservation.setVehicle((Vehicle) vehicle);
+
+        ResponseEntity<Reservation> responseEntity = ResponseEntity.ok().body(firstSavedReservation);
+
+        return responseEntity;
     }
 
     @PutMapping("/reservations/{id}")
     public ResponseEntity<Reservation> updateReservation(@PathVariable(value = "id") Long reservationId,
-                                                   @Valid @RequestBody Reservation reservationDetails) throws ResourceNotFoundException {
+                                                         @Valid @RequestBody Reservation reservationDetails) throws ResourceNotFoundException
+    {
         Reservation reservation = repository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found for this id :: " + reservationId));
 
@@ -106,7 +124,8 @@ public class ReservationController
 
     @DeleteMapping("/reservations/{id}")
     public Reservation deleteReservation(@PathVariable(value = "id") Long reservationId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException
+    {
         Reservation reservation = repository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found for this id :: " + reservationId));
 

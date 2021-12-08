@@ -398,9 +398,34 @@ namespace CarRentalClientServer.Data
                     reservationInput = new Reservation
                     {
                         Id = -1,
-                        Vehicle = {Id = vehicleId},
-                        Customer = {Id = customerId},
-                        Employee = {Id = employeeId},
+                        Vehicle = new Vehicle() {
+                            Id = vehicleId,
+                            Name = "null",
+                            Type = "null",
+                            PricePerDay = -1,
+                            SeatsCount = -1,
+                            IsAutomatic = false,
+                            PowerKw = -1,
+                            FuelType = "null",
+                            Deposit = -1
+                            
+                        },
+                        Customer = new Customer() {
+                            Id = customerId,
+                            Name = "null",
+                            Email = "null@null.null",
+                            Password = "null",
+                            Address = "null",
+                            LicenceNumber = "null"
+                        },
+                        Employee = new Employee() {
+                            Id = employeeId,
+                            Name = "null",
+                            Email = "null@null.null",
+                            Password = "null",
+                            ClearanceLevel = -1
+                            
+                        },
                         SecurityDeposit = securityDeposit,
                         DateCreated = dateCreated,
                         DateStart = dateStart,
