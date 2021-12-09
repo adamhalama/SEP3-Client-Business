@@ -15,7 +15,6 @@ namespace CarRentalClientServer
     {
         public static async Task Main(string[] args)
         {
-            /*do
             {
                 IVehicleService vehicleService = new VehicleServiceGraphQL();
                 IEmployeeService employeeService = new EmployeeServiceGraphQL();
@@ -50,24 +49,28 @@ namespace CarRentalClientServer
                     // customerService.CreateCustomerAsync("jebo", "jebnuty@jano.sk", "123", "V lese", "123XX");
                     // Console.WriteLine("Employee");
                     // await employeeService.CreateEmployeeAsync("admin", "admin@bruh.com", "admin", 1);
-
+                    /*
                     Console.WriteLine("reservation");
                     await reservationService.CreateReservationAsync(1, 1, 1, 1000,
                         1627870000, 1627870693, 1627879999, 1000, 1200, 1627870000, true);
-
+                    */
                     // vehicleService.UpdateVehicleAsync(new Vehicle(10, "Updated jebo", "Coupe", 300, 4, false, 300, "Petrol", 3000));
 
                     // Console.WriteLine(vehicleService.DeleteVehicleAsync(4).Result);
                     // Console.WriteLine(vehicleService.DeleteVehicleAsync(1).Result);
                     // Console.WriteLine(vehicleService.DeleteVehicleAsync(2).Result);
                     // Console.WriteLine(vehicleService.DeleteVehicleAsync(3).Result);
+
+                    Console.WriteLine("Employee");
+                    await employeeService.CreateEmployeeAsync("TEST 1", "EMPLOYEE1@TEST.COM", "test1", 1);
+                    await employeeService.CreateEmployeeAsync("TEST 2", "EMPLOYEE2@TEST.COM", "test2", 3);
+                    await employeeService.CreateEmployeeAsync("TEST 3", "EMPLOYEE3@TEST.COM", "test3", 1);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
             } while (Console.ReadLine() != "x");
-            */
             
             
             CreateHostBuilder(args).Build().Run();

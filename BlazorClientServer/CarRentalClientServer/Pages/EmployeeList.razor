@@ -11,8 +11,24 @@
     </JumbotronSubtitle>
 </Jumbotron>
 
-<DataGrid TItem="Employee" Data="@employees" @bind-SelectedRow="@employeeSelected" Editable Responsive>
+<DataGrid TItem="Employee" Data="@employeeList" Editable EditMode="DataGridEditMode.Form" UseInternalEditing
+          RowUpdated="@OnRowUpdated" RowInserted="@OnRowInserted" RowRemoved="OnRowRemoved" NewItemDefaultSetter="@OnNewItemDefaultSetter">
     <DataGridCommandColumn TItem="Employee">
+        <NewCommandTemplate>
+            <Button Color="Color.Success" Clicked="@context.Clicked">New</Button>
+        </NewCommandTemplate>
+        <SaveCommandTemplate>
+            <Button Color="Color.Success" Clicked="@context.Clicked">Save</Button>
+        </SaveCommandTemplate>
+        <EditCommandTemplate>
+            <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+        </EditCommandTemplate>
+        <DeleteCommandTemplate>
+            <Button Color="Color.Danger" Clicked="@context.Clicked">Delete</Button>
+        </DeleteCommandTemplate>
+        <CancelCommandTemplate>
+            <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
+        </CancelCommandTemplate>
     </DataGridCommandColumn>
 
     <DataGridColumn TItem="Employee" Field="@nameof(Employee.Id)" Caption="Id" Sortable="false" Editable="false" />
@@ -25,9 +41,15 @@
 
 @code {
     private List<Employee> employees = null;
+    private IList<Employee> employeeList = null;
     private Employee employeeSelected;
 
     protected override async Task OnInitializedAsync()
+    {
+        employeeList = await employeeService.GetEmployeesAsync();
+    }
+    
+    void OnNewItemDefaultSetter(Employee employee)
     {
         employees = new()
             {
@@ -64,11 +86,31 @@
                     ClearanceLevel = 1
                 }
             };
+        StateHasChanged();
     }
 
-    private void SaveSelectedEmployee()
+    async Task OnRowInserted(SavedRowItem<Employee, Dictionary<string, object>> e)
     {
-        employeeService.UpdateEmployeeAsync(employeeSelected);
+        //for new item
+        var employee = e.Item;
+        await employeeService.CreateEmployeeAsync(employee.Name, employee.Email, employee.Password, employee.ClearanceLevel);
+        employeeList = await employeeService.GetEmployeesAsync();
+        StateHasChanged();
     }
 
+    async Task OnRowUpdated(SavedRowItem<Employee, Dictionary<string, object>> e)
+    {
+        //for update item
+        var employee = e.Item;
+        await employeeService.UpdateEmployeeAsync(employee);
+        employeeList = await employeeService.GetEmployeesAsync();
+        StateHasChanged();
+    }
+
+    async Task OnRowRemoved(Employee employee)
+    {
+        await employeeService.DeleteEmployeeAsync(employee.Id);
+        employeeList = await employeeService.GetEmployeesAsync();
+        StateHasChanged();
+    }
 }
