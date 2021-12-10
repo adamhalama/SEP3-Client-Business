@@ -261,15 +261,24 @@ using CarRentalClientServer.Models;
         int compNum = DateTime.Compare(start, end);
         int compNum1 = DateTime.Compare(start, today);
         int compNum2 = DateTime.Compare(end, today);
-        if (compNum > 0 || (compNum1 > 0 || compNum2 > 0))
+        if (compNum > 0)
         {
             this.isSearched = false;
-            this.isCorrect = false ;
+            this.isCorrect = false;
         }
         else
         {
-            this.isSearched = true;
-            this.isCorrect = true;
+            if (compNum1 < 0 && compNum2 < 0)
+            {
+                this.isSearched = false;
+                this.isCorrect = false;
+            }
+            else
+            {
+                this.isSearched = true;
+                this.isCorrect = true;
+            }
+
         }
 
     }
