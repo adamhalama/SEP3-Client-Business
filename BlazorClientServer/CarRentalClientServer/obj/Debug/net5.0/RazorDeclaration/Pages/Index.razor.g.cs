@@ -119,16 +119,19 @@ using CarRentalClientServer.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 194 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
+#line 201 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
        
     DatePicker<DateTime?> startDate;
     DatePicker<DateTime?> endDate;
     private bool isSearched = false;
+    private bool isCorrect = false;
     string customCardStyle = $"width: 1100px";
     private Vehicle selectedVehicle;
 
     private string typeFilter;
     private string seatFilter;
+    [Inject] IMessageService MessageService { get; set; }
+    [Inject] INotificationService NotificationService { get; set; }
 
     private bool TypeFilter(object itemValue, object searchValue)
     {
@@ -252,13 +255,30 @@ using CarRentalClientServer.Models;
     private void SearchButtonClicked()
     {
         //search a car
-        this.isSearched = true;
+        var start = startDate.Date.Value;
+        var end = endDate.Date.Value;
+        var today = DateTime.Now;
+        int compNum = DateTime.Compare(start, end);
+        int compNum1 = DateTime.Compare(start, today);
+        int compNum2 = DateTime.Compare(end, today);
+        if (compNum > 0 || (compNum1 > 0 || compNum2 > 0))
+        {
+            this.isSearched = false;
+            this.isCorrect = false ;
+        }
+        else
+        {
+            this.isSearched = true;
+            this.isCorrect = true;
+        }
+
     }
 
     private void BookCarClicked(long id)
     {
         NavMgr.NavigateTo($"/Book/{id}");
     }
+
 
 #line default
 #line hidden
