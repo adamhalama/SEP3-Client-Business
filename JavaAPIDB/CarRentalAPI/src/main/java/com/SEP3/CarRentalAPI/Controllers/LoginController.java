@@ -7,6 +7,7 @@ import com.SEP3.CarRentalAPI.Model.Employee;
 import com.SEP3.CarRentalAPI.Model.UserLogin;
 import com.SEP3.CarRentalAPI.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class LoginController
     private CustomerRepository customerRepository;
 
     @PostMapping("/login")
-    public UserLogin login(@Valid @RequestBody UserLogin userLogin) throws ResourceNotFoundException
+    public ResponseEntity<UserLogin> login(@Valid @RequestBody UserLogin userLogin) throws ResourceNotFoundException
     {
         //Checking if the email belongs to an employee
         Employee employee = employeeRepository.findByEmail(userLogin.getEmail());
@@ -32,7 +33,7 @@ public class LoginController
         {
             if (employee.getPassword().equals(userLogin.getPassword()))
             {
-                return new UserLogin(true, employee.getId(), true);
+                return ResponseEntity.ok().body(new UserLogin(true, employee.getId(), true));
             }
         }
 
@@ -42,10 +43,12 @@ public class LoginController
         {
             if (customer.getPassword().equals(userLogin.getPassword()))
             {
-                return new UserLogin(true, customer.getId(), false);
+                return ResponseEntity.ok().body(new UserLogin(true, customer.getId(), false));
             }
-            throw new ResourceNotFoundException("Wrong password");
+            return ResponseEntity.noContent().build();
+//            throw new ResourceNotFoundException("Wrong password");
         }
-        throw new ResourceNotFoundException("User with this email not found:" + userLogin.getEmail());
+        return ResponseEntity.notFound().build();
+//        throw new ResourceNotFoundException("User with this email not found:" + userLogin.getEmail());
     }
 }

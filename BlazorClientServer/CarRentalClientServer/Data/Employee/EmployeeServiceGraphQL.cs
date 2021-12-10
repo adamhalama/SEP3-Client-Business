@@ -28,7 +28,6 @@ namespace CarRentalClientServer.Data
                         id
                         name
                         email
-                        address
                         clearanceLevel
                     }
                 }",
@@ -64,7 +63,6 @@ namespace CarRentalClientServer.Data
                         id
                         name
                         email
-                        address
                         clearanceLevel
                     }
                 }
@@ -155,7 +153,6 @@ namespace CarRentalClientServer.Data
                         id
                         name
                         email
-                        address
                         clearanceLevel
                     }
                 }",
@@ -168,16 +165,7 @@ namespace CarRentalClientServer.Data
 
             try
             {
-                //showing what was sent
-                Console.WriteLine(JsonSerializer.Serialize(request,
-                    new JsonSerializerOptions {WriteIndented = true}));
-
                 var graphQLResponse = await graphQlClient.SendQueryAsync<UpdateEmployeeResponse>(request);
-                //showing serialized response
-                Console.WriteLine("serialised response:");
-                Console.WriteLine(JsonSerializer.Serialize(graphQLResponse,
-                    new JsonSerializerOptions {WriteIndented = true}));
-
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
                     ErrorHandling.HandleGraphQLReturnErrors(errors);
@@ -204,7 +192,6 @@ namespace CarRentalClientServer.Data
                         id
                         name
                         email
-                        address
                         clearanceLevel
                     }
                 }",

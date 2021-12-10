@@ -92,7 +92,7 @@ namespace CarRentalLogicServer.APIConsumer
             HttpResponseMessage response = await client.PutAsync($"{uri}/employees/{employee.Id}", content);
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"{response.StatusCode};{response.ReasonPhrase}");
+                throw new Exception(response.StatusCode.ToString());
             }
             else
             {

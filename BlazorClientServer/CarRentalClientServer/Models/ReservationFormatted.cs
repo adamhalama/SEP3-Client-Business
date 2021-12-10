@@ -12,9 +12,10 @@ namespace CarRentalClientServer.Models
         [JsonPropertyName("customer")] public Customer Customer { get; set; }
         [JsonPropertyName("employee")] public Employee Employee { get; set; }
 
-        public string VehicleNameAndId { get; set; }
-        public string CustomerNameAndId { get; set; }
-        public string EmployeeNameAndId { get; set; }
+        public long VehicleId { get; set; }
+        public string VehicleName { get; set; }
+        public long CustomerId { get; set; }
+        public long EmployeeId { get; set; }
 
         [JsonPropertyName("securityDeposit")] public int SecurityDeposit { get; set; }
         [JsonPropertyName("dateCreated")] public DateTime DateCreated { get; set; }
@@ -25,15 +26,22 @@ namespace CarRentalClientServer.Models
         [JsonPropertyName("billDate")] public DateTime BillDate { get; set; }
         [JsonPropertyName("isPaid")] public bool IsPaid { get; set; }
 
-        public ReservationFormatted(long id, Vehicle vehicle, Customer customer, Employee employee, string vehicleNameAndId, string customerNameAndId, string employeeNameAndId, int securityDeposit, DateTime dateCreated, DateTime dateStart, DateTime dateEnd, int allowedKm, float paymentAmount, DateTime billDate, bool isPaid)
+        public ReservationFormatted()
+        {
+        }
+
+        public ReservationFormatted(long id, Vehicle vehicle, Customer customer, Employee employee, long vehicleId, 
+            string vehicleName, long customerId, long employeeId, int securityDeposit, DateTime dateCreated, 
+            DateTime dateStart, DateTime dateEnd, int allowedKm, float paymentAmount, DateTime billDate, bool isPaid)
         {
             Id = id;
             Vehicle = vehicle;
             Customer = customer;
             Employee = employee;
-            VehicleNameAndId = vehicleNameAndId;
-            CustomerNameAndId = customerNameAndId;
-            EmployeeNameAndId = employeeNameAndId;
+            VehicleId = vehicleId;
+            VehicleName = vehicleName;
+            CustomerId = customerId;
+            EmployeeId = employeeId;
             SecurityDeposit = securityDeposit;
             DateCreated = dateCreated;
             DateStart = dateStart;
@@ -44,23 +52,45 @@ namespace CarRentalClientServer.Models
             IsPaid = isPaid;
         }
 
+        public ReservationFormatted(ReservationFormatted reservationFormatted)
+        {
+            Id = reservationFormatted.Id;
+            Vehicle = reservationFormatted.Vehicle;
+            Customer = reservationFormatted.Customer;
+            Employee = reservationFormatted.Employee;
+            VehicleId = reservationFormatted.VehicleId;
+            VehicleName = reservationFormatted.VehicleName;
+            CustomerId = reservationFormatted.CustomerId;
+            EmployeeId = reservationFormatted.EmployeeId;
+            SecurityDeposit = reservationFormatted.SecurityDeposit;
+            DateCreated = reservationFormatted.DateCreated;
+            DateStart = reservationFormatted.DateStart;
+            DateEnd = reservationFormatted.DateEnd;
+            AllowedKm = reservationFormatted.AllowedKm;
+            PaymentAmount = reservationFormatted.PaymentAmount;
+            BillDate = reservationFormatted.BillDate;
+            IsPaid = reservationFormatted.IsPaid;
+        }
+
         public ReservationFormatted(Reservation reservation)
         {
             Id = reservation.Id;
             Vehicle = reservation.Vehicle;
             Customer = reservation.Customer;
             Employee = reservation.Employee;
-            VehicleNameAndId = "Not Found";
-            CustomerNameAndId = "Not Found";
-            EmployeeNameAndId = "Not Found";
+            VehicleId = -1;
+            VehicleName = "Not Found";
+            CustomerId = -1;
+            EmployeeId = -1;
             if (reservation.Vehicle != null && reservation.Vehicle.Name != null)
-                VehicleNameAndId = " #" + reservation.Vehicle.Id + reservation.Vehicle.Name;
-            
-            if (reservation.Customer != null && reservation.Customer.Name != null)
-                CustomerNameAndId = " #" + reservation.Customer.Id + reservation.Customer.Name;
-            
-            if (reservation.Employee != null && reservation.Employee.Name != null)
-                EmployeeNameAndId = " #" + reservation.Employee.Id + reservation.Employee.Name;
+            {
+                VehicleId = reservation.Vehicle.Id;
+                VehicleName = reservation.Vehicle.Name;
+            }
+            if (reservation.Customer != null)
+                CustomerId = reservation.Customer.Id;
+            if (reservation.Employee != null )
+                EmployeeId = reservation.Employee.Id;
             SecurityDeposit = reservation.SecurityDeposit;
             DateCreated = DateTimeConversions.GetDateTime(reservation.DateCreated);
             DateStart = DateTimeConversions.GetDateTime(reservation.DateStart);

@@ -22,9 +22,9 @@ public class CustomerController
     private EmployeeRepository employeeRepository;
 
     @GetMapping("/customers")
-    public List<Customer> getAllCustomers()
+    public ResponseEntity<List<Customer>> getAllCustomers()
     {
-        return repository.findAll();
+        return ResponseEntity.ok().body(repository.findAll());
     }
 
     @GetMapping("/customers/{id}")
@@ -37,13 +37,13 @@ public class CustomerController
     }
 
     @PostMapping("/customers")
-    public Customer createCustomer(@Valid @RequestBody Customer customer) throws EmailAlreadyUsedException
+    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) throws EmailAlreadyUsedException
     {
         if (employeeRepository.findByEmail(customer.getEmail()) != null)
         {
             throw new EmailAlreadyUsedException("Email already used");
         }
-        return repository.save(customer);
+        return ResponseEntity.ok().body(repository.save(customer));
     }
 
     @PutMapping("/customers/{id}")
@@ -63,7 +63,7 @@ public class CustomerController
     }
 
     @DeleteMapping("/customers/{id}")
-    public Customer deleteCustomer(@PathVariable(value = "id") Long customerId)
+    public ResponseEntity<Customer> deleteCustomer(@PathVariable(value = "id") Long customerId)
             throws ResourceNotFoundException
     {
         Customer customer = repository.findById(customerId)
@@ -71,6 +71,6 @@ public class CustomerController
 
         Customer deletedCustomer = repository.getById(customerId);
         repository.deleteById(customerId);
-        return deletedCustomer;
+        return ResponseEntity.ok().body(deletedCustomer);
     }
 }

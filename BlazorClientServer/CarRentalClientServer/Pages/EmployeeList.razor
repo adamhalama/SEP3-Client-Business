@@ -11,8 +11,13 @@
     </JumbotronSubtitle>
 </Jumbotron>
 
-<DataGrid TItem="Employee" Data="@employeeList" Editable EditMode="DataGridEditMode.Form" UseInternalEditing
-          RowUpdated="@OnRowUpdated" RowInserted="@OnRowInserted" RowRemoved="OnRowRemoved" NewItemDefaultSetter="@OnNewItemDefaultSetter">
+<DataGrid TItem="Employee" Data="@employeeList"  
+          Sortable="true" Filterable="true" Editable="true
+" EditMode="DataGridEditMode.Form" UseInternalEditing
+          RowUpdated="@OnRowUpdated" 
+          RowInserted="@OnRowInserted" 
+          RowRemoved="@OnRowRemoved" 
+          NewItemDefaultSetter="@OnNewItemDefaultSetter">
     <DataGridCommandColumn TItem="Employee">
         <NewCommandTemplate>
             <Button Color="Color.Success" Clicked="@context.Clicked">New</Button>
@@ -31,7 +36,7 @@
         </CancelCommandTemplate>
     </DataGridCommandColumn>
 
-    <DataGridColumn TItem="Employee" Field="@nameof(Employee.Id)" Caption="Id" Sortable="false" Editable="false" />
+    <DataGridColumn TItem="Employee" Field="@nameof(Employee.Id)" Caption="ID" Sortable="true" Editable="false" />
     <DataGridColumn TItem="Employee" Field="@nameof(Employee.Name)" Caption="Name" Editable />
     <DataGridColumn TItem="Employee" Field="@nameof(Employee.Email)" Caption="Email" Editable />
     <DataGridColumn TItem="Employee" Field="@nameof(Employee.ClearanceLevel)" Caption="Clearance level" Editable />

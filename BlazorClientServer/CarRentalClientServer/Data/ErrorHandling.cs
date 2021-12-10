@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using GraphQL;
 
 namespace CarRentalClientServer.Data
@@ -14,7 +15,7 @@ namespace CarRentalClientServer.Data
 
             var extensions = errors[0].Extensions;
             if (extensions != null && extensions["message"] != null)
-                throw new IndexOutOfRangeException(extensions["message"].ToString());
+                throw new ExternalException(extensions["message"].ToString());
 
             throw new Exception(errors[0].Message);
         }

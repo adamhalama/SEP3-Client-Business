@@ -21,9 +21,9 @@ public class VehicleController
     private VehicleRepository repository;
 
     @GetMapping("/vehicles")
-    public List<Vehicle> getAllVehicles()
+    public ResponseEntity<List<Vehicle>> getAllVehicles()
     {
-        return repository.findAll();
+        return ResponseEntity.ok().body(repository.findAll());
     }
 
     @GetMapping("/vehicles/{id}")
@@ -36,10 +36,10 @@ public class VehicleController
     }
 
     @PostMapping("/vehicles")
-    public Vehicle createVehicle(@Valid @RequestBody Vehicle vehicle)
+    public ResponseEntity<Vehicle> createVehicle(@Valid @RequestBody Vehicle vehicle)
     {
         vehicle.setId(-1);
-        return repository.save(vehicle);
+        return ResponseEntity.ok().body(repository.save(vehicle));
     }
 
     @PutMapping("/vehicles/{id}")
@@ -63,14 +63,14 @@ public class VehicleController
     }
 
     @DeleteMapping("/vehicles/{id}")
-    public Vehicle deleteVehicle(@PathVariable(value = "id") Long vehicleId)
+    public ResponseEntity<Vehicle> deleteVehicle(@PathVariable(value = "id") Long vehicleId)
             throws ResourceNotFoundException {
         Vehicle vehicle = repository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found for this id :: " + vehicleId));
 
         Vehicle vehicleToDelete = repository.getById(vehicleId);
         repository.deleteById(vehicleId);
-        return vehicleToDelete;
+        return ResponseEntity.ok().body(vehicleToDelete);
     }
 
 }

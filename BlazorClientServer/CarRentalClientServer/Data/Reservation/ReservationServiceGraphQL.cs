@@ -535,7 +535,6 @@ namespace CarRentalClientServer.Data
                     deleteReservation(id : $id)
                     {
                         id
-                        name
                     }
                 }",
                 OperationName = "DeleteReservation",

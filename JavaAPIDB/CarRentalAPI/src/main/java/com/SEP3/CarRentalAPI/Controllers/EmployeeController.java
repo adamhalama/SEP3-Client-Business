@@ -22,8 +22,8 @@ public class EmployeeController
 	private CustomerRepository customerRepository;
 
 	@GetMapping("/employees")
-	public List<Employee> getAllEmployees() {
-		return repository.findAll();
+	public ResponseEntity<List<Employee>> getAllEmployees() {
+		return ResponseEntity.ok().body(repository.findAll());
 	}
 
 	@GetMapping("/employees/{id}")
@@ -36,13 +36,13 @@ public class EmployeeController
 	}
 
 	@PostMapping("/employees")
-	public Employee createEmployee(@Valid @RequestBody Employee employee) throws EmailAlreadyUsedException
+	public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) throws EmailAlreadyUsedException
 	{
 		if(customerRepository.findByEmail(employee.getEmail()) != null)
 		{
 			throw new EmailAlreadyUsedException("Email already used");
 		}
-		return repository.save(employee);
+		return ResponseEntity.ok().body(repository.save(employee));
 	}
 
 	@PutMapping("/employees/{id}")
@@ -53,20 +53,21 @@ public class EmployeeController
 
 		employee.setName(employeeDetails.getName());
 		employee.setEmail(employeeDetails.getEmail());
-		employee.setPassword(employeeDetails.getPassword());
+		if(employeeDetails.getPassword() != null && !employeeDetails.getPassword().isEmpty())
+			employee.setPassword(employeeDetails.getPassword());
 		employee.setClearanceLevel(employeeDetails.getClearanceLevel());
 		final Employee updatedEmployee = repository.save(employee);
 		return ResponseEntity.ok(updatedEmployee);
 	}
 
 	@DeleteMapping("/employees/{id}")
-	public Employee deleteEmployee(@PathVariable(value = "id") Long employeeId)
+	public ResponseEntity<Employee> deleteEmployee(@PathVariable(value = "id") Long employeeId)
 			throws ResourceNotFoundException {
 		Employee employee = repository.findById(employeeId)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 
 		Employee deletedEmployee = repository.getById(employeeId);
 		repository.deleteById(employeeId);
-		return deletedEmployee;
+		return ResponseEntity.ok().body(deletedEmployee);
 	}
 }

@@ -31,34 +31,34 @@ public class ReservationController
     private EmployeeRepository employeeRepository;
 
     @GetMapping("/reservations/vehicle/{id}")
-    public List<Reservation> getReservationsByVehicle(@PathVariable(value = "id") Long vehicleId) throws ResourceNotFoundException
+    public ResponseEntity<List<Reservation>> getReservationsByVehicle(@PathVariable(value = "id") Long vehicleId) throws ResourceNotFoundException
     {
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found for this id :: " + vehicleId));
-        return repository.getAllByVehicle(vehicle);
+        return ResponseEntity.ok().body(repository.getAllByVehicle(vehicle));
     }
 
     @GetMapping("/reservations/customer/{id}")
-    public List<Reservation> getReservationsByCustomer(@PathVariable(value = "id") Long customerId) throws ResourceNotFoundException
+    public ResponseEntity<List<Reservation>> getReservationsByCustomer(@PathVariable(value = "id") Long customerId) throws ResourceNotFoundException
     {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
-        return repository.getAllByCustomer(customer);
+        return ResponseEntity.ok().body(repository.getAllByCustomer(customer));
     }
 
     @GetMapping("/reservations/employee/{id}")
-    public List<Reservation> getReservationsByEmployee(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException
+    public ResponseEntity<List<Reservation>> getReservationsByEmployee(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException
     {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
-        return repository.getAllByEmployee(employee);
+        return ResponseEntity.ok().body(repository.getAllByEmployee(employee));
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getAllReservations()
+    public ResponseEntity<List<Reservation>> getAllReservations()
     {
-        return repository.findAll();
+        return ResponseEntity.ok().body(repository.findAll());
     }
 
 
@@ -69,8 +69,7 @@ public class ReservationController
         Reservation reservation = repository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found for this id :: " + reservationId));
 
-        ResponseEntity<Reservation> responseEntity = ResponseEntity.ok().body(reservation);
-        return responseEntity;
+        return ResponseEntity.ok().body(reservation);
     }
 
     @PostMapping("/reservations")
@@ -81,19 +80,17 @@ public class ReservationController
         reservation.setCustomer(customerRepository.getById(reservation.getCustomer().getId()));
         reservation.setEmployee(employeeRepository.getById(reservation.getEmployee().getId()));
 
-        Reservation firstSavedReservation = repository.save(reservation);
+        Reservation savedReservation = repository.save(reservation);
 
-        Object customer = Hibernate.unproxy(firstSavedReservation.getCustomer());
-        Object employee = Hibernate.unproxy(firstSavedReservation.getEmployee());
-        Object vehicle = Hibernate.unproxy(firstSavedReservation.getVehicle());
+        Object customer = Hibernate.unproxy(savedReservation.getCustomer());
+        Object employee = Hibernate.unproxy(savedReservation.getEmployee());
+        Object vehicle = Hibernate.unproxy(savedReservation.getVehicle());
 
-        firstSavedReservation.setCustomer((Customer) customer);
-        firstSavedReservation.setEmployee((Employee) employee);
-        firstSavedReservation.setVehicle((Vehicle) vehicle);
+        savedReservation.setCustomer((Customer) customer);
+        savedReservation.setEmployee((Employee) employee);
+        savedReservation.setVehicle((Vehicle) vehicle);
 
-        ResponseEntity<Reservation> responseEntity = ResponseEntity.ok().body(firstSavedReservation);
-
-        return responseEntity;
+        return ResponseEntity.ok().body(savedReservation);
     }
 
     @PutMapping("/reservations/{id}")
@@ -123,7 +120,7 @@ public class ReservationController
     }
 
     @DeleteMapping("/reservations/{id}")
-    public Reservation deleteReservation(@PathVariable(value = "id") Long reservationId)
+    public ResponseEntity<Reservation> deleteReservation(@PathVariable(value = "id") Long reservationId)
             throws ResourceNotFoundException
     {
         Reservation reservation = repository.findById(reservationId)
@@ -131,6 +128,6 @@ public class ReservationController
 
         Reservation deletedReservation = repository.getById(reservationId);
         repository.deleteById(reservationId);
-        return deletedReservation;
+        return ResponseEntity.ok().body(deletedReservation);
     }
 }
