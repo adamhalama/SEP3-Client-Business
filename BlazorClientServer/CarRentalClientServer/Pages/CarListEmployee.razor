@@ -14,19 +14,19 @@
     <BarMenu>
         <BarStart>
             <Button Color="Color.None" Clicked="@ShowSedan">
-                <img src="/Img/Sedan.png" style="width:40% " />
+                <img src="/Img/Sedan.png" style="width:40% "/>
                 <p style="position:center">Sedan</p>
             </Button>
             <Button Color="Color.None" Clicked="@ShowLuxury">
-                <img src="/Img/Luxury.png" style="width:40% " />
+                <img src="/Img/Luxury.png" style="width:40% "/>
                 <p style="position:center">Luxury</p>
             </Button>
             <Button Color="Color.None" Clicked="@ShowSUV">
-                <img src="/Img/SUV.png" style="width:40% " />
+                <img src="/Img/SUV.png" style="width:40% "/>
                 <p style="position:center">SUV</p>
             </Button>
             <Button Color="Color.None" Clicked="@ShowMPV">
-                <img src="/Img/MPV.png" style="width:40% " />
+                <img src="/Img/MPV.png" style="width:40% "/>
                 <p style="position:center">MPV</p>
             </Button>
         </BarStart>
@@ -34,59 +34,39 @@
 </Bar>
 <Div Padding="Padding.Is2"></Div>
 
-<Card>
-    <CardHeader>
-        <CardTitle>Deatil</CardTitle>
-    </CardHeader>
-    <CardBody>
-        <Fields>
-            <Field>
-                <FieldLabel>Name</FieldLabel>
-                <FieldBody>
-                    <TextEdit ReadOnly Text="@selectedVehicle?.Name"></TextEdit>
-                </FieldBody>
-            </Field>
-            <Field>
-                <FieldLabel>Type</FieldLabel>
-                <TextEdit ReadOnly Text="@selectedVehicle?.Type"></TextEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Price per day</FieldLabel>
-                <NumericEdit ReadOnly Value="@selectedVehicle?.PricePerDay"></NumericEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Seat</FieldLabel>
-                <NumericEdit ReadOnly Value="@selectedVehicle?.SeatsCount"></NumericEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Automatic ?</FieldLabel>
-                <TextEdit ReadOnly Text="@selectedVehicle?.IsAutomatic.ToString()"></TextEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Power (kw)</FieldLabel>
-                <NumericEdit ReadOnly Value="@selectedVehicle?.PowerKw"></NumericEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Fuel type</FieldLabel>
-                <TextEdit ReadOnly Text="@selectedVehicle?.FuelType"></TextEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Deposit</FieldLabel>
-                <NumericEdit ReadOnly Value="@selectedVehicle?.Deposit"></NumericEdit>
-            </Field>
-        </Fields>
-    </CardBody>
-</Card>
 
-<Divider />
+<DataGrid TItem="Vehicle" Data="vehicleList" Sortable="true" Filterable="true" Editable="true"
+          EditMode="DataGridEditMode.Form" UseInternalEditing
+          ShowPager="true" PageSize="10"
+          RowUpdated="@OnRowUpdated"
+          RowInserted="@OnRowInserted"
+          RowRemoved="@OnRowRemoved"
+          NewItemDefaultSetter="@OnNewItemDefaultSetter"
+          ReadData="@LoadFromService">
 
-<DataGrid TItem="Vehicle" Data="vehicleListTest" SelectionMode="DataGridSelectionMode.Single"
-          @bind-SelectedRow="@selectedVehicle" Responsive Filterable FilterMethod="DataGridFilterMethod.Contains">
     <DataGridColumns>
-        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" />
+        <DataGridCommandColumn TItem="Vehicle">
+            <NewCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">New</Button>
+            </NewCommandTemplate>
+            <SaveCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">Save</Button>
+            </SaveCommandTemplate>
+            <EditCommandTemplate>
+                <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+            </EditCommandTemplate>
+            <DeleteCommandTemplate>
+                <Button Color="Color.Danger" Clicked="@context.Clicked">Delete</Button>
+            </DeleteCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name"/>
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" CustomFilter="@TypeFilter">
             <FilterTemplate>
-                <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange( typeFilter);})">
+                <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange(typeFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                     <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
                     <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
@@ -95,10 +75,10 @@
                 </Select>
             </FilterTemplate>
         </DataGridColumn>
-        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable=false />
-        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable="false"/>
+        <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
             <FilterTemplate>
-                <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange( seatFilter );})">
+                <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange(seatFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                     <SelectItem TValue="int" Value="@(2)">2</SelectItem>
                     <SelectItem TValue="int" Value="@(4)">4</SelectItem>
@@ -106,17 +86,30 @@
                     <SelectItem TValue="int" Value="@(6)">6</SelectItem>
                     <SelectItem TValue="int" Value="@(7)">7</SelectItem>
                     <SelectItem TValue="int" Value="@(8)">8</SelectItem>
+                    <SelectItem TValue="int" Value="@(9)">9</SelectItem>
                 </Select>
             </FilterTemplate>
-        </DataGridColumn>
+        </DataGridNumericColumn>
     </DataGridColumns>
+    
+    <EmptyTemplate>
+        <div class="box">
+            No Cars were found!
+        </div>
+    </EmptyTemplate>
+    <LoadingTemplate>
+        <div class="box">
+            <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+        </div>
+    </LoadingTemplate>
+
 </DataGrid>
 
 <Modal @ref="sedanModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Sedan</ModalTitle>
-            <CloseButton />
+            <CloseButton/>
         </ModalHeader>
         <ModalBody>
             <Paragraph>
@@ -134,7 +127,7 @@
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Sedan</ModalTitle>
-            <CloseButton />
+            <CloseButton/>
         </ModalHeader>
         <ModalBody>
             <Paragraph>
@@ -152,7 +145,7 @@
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>SUV</ModalTitle>
-            <CloseButton />
+            <CloseButton/>
         </ModalHeader>
         <ModalBody>
             <Paragraph>
@@ -170,7 +163,7 @@
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>MPV</ModalTitle>
-            <CloseButton />
+            <CloseButton/>
         </ModalHeader>
         <ModalBody>
             <Paragraph>
@@ -185,6 +178,10 @@
 </Modal>
 
 @code {
+
+    protected Progress progressRef = new();
+    protected int progress;
+
     private Modal sedanModal;
     private Modal luxuryModal;
     private Modal suvModal;
@@ -192,12 +189,71 @@
     private Vehicle selectedVehicle;
     private string typeFilter;
     private string seatFilter;
-    private IList<Vehicle> vehicles;
+    private IList<Vehicle> vehicleList;
 
-    protected override async Task OnInitializedAsync()
+    async Task LoadFromService( DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs )
     {
-        vehicles = await VehicleData.GetVehiclesAsync();
+        progressRef.Animated = true;
+        progress = 0;
+        await InvokeAsync( StateHasChanged );
+        try
+        {
+            progress = 5;
+            await InvokeAsync( StateHasChanged );
+            var fetchedVehicles = VehicleData.GetVehiclesAsync();
+            progress = 33;
+            await Task.Delay( 500 );
+            await InvokeAsync( StateHasChanged );
+            await fetchedVehicles;
+            progress = 66;
+            await Task.Delay( 500 );
+            await InvokeAsync( StateHasChanged );
+            vehicleList = fetchedVehicles.Result;
+            progress = 100;
+            await InvokeAsync( StateHasChanged );
+        }
+        catch (Exception e)
+        {
+            progress = 100;
+            await InvokeAsync( StateHasChanged );
+            Console.WriteLine(e);
+        }
     }
+
+ private void OnNewItemDefaultSetter(Vehicle vehicle)
+    {
+     StateHasChanged();
+    }
+
+    async Task OnRowInserted(SavedRowItem<Vehicle, Dictionary<string, object>> e)
+    {
+        var v = e.Item;
+        await VehicleData.CreateVehicleAsync(v.Name, v.Type, v.PricePerDay, v.SeatsCount,
+            v.IsAutomatic, v.PowerKw, v.FuelType, v.Deposit);
+
+        vehicleList = VehicleData.GetVehiclesAsync().Result;
+        StateHasChanged();
+    }
+
+    async Task OnRowUpdated(SavedRowItem<Vehicle, Dictionary<string, object>> e)
+    {
+    //for update item
+        var v = e.Item;
+        await VehicleData.UpdateVehicleAsync(v);
+
+        vehicleList = VehicleData.GetVehiclesAsync().Result;
+        StateHasChanged();
+    }
+
+    async Task OnRowRemoved(Vehicle vehicle)
+    {
+
+        await VehicleData.DeleteVehicleAsync(vehicle.Id); 
+            
+        vehicleList = VehicleData.GetVehiclesAsync().Result;
+        StateHasChanged();
+    }
+
 
     private bool TypeFilter(object itemValue, object searchValue)
     {
@@ -221,6 +277,7 @@
     {
         return sedanModal.Show();
     }
+
     private Task HideSedan()
     {
         return sedanModal.Hide();
@@ -230,6 +287,7 @@
     {
         return luxuryModal.Show();
     }
+
     private Task HideLuxury()
     {
         return luxuryModal.Hide();
@@ -239,6 +297,7 @@
     {
         return suvModal.Show();
     }
+
     private Task HideSUV()
     {
         return suvModal.Hide();
@@ -248,108 +307,110 @@
     {
         return mpvModal.Show();
     }
+
     private Task HideMPV()
     {
         return mpvModal.Hide();
     }
 
     private List<Vehicle> vehicleListTest = new()
+    {
+        new()
         {
-            new()
-            {
-                Id = 1,
-                Name = "CAR1",
-                Type = "Sedan",
-                PricePerDay = 100,
-                SeatsCount = 4,
-                IsAutomatic = true,
-                PowerKw = 250,
-                FuelType = "95",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 2,
-                Name = "CAR2",
-                Type = "Sedan",
-                PricePerDay = 400,
-                SeatsCount = 2,
-                IsAutomatic = false,
-                PowerKw = 400,
-                FuelType = "92",
-                Deposit = 800,
-            },
-            new()
-            {
-                Id = 3,
-                Name = "CAR3",
-                Type = "SUV",
-                PricePerDay = 200,
-                SeatsCount = 5,
-                IsAutomatic = true,
-                PowerKw = 300,
-                FuelType = "95",
-                Deposit = 700,
-            },
-            new()
-            {
-                Id = 4,
-                Name = "CAR4",
-                Type = "MPV",
-                PricePerDay = 340,
-                SeatsCount = 8,
-                IsAutomatic = true,
-                PowerKw = 300,
-                FuelType = "Diesel",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 5,
-                Name = "CAR5",
-                Type = "SUV",
-                PricePerDay = 600,
-                SeatsCount = 4,
-                IsAutomatic = false,
-                PowerKw = 500,
-                FuelType = "Diesel",
-                Deposit = 1000,
-            },
-            new()
-            {
-                Id = 6,
-                Name = "CAR6",
-                Type = "Sedan",
-                PricePerDay = 100,
-                SeatsCount = 4,
-                IsAutomatic = true,
-                PowerKw = 250,
-                FuelType = "92",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 7,
-                Name = "CAR7",
-                Type = "Luxury",
-                PricePerDay = 730,
-                SeatsCount = 4,
-                IsAutomatic = true,
-                PowerKw = 430,
-                FuelType = "95",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 8,
-                Name = "CAR8 OLD",
-                Type = "MPV",
-                PricePerDay = 360,
-                SeatsCount = 8,
-                IsAutomatic = false,
-                PowerKw = 250,
-                FuelType = "Diesel",
-                Deposit = 500,
-            }
-        };
+            Id = 1,
+            Name = "CAR1",
+            Type = "Sedan",
+            PricePerDay = 100,
+            SeatsCount = 4,
+            IsAutomatic = true,
+            PowerKw = 250,
+            FuelType = "95",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 2,
+            Name = "CAR2",
+            Type = "Sedan",
+            PricePerDay = 400,
+            SeatsCount = 2,
+            IsAutomatic = false,
+            PowerKw = 400,
+            FuelType = "92",
+            Deposit = 800,
+        },
+        new()
+        {
+            Id = 3,
+            Name = "CAR3",
+            Type = "SUV",
+            PricePerDay = 200,
+            SeatsCount = 5,
+            IsAutomatic = true,
+            PowerKw = 300,
+            FuelType = "95",
+            Deposit = 700,
+        },
+        new()
+        {
+            Id = 4,
+            Name = "CAR4",
+            Type = "MPV",
+            PricePerDay = 340,
+            SeatsCount = 8,
+            IsAutomatic = true,
+            PowerKw = 300,
+            FuelType = "Diesel",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 5,
+            Name = "CAR5",
+            Type = "SUV",
+            PricePerDay = 600,
+            SeatsCount = 4,
+            IsAutomatic = false,
+            PowerKw = 500,
+            FuelType = "Diesel",
+            Deposit = 1000,
+        },
+        new()
+        {
+            Id = 6,
+            Name = "CAR6",
+            Type = "Sedan",
+            PricePerDay = 100,
+            SeatsCount = 4,
+            IsAutomatic = true,
+            PowerKw = 250,
+            FuelType = "92",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 7,
+            Name = "CAR7",
+            Type = "Luxury",
+            PricePerDay = 730,
+            SeatsCount = 4,
+            IsAutomatic = true,
+            PowerKw = 430,
+            FuelType = "95",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 8,
+            Name = "CAR8 OLD",
+            Type = "MPV",
+            PricePerDay = 360,
+            SeatsCount = 8,
+            IsAutomatic = false,
+            PowerKw = 250,
+            FuelType = "Diesel",
+            Deposit = 500,
+        }
+    };
+
 }

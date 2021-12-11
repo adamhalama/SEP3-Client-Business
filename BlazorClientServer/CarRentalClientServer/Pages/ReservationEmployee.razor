@@ -15,71 +15,79 @@
     </JumbotronSubtitle>
 </Jumbotron>
 
-<button @onclick="@(() => Debug())">
-    debug
-</button>
-
 <DataGrid TItem="ReservationFormatted" Data="@reservationList"
-          Sortable="true" Filterable="true" Editable="true" 
+          Sortable="true" Filterable="true" Editable="true"
           EditMode="DataGridEditMode.Form" UseInternalEditing
           ShowPager="true" PageSize="10"
           RowUpdated="@OnRowUpdated"
           RowInserted="@OnRowInserted"
           RowRemoved="@OnRowRemoved"
-          NewItemDefaultSetter="@OnNewItemDefaultSetter">
-    <DataGridCommandColumn TItem="ReservationFormatted">
-        <NewCommandTemplate>
-            <Button Color="Color.Success" Clicked="@context.Clicked">New</Button>
-        </NewCommandTemplate>
-        <SaveCommandTemplate>
-            <Button Color="Color.Success" Clicked="@context.Clicked">Save</Button>
-        </SaveCommandTemplate>
-        <EditCommandTemplate>
-            <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
-        </EditCommandTemplate>
-        <DeleteCommandTemplate>
-            <Button Color="Color.Danger" Clicked="@context.Clicked">Delete</Button>
-        </DeleteCommandTemplate>
-        <CancelCommandTemplate>
-            <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
-        </CancelCommandTemplate>
-    </DataGridCommandColumn>
-    <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID" />
-    <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="true"/>
-    <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
-    <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.CustomerId)" Caption="Customer ID" Editable="true"/>
-    <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeId)" Caption="Employee ID" Editable="true"/>
-    <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.SecurityDeposit)" Caption="Security Deposit" Editable="false"
-                    DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
-    <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateCreated)" Caption="Date Created" Editable="false" DisplayFormat="{0:dd.MM.yyyy HH:mm}"/>
-    <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateStart)" Caption="Date Start" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
-        <EditTemplate>
-            <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
-        </EditTemplate>
-    </DataGridDateColumn>
-    <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateEnd)" Caption="Date End" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
-    <EditTemplate>
+          NewItemDefaultSetter="@OnNewItemDefaultSetter"
+          ReadData="@LoadFromService"
+          >
+    <DataGridColumns>
+        <DataGridCommandColumn TItem="ReservationFormatted">
+            <NewCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">New</Button>
+            </NewCommandTemplate>
+            <SaveCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">Save</Button>
+            </SaveCommandTemplate>
+            <EditCommandTemplate>
+                <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+            </EditCommandTemplate>
+            <DeleteCommandTemplate>
+                <Button Color="Color.Danger" Clicked="@context.Clicked">Delete</Button>
+            </DeleteCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="true"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.CustomerId)" Caption="Customer ID" Editable="true"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeId)" Caption="Employee ID" Editable="true"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.SecurityDeposit)" Caption="Security Deposit" Editable="false"
+                        DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateCreated)" Caption="Date Created" Editable="false" DisplayFormat="{0:dd.MM.yyyy HH:mm}"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateStart)" Caption="Date Start" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
+            <EditTemplate>
                 <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
             </EditTemplate>
         </DataGridDateColumn>
-    <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.AllowedKm)" Caption="Allowed Km" Editable="true"/>
-    <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.PaymentAmount)" Caption="Payment Amount" Editable="true"
-                    DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
-    @*<DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.PaymentAmount)" Caption="PaymentAmount" DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")" Editable="true">
-        <EditTemplate>
-            <NumericEdit TValue="decimal" Value="@((decimal) context.CellValue)" ValueChanged="@(v => context.CellValue = v)"/>
-        </EditTemplate>
-    </DataGridColumn>*@
-    <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.BillDate)" Caption="Bill Date" Editable="true" DisplayFormat="{0:dd.MM.yyyy}"/>
-    <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.IsPaid)" Caption="Paid" Editable="true"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateEnd)" Caption="Date End" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
+            <EditTemplate>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+            </EditTemplate>
+        </DataGridDateColumn>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.AllowedKm)" Caption="Allowed Km" Editable="true"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.PaymentAmount)" Caption="Payment Amount" Editable="true"
+                        DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.BillDate)" Caption="Bill Date" Editable="true" DisplayFormat="{0:dd.MM.yyyy}"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.IsPaid)" Caption="Paid" Editable="true"/>
+    </DataGridColumns>
+
+    <EmptyTemplate>
+        <div class="box">
+            No Reservations were found!
+        </div>
+    </EmptyTemplate>
+    <LoadingTemplate>
+        <div class="box">
+            <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+        </div>
+    </LoadingTemplate>
 </DataGrid>
 
+
 @code {
+    
+    protected Progress progressRef = new();
+    protected int progress;
 
     private Modal modalInfo;
-    Customer user = new Customer();
     private IList<ReservationFormatted> reservationList = null;
-    //connect to the database
 
     //test parts below, delete after connection finished
     private ReservationFormatted selectedReservation;
@@ -100,20 +108,20 @@
     //for new item
         if (e.Item.DateStart.CompareTo(e.Item.DateEnd) >= 0)
         {
-            //error label
+    //error label
             throw new Exception();
         }
-        
+
         e.Item.DateCreated = DateTime.Now;
         var r = e.Item.ToVanillaReservation();
         r.Vehicle = await vehicleService.GetVehicleAsync(e.Item.VehicleId);
         r.Customer = await customerService.GetCustomerAsync(e.Item.CustomerId);
         r.Employee = await employeeService.GetEmployeeAsync(e.Item.EmployeeId);
-        
+
         await reservationService.CreateReservationAsync(r.Vehicle.Id, r.Customer.Id, r.Employee.Id,
             r.SecurityDeposit, r.DateCreated, r.DateStart,
             r.DateEnd, r.AllowedKm, r.PaymentAmount, r.BillDate, r.IsPaid);
-        
+
         reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
         StateHasChanged();
     }
@@ -141,11 +149,34 @@
         var kokot = 1;
     }
 
-    protected override async Task OnInitializedAsync()
+    async Task LoadFromService( DataGridReadDataEventArgs<ReservationFormatted> gridReadDataEventArgs )
     {
     //remote
-        var fetchedReservations = await reservationService.GetReservationsAsync();
-        reservationList = ReservationFormatted.FormatReservations(fetchedReservations).ToList();
+        progressRef.Animated = true;
+        progress = 0;
+        await InvokeAsync( StateHasChanged );
+        try
+        {
+            progress = 5;
+            await InvokeAsync( StateHasChanged );
+            var fetchedReservations = reservationService.GetReservationsAsync();
+            progress = 33;
+            await Task.Delay( 500 );
+            await InvokeAsync( StateHasChanged );
+            await fetchedReservations;
+            progress = 66;
+            await Task.Delay( 500 );
+            await InvokeAsync( StateHasChanged );
+            reservationList = ReservationFormatted.FormatReservations(fetchedReservations.Result).ToList();
+            progress = 100;
+            await InvokeAsync( StateHasChanged );
+        }
+        catch (Exception e)
+        {
+            progress = 100;
+            await InvokeAsync( StateHasChanged );
+            Console.WriteLine(e);
+        }
 
     //local
     //TransferReservations();

@@ -112,5 +112,10 @@ namespace CarRentalClientServer.Authentification
             
             
         }
+
+        public UserLogin GetLoggedInUser()
+        {
+            return cachedUser;
+        }
     }
 }
