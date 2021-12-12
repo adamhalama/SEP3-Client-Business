@@ -63,8 +63,11 @@
             </CancelCommandTemplate>
         </DataGridCommandColumn>
 
-        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name"/>
-        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" CustomFilter="@TypeFilter">
+
+        <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.Id)" Caption="ID" Editable="false" Sortable="true" Filterable="false"/>
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" Editable="true" Sortable="true"/>
+        <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.PowerKw)" Caption="Power in KW" Editable="true" Sortable="true"/>
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" Editable="true" Sortable="true" CustomFilter="@TypeFilter">
             <FilterTemplate>
                 <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange(typeFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
@@ -74,9 +77,17 @@
                     <SelectItem TValue="string" Value="@("MPV")">MPV</SelectItem>
                 </Select>
             </FilterTemplate>
+            <EditTemplate>
+                <Select TValue="string" SelectedValue="@context.Item.Type" SelectedValueChanged="@(value => {context.Item.Type = value;context.UpdateCell(nameof(Vehicle.Type), value);})">
+                    <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
+                    <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
+                    <SelectItem TValue="string" Value="@("SUV")">SUV</SelectItem>
+                    <SelectItem TValue="string" Value="@("MPV")">MPV</SelectItem>
+                </Select>
+            </EditTemplate>
         </DataGridColumn>
-        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable="false"/>
-        <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Editable="true" Sortable="true" Filterable="false"/>
+        <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" Editable="true" Sortable="true" CustomFilter="@SeatFilter">
             <FilterTemplate>
                 <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange(seatFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
@@ -90,8 +101,27 @@
                 </Select>
             </FilterTemplate>
         </DataGridNumericColumn>
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.FuelType)" Caption="Fuel Type" Editable="true" Sortable="true" Filterable="false">
+            <FilterTemplate>
+                <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange(typeFilter);})">
+                    <SelectItem TValue="string" Value="@("*")">All</SelectItem>
+                    <SelectItem TValue="string" Value="@("Petrol")">Petrol</SelectItem>
+                    <SelectItem TValue="string" Value="@("Diesel")">Diesel</SelectItem>
+                    <SelectItem TValue="string" Value="@("Electric")">Electric</SelectItem>
+                </Select>
+            </FilterTemplate>
+            <EditTemplate>
+                <Select TValue="string" SelectedValue="@context.Item.FuelType">
+                    <SelectItem TValue="string" Value="@("Petrol")">Petrol</SelectItem>
+                    <SelectItem TValue="string" Value="@("Diesel")">Diesel</SelectItem>
+                    <SelectItem TValue="string" Value="@("Electric")">Electric</SelectItem>
+                </Select>
+            </EditTemplate>
+        </DataGridColumn>
+        <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Deposit)" Caption="Deposit" Editable="true" Sortable="true" Filterable="false"/>
+        <DataGridCheckColumn TItem="Vehicle" Field="@nameof(Vehicle.IsAutomatic)" Caption="Automatic" Editable="true" Sortable="true" Filterable="true"/>
     </DataGridColumns>
-    
+
     <EmptyTemplate>
         <div class="box">
             No Cars were found!
@@ -178,6 +208,8 @@
 </Modal>
 
 @code {
+//SelectedValueChanged="@(value => {context.Item.FuelType = value;context.UpdateCell(nameof(Vehicle.FuelType), value);})"
+    //SelectedValueChanged="@(value => {context.Item.Type = value;context.UpdateCell(nameof(Vehicle.Type), value);})"
 
     protected Progress progressRef = new();
     protected int progress;
@@ -191,38 +223,38 @@
     private string seatFilter;
     private IList<Vehicle> vehicleList;
 
-    async Task LoadFromService( DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs )
+    async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
     {
         progressRef.Animated = true;
         progress = 0;
-        await InvokeAsync( StateHasChanged );
+        await InvokeAsync(StateHasChanged);
         try
         {
             progress = 5;
-            await InvokeAsync( StateHasChanged );
+            await InvokeAsync(StateHasChanged);
             var fetchedVehicles = VehicleData.GetVehiclesAsync();
             progress = 33;
-            await Task.Delay( 500 );
-            await InvokeAsync( StateHasChanged );
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
             await fetchedVehicles;
             progress = 66;
-            await Task.Delay( 500 );
-            await InvokeAsync( StateHasChanged );
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
             vehicleList = fetchedVehicles.Result;
             progress = 100;
-            await InvokeAsync( StateHasChanged );
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
             progress = 100;
-            await InvokeAsync( StateHasChanged );
+            await InvokeAsync(StateHasChanged);
             Console.WriteLine(e);
         }
     }
 
- private void OnNewItemDefaultSetter(Vehicle vehicle)
+    private void OnNewItemDefaultSetter(Vehicle vehicle)
     {
-     StateHasChanged();
+        StateHasChanged();
     }
 
     async Task OnRowInserted(SavedRowItem<Vehicle, Dictionary<string, object>> e)
@@ -247,9 +279,8 @@
 
     async Task OnRowRemoved(Vehicle vehicle)
     {
+        await VehicleData.DeleteVehicleAsync(vehicle.Id);
 
-        await VehicleData.DeleteVehicleAsync(vehicle.Id); 
-            
         vehicleList = VehicleData.GetVehiclesAsync().Result;
         StateHasChanged();
     }
