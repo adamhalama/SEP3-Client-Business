@@ -31,8 +31,9 @@ namespace CarRentalClientServer
                     // {
                     //     Console.WriteLine(vehicle.ToString());
                     // }
-                    
-                    
+                    Console.WriteLine(("User"));
+                    employeeService.CreateEmployeeAsync("Test", "test@email.com", "test", 5);
+
                     // Console.WriteLine("create vehicles");
                     // vehicleService.CreateVehicleAsync(
                     //     "BMW M2 Competition 3.0", "Coupe", 300, 
@@ -46,15 +47,15 @@ namespace CarRentalClientServer
                     // vehicleService.CreateVehicleAsync(
                     //     "Updated jebo", "Coupe", 300,
                     //     4, false, 300, "Petrol", 3000);
-                    
+
                     // Console.WriteLine("Customer");
                     // customerService.CreateCustomerAsync("jebo", "jebnuty@jano.sk", "123", "V lese", "123XX");
                     // Console.WriteLine("Employee");
                     // await employeeService.CreateEmployeeAsync("admin", "admin@bruh.com", "admin", 1);
 
                     // Console.WriteLine("reservation");
-                    // await reservationService.CreateReservationAsync(1, 1, 1, 1000,
-                    //     1627870000, 1627870693, 1627879999, 1000, 1200, 1627870000, true);
+                    //await reservationService.CreateReservationAsync(1, 1, 1, 1000,
+                    //    1639404928, 1639491328, 1639656928, 1000, 1200, 1639408528, true);
 
                     // vehicleService.UpdateVehicleAsync(new Vehicle(10, "Updated jebo", "Coupe", 300, 4, false, 300, "Petrol", 3000));
 

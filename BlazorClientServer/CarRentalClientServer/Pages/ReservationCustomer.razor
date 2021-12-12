@@ -12,73 +12,73 @@
 <Div Padding="Padding.Is4"></Div>
 
 <Card>
-                <CardHeader>
-                    <CardTitle>Detail</CardTitle>
-                </CardHeader>
-                <CardBody>
-                    <Fields>
-                        <Field>
-                            <FieldLabel>Customer name</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.CustomerId"></NumericEdit>
-                            </FieldBody>
-                        </Field>
-                        <!--customer name-->
-                        <!--employee name-->
-                        <!--vehicle name-->
-                        <Field>
-                            <FieldLabel>Security deposit</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.SecurityDeposit"></NumericEdit>
-                            </FieldBody>
-                        </Field>
-                        <Field>
-                            <FieldLabel>Total amount</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.PaymentAmount"></NumericEdit>
-                            </FieldBody>
-                        </Field>
-                        <!-- change type to Date in the future -->
-                        <Field>
-                            <FieldLabel>Date created</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.DateCreated"></NumericEdit>
-                            </FieldBody>
-                        </Field>
-                        <Field>
-                            <FieldLabel>Date start</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.DateStart"></NumericEdit>
-                            </FieldBody>
-                        </Field>
-                        <Field>
-                            <FieldLabel>Date end</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.DateEnd"></NumericEdit>
-                            </FieldBody>
-                        </Field>
-                        <Field>
-                            <FieldLabel>Bill date</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.BillDate"></NumericEdit>
-                            </FieldBody>
-                        </Field>
+    <CardHeader>
+        <CardTitle>Detail</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <Fields>
+            <Field>
+                <FieldLabel>Customer name</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.CustomerId"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <!--customer name-->
+            <!--employee name-->
+            <!--vehicle name-->
+            <Field>
+                <FieldLabel>Security deposit</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.SecurityDeposit"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>Total amount</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.PaymentAmount"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <!-- change type to Date in the future -->
+            <Field>
+                <FieldLabel>Date created</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.DateCreated"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>Date start</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.DateStart"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>Date end</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.DateEnd"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>Bill date</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.BillDate"></NumericEdit>
+                </FieldBody>
+            </Field>
 
-                        <Field>
-                            <FieldLabel>Allowed distance</FieldLabel>
-                            <FieldBody>
-                                <NumericEdit ReadOnly Value="@selectedReserve?.AllowedKm"></NumericEdit>
-                            </FieldBody>
-                        </Field>
+            <Field>
+                <FieldLabel>Allowed distance</FieldLabel>
+                <FieldBody>
+                    <NumericEdit ReadOnly Value="@selectedReserve?.AllowedKm"></NumericEdit>
+                </FieldBody>
+            </Field>
 
-                    </Fields>
-                </CardBody>
-            </Card>
+        </Fields>
+    </CardBody>
+</Card>
 
 <DataGrid TItem="ReservationTest" Data="@listTest"
           @bind-SelectedRow="@selectedReserve" Responsive
           Filterable FilterMethod="DataGridFilterMethod.StartsWith">
-          <!--Add filter for employee name and ca rname, remove filter for amount-->
+    <!--Add filter for employee name and ca rname, remove filter for amount-->
     <DataGridColumns>
         <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false />
         <!--customer name-->

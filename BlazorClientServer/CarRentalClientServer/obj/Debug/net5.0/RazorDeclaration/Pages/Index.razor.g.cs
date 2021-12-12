@@ -105,6 +105,13 @@ using Blazorise.Components;
 #nullable disable
 #nullable restore
 #line 2 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
+using CarRentalClientServer.Data;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 3 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
 using CarRentalClientServer.Models;
 
 #line default
@@ -119,7 +126,7 @@ using CarRentalClientServer.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 201 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
+#line 204 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
        
     DatePicker<DateTime?> startDate;
     DatePicker<DateTime?> endDate;
@@ -293,6 +300,8 @@ using CarRentalClientServer.Models;
 #line hidden
 #nullable disable
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavMgr { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IVehicleService vs { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IReservationService rs { get; set; }
     }
 }
 #pragma warning restore 1591
