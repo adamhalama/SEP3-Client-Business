@@ -154,8 +154,9 @@ namespace CarRentalClientServer.Data
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw;
             }
+
+            return new Vehicle();
         }
 
         public async Task<Vehicle> UpdateVehicleAsync(Vehicle vehicle)

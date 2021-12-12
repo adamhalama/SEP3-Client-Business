@@ -13,6 +13,12 @@
     <JumbotronSubtitle>
         The whole reservation list.
     </JumbotronSubtitle>
+    @if (showError)
+    {
+        <Paragraph TextColor="TextColor.Danger">
+            @errorLabel
+        </Paragraph>
+    }
 </Jumbotron>
 
 <DataGrid TItem="ReservationFormatted" Data="@reservationList"
@@ -23,8 +29,7 @@
           RowInserted="@OnRowInserted"
           RowRemoved="@OnRowRemoved"
           NewItemDefaultSetter="@OnNewItemDefaultSetter"
-          ReadData="@LoadFromService"
-          >
+          ReadData="@LoadFromService">
     <DataGridColumns>
         <DataGridCommandColumn TItem="ReservationFormatted">
             <NewCommandTemplate>
@@ -43,6 +48,8 @@
                 <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
             </CancelCommandTemplate>
         </DataGridCommandColumn>
+
+
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID"/>
         <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="true"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
@@ -82,9 +89,12 @@
 
 
 @code {
-    
+
     protected Progress progressRef = new();
     protected int progress;
+
+    private bool showError = false;
+    private string errorLabel = "Error label";
 
     private Modal modalInfo;
     private IList<ReservationFormatted> reservationList = null;
@@ -103,44 +113,75 @@
         StateHasChanged();
     }
 
-    async Task OnRowInserted(SavedRowItem<ReservationFormatted, Dictionary<string, object>> e)
+    async Task OnRowInserted(SavedRowItem<ReservationFormatted, Dictionary<string, object>> item)
     {
-    //for new item
-        if (e.Item.DateStart.CompareTo(e.Item.DateEnd) >= 0)
+        showError = false;
+        try
         {
+            if (item.Item.DateStart.CompareTo(item.Item.DateEnd) >= 0)
+            {
     //error label
-            throw new Exception();
+                throw new Exception();
+            }
+
+            item.Item.DateCreated = DateTime.Now;
+            var r = item.Item.ToVanillaReservation();
+            r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
+            r.Customer = await customerService.GetCustomerAsync(item.Item.CustomerId);
+            r.Employee = await employeeService.GetEmployeeAsync(item.Item.EmployeeId);
+
+            await reservationService.CreateReservationAsync(r.Vehicle.Id, r.Customer.Id, r.Employee.Id,
+                r.SecurityDeposit, r.DateCreated, r.DateStart,
+                r.DateEnd, r.AllowedKm, r.PaymentAmount, r.BillDate, r.IsPaid);
+
+            reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
+            await InvokeAsync(StateHasChanged);
         }
-
-        e.Item.DateCreated = DateTime.Now;
-        var r = e.Item.ToVanillaReservation();
-        r.Vehicle = await vehicleService.GetVehicleAsync(e.Item.VehicleId);
-        r.Customer = await customerService.GetCustomerAsync(e.Item.CustomerId);
-        r.Employee = await employeeService.GetEmployeeAsync(e.Item.EmployeeId);
-
-        await reservationService.CreateReservationAsync(r.Vehicle.Id, r.Customer.Id, r.Employee.Id,
-            r.SecurityDeposit, r.DateCreated, r.DateStart,
-            r.DateEnd, r.AllowedKm, r.PaymentAmount, r.BillDate, r.IsPaid);
-
-        reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
-        StateHasChanged();
+        catch (Exception e)
+        {
+            errorLabel = "Error while creating";
+            showError = true;
+            await InvokeAsync(StateHasChanged);
+            Console.WriteLine(e);
+        }
     }
 
-    async Task OnRowUpdated(SavedRowItem<ReservationFormatted, Dictionary<string, object>> e)
+    async Task OnRowUpdated(SavedRowItem<ReservationFormatted, Dictionary<string, object>> item)
     {
-    //for update item
-        var r = e.Item.ToVanillaReservation();
-        r.Vehicle = await vehicleService.GetVehicleAsync(e.Item.VehicleId);
+        showError = false;
+        try
+        {
+        var r = item.Item.ToVanillaReservation();
+        r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
         await reservationService.UpdateReservationAsync(r);
         reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while updating";
+            showError = true;
+            StateHasChanged();
+        }
     }
 
     async Task OnRowRemoved(ReservationFormatted reservation)
     {
+        showError = false;
+        try
+        {
         await reservationService.DeleteReservationAsync(reservation.Id);
         reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while removing";
+            showError = true;
+            StateHasChanged();
+        }
     }
 
     private void Debug()
@@ -149,39 +190,36 @@
         var kokot = 1;
     }
 
-    async Task LoadFromService( DataGridReadDataEventArgs<ReservationFormatted> gridReadDataEventArgs )
+    async Task LoadFromService(DataGridReadDataEventArgs<ReservationFormatted> gridReadDataEventArgs)
     {
-    //remote
+        showError = false;
         progressRef.Animated = true;
         progress = 0;
-        await InvokeAsync( StateHasChanged );
+        await InvokeAsync(StateHasChanged);
         try
         {
             progress = 5;
-            await InvokeAsync( StateHasChanged );
+            await InvokeAsync(StateHasChanged);
             var fetchedReservations = reservationService.GetReservationsAsync();
             progress = 33;
-            await Task.Delay( 500 );
-            await InvokeAsync( StateHasChanged );
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
             await fetchedReservations;
             progress = 66;
-            await Task.Delay( 500 );
-            await InvokeAsync( StateHasChanged );
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
             reservationList = ReservationFormatted.FormatReservations(fetchedReservations.Result).ToList();
             progress = 100;
-            await InvokeAsync( StateHasChanged );
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
             progress = 100;
-            await InvokeAsync( StateHasChanged );
+            await InvokeAsync(StateHasChanged);
             Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
         }
-
-    //local
-    //TransferReservations();
-    // reservationList = ReservationFormatted.FormatReservations(reservationListTest).ToList();
-        await base.OnInitializedAsync();
     }
 
     private bool StatusCustomerFilter(object itemValue, object searchValue)

@@ -8,6 +8,12 @@
     <JumbotronSubtitle>
         All the cars.
     </JumbotronSubtitle>
+    @if (showError)
+        {
+            <Paragraph TextColor="TextColor.Danger">
+                @errorLabel
+            </Paragraph>
+        }
 </Jumbotron>
 <h3>We have four types of car for you.</h3>
 <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light" ThemeContrast="ThemeContrast.Light" Shadow="Shadow.Small">
@@ -35,7 +41,8 @@
 <Div Padding="Padding.Is2"></Div>
 
 
-<DataGrid TItem="Vehicle" Data="vehicleList" Sortable="true" Filterable="true" Editable="true"
+<DataGrid TItem="Vehicle" Data="vehicleList" 
+          Editable="true"
           EditMode="DataGridEditMode.Form" UseInternalEditing
           ShowPager="true" PageSize="10"
           RowUpdated="@OnRowUpdated"
@@ -77,14 +84,6 @@
                     <SelectItem TValue="string" Value="@("MPV")">MPV</SelectItem>
                 </Select>
             </FilterTemplate>
-            <EditTemplate>
-                <Select TValue="string" SelectedValue="@context.Item.Type" SelectedValueChanged="@(value => {context.Item.Type = value;context.UpdateCell(nameof(Vehicle.Type), value);})">
-                    <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
-                    <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
-                    <SelectItem TValue="string" Value="@("SUV")">SUV</SelectItem>
-                    <SelectItem TValue="string" Value="@("MPV")">MPV</SelectItem>
-                </Select>
-            </EditTemplate>
         </DataGridColumn>
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Editable="true" Sortable="true" Filterable="false"/>
         <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" Editable="true" Sortable="true" CustomFilter="@SeatFilter">
@@ -110,13 +109,6 @@
                     <SelectItem TValue="string" Value="@("Electric")">Electric</SelectItem>
                 </Select>
             </FilterTemplate>
-            <EditTemplate>
-                <Select TValue="string" SelectedValue="@context.Item.FuelType">
-                    <SelectItem TValue="string" Value="@("Petrol")">Petrol</SelectItem>
-                    <SelectItem TValue="string" Value="@("Diesel")">Diesel</SelectItem>
-                    <SelectItem TValue="string" Value="@("Electric")">Electric</SelectItem>
-                </Select>
-            </EditTemplate>
         </DataGridColumn>
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Deposit)" Caption="Deposit" Editable="true" Sortable="true" Filterable="false"/>
         <DataGridCheckColumn TItem="Vehicle" Field="@nameof(Vehicle.IsAutomatic)" Caption="Automatic" Editable="true" Sortable="true" Filterable="true"/>
@@ -213,6 +205,11 @@
 
     protected Progress progressRef = new();
     protected int progress;
+    
+    private IList<Vehicle> vehicleList;
+    
+    private bool showError = false;
+    private string errorLabel = "Error label";
 
     private Modal sedanModal;
     private Modal luxuryModal;
@@ -221,7 +218,6 @@
     private Vehicle selectedVehicle;
     private string typeFilter;
     private string seatFilter;
-    private IList<Vehicle> vehicleList;
 
     async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
     {
@@ -249,6 +245,8 @@
             progress = 100;
             await InvokeAsync(StateHasChanged);
             Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
         }
     }
 
@@ -257,32 +255,61 @@
         StateHasChanged();
     }
 
-    async Task OnRowInserted(SavedRowItem<Vehicle, Dictionary<string, object>> e)
+    async Task OnRowInserted(SavedRowItem<Vehicle, Dictionary<string, object>> item)
     {
-        var v = e.Item;
+        showError = false;
+        try
+        {
+        var v = item.Item;
         await VehicleData.CreateVehicleAsync(v.Name, v.Type, v.PricePerDay, v.SeatsCount,
             v.IsAutomatic, v.PowerKw, v.FuelType, v.Deposit);
 
-        vehicleList = VehicleData.GetVehiclesAsync().Result;
+        vehicleList = await VehicleData.GetVehiclesAsync();
         StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            errorLabel = "Error while creating";
+            showError = true;
+            Console.WriteLine(e);
+        }
     }
 
-    async Task OnRowUpdated(SavedRowItem<Vehicle, Dictionary<string, object>> e)
+    async Task OnRowUpdated(SavedRowItem<Vehicle, Dictionary<string, object>> item)
     {
-    //for update item
-        var v = e.Item;
-        await VehicleData.UpdateVehicleAsync(v);
+        showError = false;
+        try
+        {
+            var v = item.Item;
+            await VehicleData.UpdateVehicleAsync(v);
 
-        vehicleList = VehicleData.GetVehiclesAsync().Result;
-        StateHasChanged();
+            vehicleList = await VehicleData.GetVehiclesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while updating";
+            showError = true;
+        }
     }
 
     async Task OnRowRemoved(Vehicle vehicle)
     {
+        showError = false;
+        try
+        {
         await VehicleData.DeleteVehicleAsync(vehicle.Id);
 
-        vehicleList = VehicleData.GetVehiclesAsync().Result;
+        vehicleList = await VehicleData.GetVehiclesAsync();
         StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while removing";
+            showError = true;
+        }
     }
 
 

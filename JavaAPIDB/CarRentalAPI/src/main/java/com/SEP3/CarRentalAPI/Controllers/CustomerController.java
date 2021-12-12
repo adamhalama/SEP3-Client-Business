@@ -55,7 +55,8 @@ public class CustomerController
 
         customer.setName(customerDetails.getName());
         customer.setEmail(customerDetails.getEmail());
-        customer.setPassword(customerDetails.getPassword());
+        if(customerDetails.getPassword() != null && !customerDetails.getPassword().isEmpty())
+            customer.setPassword(customerDetails.getPassword());
         customer.setAddress(customerDetails.getAddress());
         customer.setLicenceNumber(customerDetails.getLicenceNumber());
         final Customer updatedCustomer = repository.save(customer);

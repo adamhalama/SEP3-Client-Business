@@ -9,6 +9,12 @@
     <JumbotronSubtitle>
         All the employees.
     </JumbotronSubtitle>
+    @if (showError)
+    {
+        <Paragraph TextColor="TextColor.Danger">
+            @errorLabel
+        </Paragraph>
+    }
 </Jumbotron>
 
 <DataGrid TItem="Employee" Data="@employeeList"
@@ -62,12 +68,16 @@
     protected Progress progressRef = new();
     protected int progress;
 
+    private bool showError = false;
+    private string errorLabel = "Error label";
+
     private List<Employee> employees = null;
     private IList<Employee> employeeList;
     private Employee employeeSelected;
 
     async Task LoadFromService(DataGridReadDataEventArgs<Employee> gridReadDataEventArgs)
     {
+        showError = false;
         progressRef.Animated = true;
         progress = 0;
         await InvokeAsync(StateHasChanged);
@@ -92,6 +102,8 @@
             progress = 100;
             await InvokeAsync(StateHasChanged);
             Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
         }
     }
 
@@ -135,29 +147,60 @@
         StateHasChanged();
     }
 
-    async Task OnRowInserted(SavedRowItem<Employee, Dictionary<string, object>> e)
+    async Task OnRowInserted(SavedRowItem<Employee, Dictionary<string, object>> item)
     {
-    //for new item
-        var employee = e.Item;
-        await employeeService.CreateEmployeeAsync(employee.Name, employee.Email, employee.Password, employee.ClearanceLevel);
-        employeeList = await employeeService.GetEmployeesAsync();
-        StateHasChanged();
+        showError = false;
+        try
+        {
+            var employee = item.Item;
+            await employeeService.CreateEmployeeAsync(employee.Name, employee.Email, employee.Password, employee.ClearanceLevel);
+            employeeList = await employeeService.GetEmployeesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            errorLabel = "Error while creating";
+            showError = true;
+            StateHasChanged();
+            Console.WriteLine(e);
+        }
     }
 
-    async Task OnRowUpdated(SavedRowItem<Employee, Dictionary<string, object>> e)
+    async Task OnRowUpdated(SavedRowItem<Employee, Dictionary<string, object>> item)
     {
-    //for update item
-        var employee = e.Item;
-        await employeeService.UpdateEmployeeAsync(employee);
-        employeeList = await employeeService.GetEmployeesAsync();
-        StateHasChanged();
+        showError = false;
+        try
+        {
+            var employee = item.Item;
+            await employeeService.UpdateEmployeeAsync(employee);
+            employeeList = await employeeService.GetEmployeesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while updating";
+            showError = true;
+            StateHasChanged();
+        }
     }
 
     async Task OnRowRemoved(Employee employee)
     {
-        await employeeService.DeleteEmployeeAsync(employee.Id);
-        employeeList = await employeeService.GetEmployeesAsync();
-        StateHasChanged();
+        showError = false;
+        try
+        {
+            await employeeService.DeleteEmployeeAsync(employee.Id);
+            employeeList = await employeeService.GetEmployeesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while removing";
+            showError = true;
+            StateHasChanged();
+        }
     }
 
 }
