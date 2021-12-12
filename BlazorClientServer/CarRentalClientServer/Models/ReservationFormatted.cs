@@ -16,11 +16,14 @@ namespace CarRentalClientServer.Models
         public string VehicleName { get; set; }
         public long CustomerId { get; set; }
         public long EmployeeId { get; set; }
+        
+        public string EmployeeName { get; set; }
 
         [JsonPropertyName("securityDeposit")] public int SecurityDeposit { get; set; }
         [JsonPropertyName("dateCreated")] public DateTime DateCreated { get; set; }
         [JsonPropertyName("dateStart")] public DateTime DateStart { get; set; }
         [JsonPropertyName("dateEnd")] public DateTime DateEnd { get; set; }
+        
         [JsonPropertyName("allowedKm")] public int AllowedKm { get; set; }
         [JsonPropertyName("paymentAmount")] public float PaymentAmount { get; set; }
         [JsonPropertyName("billDate")] public DateTime BillDate { get; set; }
@@ -89,8 +92,11 @@ namespace CarRentalClientServer.Models
             }
             if (reservation.Customer != null)
                 CustomerId = reservation.Customer.Id;
-            if (reservation.Employee != null )
+            if (reservation.Employee != null && reservation.Employee.Name != null)
+            {
                 EmployeeId = reservation.Employee.Id;
+                EmployeeName = reservation.Employee.Name;
+            }
             SecurityDeposit = reservation.SecurityDeposit;
             DateCreated = DateTimeConversions.GetDateTime(reservation.DateCreated);
             DateStart = DateTimeConversions.GetDateTime(reservation.DateStart);
@@ -134,6 +140,12 @@ namespace CarRentalClientServer.Models
             // reservationFormatted.DateStart.
 
             //todo find solution for day calculation
+        }
+
+        public static int GetDaysBetweenTime(DateTime startTime, DateTime endTime)
+        {
+            TimeSpan timeSpan = endTime - startTime;
+            return (int) Math.Ceiling(timeSpan.TotalDays);
         }
     }
 }

@@ -91,7 +91,7 @@ namespace CarRentalClientServer.Data
                 query
                 ReservationsByVehicle($id: Long!)
                 {
-                    ReservationsByVehicle(id: $id)
+                    reservationsByVehicle(id: $id)
                     {
                         id
                         vehicle
@@ -143,7 +143,7 @@ namespace CarRentalClientServer.Data
             }
         }
         
-        public async Task<IList<Reservation>> ReservationsByCustomerAsync(long id)
+        public async Task<IList<Reservation>> GetReservationsByCustomerAsync(long id)
         {
             var request = new GraphQLRequest
             {
@@ -151,41 +151,45 @@ namespace CarRentalClientServer.Data
                 query
                 ReservationsByCustomer($id: Long!)
                 {
-                    ReservationsByCustomer(id: $id)
+                    reservationsByCustomer(id: $id)
                     {
-                        id
-                        vehicle
-                        {
-                          id
-                          name
-                          type
-                          pricePerDay
-                          seatsCount
-                          isAutomatic
-                          powerKw
-                          fuelType
-                          deposit
-                        }
-                        customer
-                        {
-                          id
-                        }
-                        employee
-                        {
-                          id
-                          name
-                          email
-                          clearanceLevel
-                        }
-                        securityDeposit
-                        dateCreated
-                        dateStart
-                        dateEnd
-                        allowedKm
-                        paymentAmount
-                        billDate
-                        isPaid
+                    id
+                    vehicle
+                    {
+                      id
+                      name
+                      type
+                      pricePerDay
+                      seatsCount
+                      isAutomatic
+                      powerKw
+                      fuelType
+                      deposit
                     }
+                    customer
+                    {
+                      id
+                      name
+                      email
+                      address
+                      licenceNumber
+                    }
+                    employee
+                    {
+                      id
+                      name
+                      email
+                      clearanceLevel
+                    }
+                    securityDeposit
+                    dateCreated
+                    dateStart
+                    dateEnd
+                    allowedKm
+                    paymentAmount
+                    billDate
+                    isPaid
+                  }
                 }",
                 OperationName = "ReservationsByCustomer",
                 Variables = new {id = id}
@@ -213,44 +217,47 @@ namespace CarRentalClientServer.Data
             {
                 Query = @"
                 query
-                ReservationsByEmployee($id: Long!)
+                reservationsByEmployee($id: Long!)
                 {
                     ReservationsByEmployee(id: $id)
                     {
-                        id
-                        vehicle
-                        {
-                          id
-                          name
-                          type
-                          pricePerDay
-                          seatsCount
-                          isAutomatic
-                          powerKw
-                          fuelType
-                          deposit
-                        }
-                        customer
-                        {
-                          id
-                          name
-                          email
-                          address
-                          licenceNumber
-                        }
-                        employee
-                        {
-                          id
-                        }
-                        securityDeposit
-                        dateCreated
-                        dateStart
-                        dateEnd
-                        allowedKm
-                        paymentAmount
-                        billDate
-                        isPaid
+                    id
+                    vehicle
+                    {
+                      id
+                      name
+                      type
+                      pricePerDay
+                      seatsCount
+                      isAutomatic
+                      powerKw
+                      fuelType
+                      deposit
                     }
+                    customer
+                    {
+                      id
+                      name
+                      email
+                      address
+                      licenceNumber
+                    }
+                    employee
+                    {
+                      id
+                      name
+                      email
+                      clearanceLevel
+                    }
+                    securityDeposit
+                    dateCreated
+                    dateStart
+                    dateEnd
+                    allowedKm
+                    paymentAmount
+                    billDate
+                    isPaid
+                  }
                 }",
                 OperationName = "ReservationsByEmployee",
                 Variables = new {id = id}

@@ -1,250 +1,157 @@
-﻿@page "/Reservations"
-@attribute [Authorize(Policy = "SecurityLevel0")]
+﻿@page "/ReservationHistory"
+@attribute [Authorize(Policy = "CustomerOnly")]
 
 @using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Authentification
+@inject AuthenticationStateProvider authenticationStateProvider
+
+@inject IReservationService reservationService;
+@inject IVehicleService vehicleService;
+@inject ICustomerService customerService;
+@inject IEmployeeService employeeService;
 
 <Div Padding="Padding.Is4"></Div>
-<Card>
-    <CardBody>
-        <Heading Size="HeadingSize.Is2">Reservation history</Heading>
-    </CardBody>
-</Card>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Reservations History</JumbotronTitle>
+    <JumbotronSubtitle>
+        The whole reservation list.
+    </JumbotronSubtitle>
+    @if (showError)
+    {
+        <Paragraph TextColor="TextColor.Danger">
+            @errorLabel
+        </Paragraph>
+    }
+</Jumbotron>
 
-
-<Div Padding="Padding.Is4"></Div>
-
-<Card>
-    <CardHeader>
-        <CardTitle>Detail</CardTitle>
-    </CardHeader>
-    <CardBody>
-        <Fields>
-            <Field>
-                <FieldLabel>Customer name</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.CustomerId"></NumericEdit>
-                </FieldBody>
-            </Field>
-            <!--customer name-->
-            <!--employee name-->
-            <!--vehicle name-->
-            <Field>
-                <FieldLabel>Security deposit</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.SecurityDeposit"></NumericEdit>
-                </FieldBody>
-            </Field>
-            <Field>
-                <FieldLabel>Total amount</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.PaymentAmount"></NumericEdit>
-                </FieldBody>
-            </Field>
-            <!-- change type to Date in the future -->
-            <Field>
-                <FieldLabel>Date created</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.DateCreated"></NumericEdit>
-                </FieldBody>
-            </Field>
-            <Field>
-                <FieldLabel>Date start</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.DateStart"></NumericEdit>
-                </FieldBody>
-            </Field>
-            <Field>
-                <FieldLabel>Date end</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.DateEnd"></NumericEdit>
-                </FieldBody>
-            </Field>
-            <Field>
-                <FieldLabel>Bill date</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.BillDate"></NumericEdit>
-                </FieldBody>
-            </Field>
-
-            <Field>
-                <FieldLabel>Allowed distance</FieldLabel>
-                <FieldBody>
-                    <NumericEdit ReadOnly Value="@selectedReserve?.AllowedKm"></NumericEdit>
-                </FieldBody>
-            </Field>
-
-        </Fields>
-    </CardBody>
-</Card>
-
-<DataGrid TItem="ReservationTest" Data="@listTest"
-          @bind-SelectedRow="@selectedReserve" Responsive
-          Filterable FilterMethod="DataGridFilterMethod.StartsWith">
-    <!--Add filter for employee name and ca rname, remove filter for amount-->
+<DataGrid TItem="ReservationFormatted" Data="@reservationList"
+          Sortable="true" Filterable="true" Editable="true"
+          EditMode="DataGridEditMode.Form" UseInternalEditing
+          ShowPager="true" PageSize="10"
+          RowRemoved="@OnRowRemoved"
+          ReadData="@LoadFromService">
     <DataGridColumns>
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.Id)" Caption="Id" Filterable=false />
-        <!--customer name-->
-        <!--employee name-->
-        <!--vehicle name-->
-        <DataGridDateColumn TItem="ReservationTest" Field="@nameof(ReservationTest.DateStart)" DisplayFormat="{0:dd.MM.yyyy}" Caption="Date start" Filterable=false />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.BillDate)" Caption="Bill date" Filterable=false />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.PaymentAmount)" Caption="Amount" />
-        <DataGridColumn TItem="ReservationTest" Field="@nameof(ReservationTest.IsPaid)" Caption="Status" CustomFilter="@StatusCustomerFilter">
-            <FilterTemplate>
-                <Select TValue="string" SelectedValue="@selectedStatusFilter" SelectedValueChanged="@(value => {selectedStatusFilter = value;context.TriggerFilterChange( selectedStatusFilter); })">
-                    <SelectItem TValue="string" Value="@("*")">All</SelectItem>
-                    <SelectItem TValue="bool" Value="@(true)">Paid</SelectItem>
-                    <SelectItem TValue="bool" Value="@(false)">Not paid</SelectItem>
-                </Select>
-            </FilterTemplate>
+        <DataGridCommandColumn TItem="ReservationFormatted">
+            <SaveCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">Save</Button>
+            </SaveCommandTemplate>
+            <EditCommandTemplate>
+                <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+            </EditCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
+            </CancelCommandTemplate>
+            <DeleteCommandTemplate>
+                            <Button Color="Color.Danger" Clicked="@context.Clicked">Delete</Button>
+                        </DeleteCommandTemplate>
+        </DataGridCommandColumn>
 
-            <DisplayTemplate>
-                @{
-                    var isPaid = (context as ReservationTest)?.IsPaid;
-                    @if (isPaid == true)
-                    {
-                        @("Paid")
-                    }
-                    else
-                    {
-                        @("Not paid or canceled")
-                    }
-                }
-            </DisplayTemplate>
-        </DataGridColumn>
+
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="false"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.CustomerId)" Caption="Customer ID" Editable="false"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeId)" Caption="Employee ID" Editable="false"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeName)" Caption="Employee name" Editable="false"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.SecurityDeposit)" Caption="Security Deposit" Editable="false"
+                        DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateCreated)" Caption="Date Created" Editable="false" DisplayFormat="{0:dd.MM.yyyy HH:mm}"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateStart)" Caption="Date Start" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
+            <EditTemplate>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+            </EditTemplate>
+        </DataGridDateColumn>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateEnd)" Caption="Date End" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
+            <EditTemplate>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+            </EditTemplate>
+        </DataGridDateColumn>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.AllowedKm)" Caption="Allowed Km" Editable="false"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.PaymentAmount)" Caption="Payment Amount" Editable="false"
+                        DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
+        <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.BillDate)" Caption="Bill Date" Editable="false" DisplayFormat="{0:dd.MM.yyyy}"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.IsPaid)" Caption="Paid" Editable="false"/>
     </DataGridColumns>
+
+    <EmptyTemplate>
+        <div class="box">
+            No Reservations history was found, just Rent a car!
+        </div>
+    </EmptyTemplate>
+    <LoadingTemplate>
+        <div class="box">
+            <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+        </div>
+    </LoadingTemplate>
 </DataGrid>
 
+
 @code {
+
+    protected Progress progressRef = new();
+    protected int progress;
+
+    private bool showError = false;
+    private string errorLabel = "Error label";
+
     private Modal modalInfo;
-    Customer user = new Customer();
-    //connect to the database
+    private IList<ReservationFormatted> reservationList = null;
 
     //test parts below, delete after connection finished
-    private ReservationTest selectedReserve;
+    private ReservationFormatted selectedReservation;
 
     string selectedStatusFilter;
-    private bool StatusCustomerFilter(object itemValue, object searchValue)
+
+
+    async Task OnRowRemoved(ReservationFormatted reservation)
     {
-        if (searchValue is string statusFilter)
+        showError = false;
+        try
         {
-            return statusFilter == "*" || statusFilter == itemValue?.ToString();
+            await reservationService.DeleteReservationAsync(reservation.Id);
+            reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
+            await InvokeAsync(StateHasChanged);
         }
-        return true;
-    }
-
-    private List<ReservationTest> listTest = new()
+        catch (Exception e)
         {
-            new()
-            {
-                Id = 1,
-                VehicleId = 2,
-                CustomerId = 2,
-                EmployeeId = 3,
-                SecurityDeposit = 500,
-                DateCreated = 1627870693,
-                DateStart = 1627957093,
-                DateEnd = 1628216293,
-                AllowedKm = 1500,
-                PaymentAmount = 3400,
-                BillDate = 1627870950,
-                IsPaid = true
-            },
-            new()
-            {
-                Id = 2,
-                VehicleId = 2,
-                CustomerId = 2,
-                EmployeeId = 3,
-                SecurityDeposit = 500,
-                DateCreated = 1627870693,
-                DateStart = 1627957093,
-                DateEnd = 1628216293,
-                AllowedKm = 1500,
-                PaymentAmount = 5900,
-                BillDate = 1627871800,
-                IsPaid = false
-            },
-            new()
-            {
-                Id = 3,
-                VehicleId = 2,
-                CustomerId = 2,
-                EmployeeId = 3,
-                SecurityDeposit = 500,
-                DateCreated = 1627870693,
-                DateStart = 1627957093,
-                DateEnd = 1628216293,
-                AllowedKm = 1500,
-                PaymentAmount = 4660,
-                BillDate = 1627870950,
-                IsPaid = true
-            }
-        };
-
-    private List<CustomerTest> customerTestList = new()
+            Console.WriteLine(e);
+            errorLabel = "Error while removing";
+            showError = true;
+            StateHasChanged();
+        }
+    }
+    
+    async Task LoadFromService(DataGridReadDataEventArgs<ReservationFormatted> gridReadDataEventArgs)
+    {
+        showError = false;
+        progressRef.Animated = true;
+        progress = 0;
+        await InvokeAsync(StateHasChanged);
+        try
         {
-            new()
-            {
-                Id = 1,
-                Name = "AB"
-            },
-            new()
-            {
-                Id = 2,
-                Name = "DD"
-            },
-            new()
-            {
-                Id = 3,
-                Name = "EE"
-            }
-        };
-
-    private List<CarTest> carTestList = new()
+            progress = 5;
+            await InvokeAsync(StateHasChanged);
+            var fetchedReservations = reservationService.GetReservationsByCustomerAsync(((CustomAuthenticationStateProvider) authenticationStateProvider).GetLoggedInUser().UserId);
+            progress = 33;
+            await Task.Delay(300);
+            await InvokeAsync(StateHasChanged);
+            await fetchedReservations;
+            progress = 66;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            reservationList = ReservationFormatted.FormatReservations(fetchedReservations.Result).ToList();
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
         {
-            new()
-            {
-                Id = 1,
-                Name = "CAR1"
-            },
-            new()
-            {
-                Id = 2,
-                Name = "CAR2"
-            },
-            new()
-            {
-                Id = 3,
-                Name = "CAR3"
-            }
-        };
-
-    public class ReservationTest
-    {
-        public long Id { get; set; }
-        public long VehicleId { get; set; }
-        public long CustomerId { get; set; }
-        public long EmployeeId { get; set; }
-        public int SecurityDeposit { get; set; }
-        public long DateCreated { get; set; }
-        public long DateStart { get; set; }
-        public long DateEnd { get; set; }
-        public int AllowedKm { get; set; }
-        public int PaymentAmount { get; set; }
-        public long BillDate { get; set; }
-        public bool IsPaid { get; set; }
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+            Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
+        }
     }
 
-    public class CustomerTest
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class CarTest
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
 }

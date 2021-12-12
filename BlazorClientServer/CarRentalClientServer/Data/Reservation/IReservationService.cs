@@ -11,7 +11,7 @@ namespace CarRentalClientServer.Data
 
         Task<IList<Reservation>> GetReservationsByVehicleAsync(long id);
 
-        Task<IList<Reservation>> ReservationsByCustomerAsync(long id);
+        Task<IList<Reservation>> GetReservationsByCustomerAsync(long id);
         Task<IList<Reservation>> GetReservationsByEmployeeAsync(long id);
         
 

@@ -22,17 +22,17 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
             return await reservationService.GetReservationByIdAsync(id);
         }
         
-        public IList<Reservation> GetReservationsByVehicle([Service] IReservationService reservationService, long vehicleId)
+        public IList<Reservation> GetReservationsByVehicle([Service] IReservationService reservationService, long id)
         {
-            return reservationService.GetReservationsByVehicleAsync(vehicleId).Result;
+            return reservationService.GetReservationsByVehicleAsync(id).Result;
         }       
-        public IList<Reservation> GetReservationsByCustomer([Service] IReservationService reservationService, long customerId)
+        public IList<Reservation> GetReservationsByCustomer([Service] IReservationService reservationService, long id)
         {
-            return reservationService.GetReservationsByCustomerAsync(customerId).Result;
+            return reservationService.GetReservationsByCustomerAsync(id).Result;
         }       
-        public IList<Reservation> GetReservationsByEmployee([Service] IReservationService reservationService, long employeeId)
+        public IList<Reservation> GetReservationsByEmployee([Service] IReservationService reservationService, long id)
         {
-            return reservationService.GetReservationsByEmployeeAsync(employeeId).Result;
+            return reservationService.GetReservationsByEmployeeAsync(id).Result;
         }
         
         

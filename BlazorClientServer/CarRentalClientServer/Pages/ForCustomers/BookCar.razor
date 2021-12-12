@@ -1,12 +1,20 @@
 ﻿@page "/Book/{Id:long}"
 @inject NavigationManager NavMgr
 @using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+@inject IVehicleService vehicleService;
 
 <Jumbotron>
     <JumbotronTitle Size="JumbotronTitleSize.Is3">Book car</JumbotronTitle>
     <JumbotronSubtitle>
         <h6>Car id is : @Id</h6>
     </JumbotronSubtitle>
+     @if (showError)
+        {
+            <Paragraph TextColor="TextColor.Danger">
+                @errorLabel
+            </Paragraph>
+        }
 </Jumbotron>
 <Steps>
     <Step Name="1" Completed="true">
@@ -37,39 +45,39 @@
                     <Field>
                         <FieldLabel>Vehicle Name</FieldLabel>
                         <FieldBody>
-                            <TextEdit ReadOnly Text="@vehicleBook.Name"></TextEdit>
+                            <TextEdit ReadOnly Text="@selectedVehicle.Name"></TextEdit>
                         </FieldBody>
                     </Field>
                     <Field>
                         <FieldLabel>Type</FieldLabel>
-                        <TextEdit ReadOnly Text="@vehicleBook.Type"></TextEdit>
+                        <TextEdit ReadOnly Text="@selectedVehicle.Type"></TextEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Price per day</FieldLabel>
-                        <NumericEdit ReadOnly Value="@vehicleBook.PricePerDay"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.PricePerDay"></NumericEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Seat</FieldLabel>
-                        <NumericEdit ReadOnly Value="@vehicleBook.SeatsCount"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.SeatsCount"></NumericEdit>
                     </Field>
                 </Fields>
 
                 <Fields>
                     <Field>
                         <FieldLabel>Automatic ?</FieldLabel>
-                        <TextEdit ReadOnly Text="@vehicleBook.IsAutomatic.ToString()"></TextEdit>
+                        <TextEdit ReadOnly Text="@selectedVehicle.IsAutomatic.ToString()"></TextEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Power (kw)</FieldLabel>
-                        <NumericEdit ReadOnly Value="@vehicleBook.PowerKw"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.PowerKw"></NumericEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Fuel type</FieldLabel>
-                        <TextEdit ReadOnly Text="@vehicleBook.FuelType"></TextEdit>
+                        <TextEdit ReadOnly Text="@selectedVehicle.FuelType"></TextEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Deposit</FieldLabel>
-                        <NumericEdit ReadOnly Value="@vehicleBook.Deposit"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.Deposit"></NumericEdit>
                     </Field>
                 </Fields>
 
@@ -166,25 +174,32 @@
         public int MyValueField { get; set; }
         public string MyTextField { get; set; }
     }
+    
+    private bool showError = false;
+    private string errorLabel = "Error label";
+    
     private bool showControl = true;
     private string selectSlide = "1";
-    private Vehicle vehicleBook;
+    private Vehicle selectedVehicle;
 
     protected override async Task OnInitializedAsync()
     {
-        foreach (var v in vehicleTestList)
+        showError = false;
+        try
         {
-            if (Id == v.Id)
-            {
-                vehicleBook = v;
-                break;
-            }
+            selectedVehicle = await vehicleService.GetVehicleAsync(Id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            showError = true;
+            errorLabel = "Failed to load the selected vehicle";
         }
     }
 
     private void FinishClicked()
     {
-        //save all the changes
+        
         NavMgr.NavigateTo("/BookFinish");
     }
 
@@ -196,7 +211,7 @@
     private long TotalAmount()
     {
         //add days calculation later
-        return vehicleBook.PricePerDay * 2 + vehicleBook.Deposit;
+        return selectedVehicle.PricePerDay * 2 + selectedVehicle.Deposit;
     }
 
     public List<Vehicle> vehicleTestList = new()
