@@ -1,4 +1,6 @@
 ﻿@page "/AllCars"
+@attribute [Authorize(Policy = "SecurityLevel1")]
+
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
 @inject IVehicleService VehicleData

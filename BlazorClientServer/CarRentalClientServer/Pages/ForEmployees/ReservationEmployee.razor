@@ -1,4 +1,6 @@
 ﻿@page "/ReservationsEmployee"
+@attribute [Authorize(Policy = "SecurityLevel1")]
+
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 

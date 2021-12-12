@@ -42,6 +42,8 @@ public class EmployeeController
 		{
 			throw new EmailAlreadyUsedException("Email already used");
 		}
+		if (employee.getClearanceLevel() > 1)
+			employee.setClearanceLevel(1);
 		return ResponseEntity.ok().body(repository.save(employee));
 	}
 
@@ -55,6 +57,8 @@ public class EmployeeController
 		employee.setEmail(employeeDetails.getEmail());
 		if(employeeDetails.getPassword() != null && !employeeDetails.getPassword().isEmpty())
 			employee.setPassword(employeeDetails.getPassword());
+		if (employeeDetails.getClearanceLevel() > 1)
+			employeeDetails.setClearanceLevel(1);
 		employee.setClearanceLevel(employeeDetails.getClearanceLevel());
 		final Employee updatedEmployee = repository.save(employee);
 		return ResponseEntity.ok(updatedEmployee);

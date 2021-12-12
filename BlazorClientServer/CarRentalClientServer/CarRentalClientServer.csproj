@@ -25,10 +25,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Pages\ForBoth" />
-        <Folder Include="Pages\ForCustomers" />
-        <Folder Include="Pages\ForEmployees" />
         <Folder Include="Pages\MenuBarComponents" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Shared\SurveyPrompt.razor" />
     </ItemGroup>
 
 </Project>

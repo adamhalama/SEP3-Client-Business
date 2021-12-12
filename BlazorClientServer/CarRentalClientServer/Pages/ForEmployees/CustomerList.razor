@@ -1,4 +1,6 @@
 ﻿@page "/AllCustomers"
+@attribute [Authorize(Policy = "SecurityLevel1")]
+
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
 @using System.Collections.Generic

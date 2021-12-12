@@ -1,4 +1,6 @@
 ﻿@page "/Reservations"
+@attribute [Authorize(Policy = "SecurityLevel0")]
+
 @using CarRentalClientServer.Models
 
 <Div Padding="Padding.Is4"></Div>

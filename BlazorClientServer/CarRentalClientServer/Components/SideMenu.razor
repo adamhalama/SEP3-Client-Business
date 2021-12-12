@@ -6,7 +6,7 @@
     <BarBrand>
         <BarItem>
             <BarLink To="/">
-                <BarIcon IconName="customLogo" />
+                <BarIcon IconName="customLogo"/>
                 Rent a car !
             </BarLink>
         </BarItem>
@@ -15,48 +15,60 @@
         <BarStart>
             <BarItem>
                 <BarLink To="/">
-                    <BarIcon IconName="IconName.Home" />
+                    <BarIcon IconName="IconName.Home"/>
                     Home
                 </BarLink>
             </BarItem>
-            <BarItem>
-                <BarLink To="/Reservations">
-                    <BarIcon IconName="IconName.CreditCard" />
-                    Reservation
+            <AuthorizeView Policy="OnlyCustomer">
+                <BarItem>
+                    <BarLink To="/Reservations">
+                        <BarIcon IconName="IconName.CreditCard"/>
+                        Reservation
+                    </BarLink>
+                </BarItem>
+            </AuthorizeView>
+            <AuthorizeView Policy="SecurityLevel0">
+                <BarItem>
+                    <BarLink To="/ProfileC">
+                        <BarIcon IconName="IconName.User"/>
+                        Account
+                    </BarLink>
+                </BarItem>
+            </AuthorizeView>
+
+            <AuthorizeView Policy="SecurityLevel1">
+                <BarLink To="/AllCars">
+                    <BarIcon IconName="IconName.ListUl"/>
+                    Car list(Staff only)
                 </BarLink>
-            </BarItem>
-            <BarItem>
-                <BarLink To="/ProfileC">
-                    <BarIcon IconName="IconName.User" />
-                    Account
+                <BarLink To="/ProfileE">
+                    <BarIcon IconName="IconName.UserTie"/>
+                    Account(Staff only)
                 </BarLink>
-            </BarItem>
-            <BarLink To="/AllCars">
-                <BarIcon IconName="IconName.ListUl" />
-                Car list(Staff only)
-            </BarLink>
-            <BarLink To="/ProfileE">
-                <BarIcon IconName="IconName.UserTie" />
-                Account(Staff only)
-            </BarLink>
-            <BarLink To="/ReservationsEmployee">
-                <BarIcon IconName="IconName.ListOl" />
-                Reservation(Staff only)
-            </BarLink>
-            <BarLink To="/AllEmployees">
-                <BarIcon IconName="IconName.List" />
-                Employee list(Staff only)
-            </BarLink>
-            <BarLink To="/AllCustomers">
-                <BarIcon IconName="IconName.ListOl" />
-                Customer list(Staff only)
-            </BarLink>
+                <BarLink To="/ReservationsEmployee">
+                    <BarIcon IconName="IconName.ListOl"/>
+                    Reservations(Staff only)
+                </BarLink>
+                <BarLink To="/AllCustomers">
+                    <BarIcon IconName="IconName.ListOl"/>
+                    Customers(Staff only)
+                </BarLink>
+            </AuthorizeView>
+
+            <AuthorizeView Policy="SecurityLevel2">
+                <BarLink To="/AllEmployees">
+                    <BarIcon IconName="IconName.List"/>
+                    Manage employees(Admin Staff only)
+                </BarLink>
+            </AuthorizeView>
         </BarStart>
     </BarMenu>
 </Bar>
 
 @code {
+
     RenderFragment customLogo =
-    @<img src="Img/Logo.png" style="width:50px; height:50px" />
-    ;
+        @<img src="Img/Logo.png" style="width:50px; height:50px"/>
+        ;
+
 }

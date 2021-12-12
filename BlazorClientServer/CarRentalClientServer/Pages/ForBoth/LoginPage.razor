@@ -1,0 +1,83 @@
+﻿@page "/Login"
+@using CarRentalClientServer.Models
+@using CarRentalClientServer.Authentification
+
+@inject NavigationManager navMgr
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<h3>Login here</h3>
+
+
+<Body>
+<div class="form-group col-md-3">
+    <AuthorizeView>
+        <NotAuthorized>
+            <Validations Mode="ValidationMode.Auto" Model="@loginCredentials">
+                <Validation>
+                    <Field>
+                        <FieldLabel>Email</FieldLabel>
+                        <TextEdit Placeholder="Enter your email" @bind-Text="@loginCredentials.Email"/>
+                        <ValidationError/>
+                    </Field>
+                </Validation>
+                <Field>
+                    <FieldLabel>Password</FieldLabel>
+                    <TextEdit Role="TextRole.Password" Placeholder="Enter password" @bind-Text="@loginCredentials.Password"/>
+                    <ValidationError/>
+                </Field>
+            </Validations>
+            <Button Color="Color.Primary" Clicked="@Login">Login</Button>
+        </NotAuthorized>
+        <Authorized>
+            <div class="form-group col-md-3">
+                <p class="actions">
+                    <button class="btn btn-outline-dark" @onclick="LogOut">Log Out</button>
+                </p>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+    <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
+</div>
+</Body>
+
+
+@code {
+
+    private string bottomLabel = "";
+    private Customer loginCredentials = new Customer();
+    
+
+    private async Task Login()
+    {
+        bottomLabel = "";
+        try
+        {
+            await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin(loginCredentials.Email, loginCredentials.Password);
+    //if something goes wrong this should throw and exc, so the following code wont get executed if the user wasnt validated successfully
+            loginCredentials.Password = "";
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Equals("NotFound"))
+            {
+                bottomLabel = "Login not successful: This combination of email and password is incorrect";
+            }
+            bottomLabel = $"Login not successful: {e.Message}";
+            Console.WriteLine(e);
+        }
+    }
+
+    private void LogOut()
+    {
+        try
+        {
+            ((CustomAuthenticationStateProvider) authenticationStateProvider).Logout();
+            bottomLabel = "Successfully logged out";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+}

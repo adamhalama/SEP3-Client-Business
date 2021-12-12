@@ -52,13 +52,22 @@ namespace CarRentalClientServer.Authentification
         public async Task ValidateLogin(string email, string password)
         {
             Console.WriteLine("Validating log in");
-            if (string.IsNullOrEmpty(email)) throw new Exception("Enter email");
-            if (string.IsNullOrEmpty(password)) throw new Exception("Enter password");
+            if (cachedUser == null)
+            {
+                if (string.IsNullOrEmpty(email)) throw new Exception("Enter email");
+                if (string.IsNullOrEmpty(password)) throw new Exception("Enter password");
+            }
+
 
             ClaimsIdentity identity = new ClaimsIdentity();
             try
             {
-                UserLogin user = await loginService.ValidateUser(email, password);
+                UserLogin user;
+                if (cachedUser == null)
+                    user = await loginService.ValidateUser(email, password);
+                else
+                    user = cachedUser;
+                
                 identity = await SetupClaimsForUser(user);
                 string serialisedData = JsonSerializer.Serialize(user);
                 await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
@@ -89,8 +98,11 @@ namespace CarRentalClientServer.Authentification
                 
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, userDetails.Name));
-                claims.Add(new Claim("Id", userDetails.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Email, userDetails.Email));
+                claims.Add(new Claim("ID", userDetails.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Role, "Employee"));
+                if (userDetails.ClearanceLevel >1)
+                    userDetails.ClearanceLevel = 1;
                 claims.Add(new Claim("Level", userDetails.ClearanceLevel.ToString()));
 
                 ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth_type");
@@ -102,7 +114,8 @@ namespace CarRentalClientServer.Authentification
                 
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, userDetails.Name));
-                claims.Add(new Claim("Id", userDetails.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Email, userDetails.Email));
+                claims.Add(new Claim("ID", userDetails.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Role, "Customer"));
                 claims.Add(new Claim("Level", "0"));
 
