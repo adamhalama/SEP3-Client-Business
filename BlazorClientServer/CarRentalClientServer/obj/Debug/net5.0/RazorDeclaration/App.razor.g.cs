@@ -77,27 +77,20 @@ using CarRentalClientServer;
 #nullable disable
 #nullable restore
 #line 10 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
-using CarRentalClientServer.Shared;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 11 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
 using Blazorise;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 12 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
+#line 11 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
 using Blazorise.DataGrid;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 13 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
+#line 12 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\_Imports.razor"
 using Blazorise.Components;
 
 #line default
