@@ -1,5 +1,8 @@
 ﻿@page "/"
+@using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
+@inject IReservationService rs;
+@inject IVehicleService vs;
 @inject NavigationManager NavMgr
 
 <Div Padding="Padding.Is4"></Div>

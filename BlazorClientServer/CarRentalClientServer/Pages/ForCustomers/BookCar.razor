@@ -52,6 +52,9 @@
                         <FieldLabel>Seat</FieldLabel>
                         <NumericEdit ReadOnly Value="@vehicleBook.SeatsCount"></NumericEdit>
                     </Field>
+                </Fields>
+
+                <Fields>
                     <Field>
                         <FieldLabel>Automatic ?</FieldLabel>
                         <TextEdit ReadOnly Text="@vehicleBook.IsAutomatic.ToString()"></TextEdit>
@@ -83,10 +86,29 @@
                         <FieldLabel>Address</FieldLabel>
                         <TextEdit ReadOnly Text="@customerTest.Address"></TextEdit>
                     </Field>
+                </Fields>
 
+                <Fields>
+                    <Field>
+                        <FieldLabel>Start time</FieldLabel>
+                        <DateEdit ReadOnly TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                        <!--add bind-date with reservation later-->
+                    </Field>
+                    <Field>
+                        <FieldLabel>End time</FieldLabel>
+                        <DateEdit ReadOnly TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                        <!--add bind-date with reservation later-->
+                    </Field>
                 </Fields>
             </CardBody>
         </Card>
+
+        <Alert Color="Color.Danger" Visible>
+            <Heading TextColor="TextColor.Danger">Attention</Heading>
+            <AlertMessage>
+                Please check all the things for the reservation are correct and then continue !
+            </AlertMessage>
+        </Alert>
     </Column>
 
     <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
@@ -101,93 +123,38 @@
                 </Inline>
             </CardBody>
         </Card>
-    </Column>
-</Row>
 
-<Row>
-    <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
         <Card>
-            <CardHeader>
-                <CardTitle>Select time</CardTitle>
-            </CardHeader>
-
             <CardBody>
-                <Row>
-                    <Column>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Take car time</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Fields>
-                                    <Field>
-                                        <FieldLabel>Start</FieldLabel>
-                                        <SelectList TItem="MySelectModel"
-                                                    TValue="int"
-                                                    Data="@hourData"
-                                                    TextField="@((item)=>item.MyTextField)"
-                                                    ValueField="@((item)=>item.MyValueField)"
-                                                    SelectedValue="@hourSelect"
-                                                    SelectedValueChanged="@MyListValueChangedHandler"
-                                                    DefaultItemText="Hour start" />
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel>End</FieldLabel>
-                                        <SelectList TItem="MySelectModel"
-                                                    TValue="int"
-                                                    Data="@minuteData"
-                                                    TextField="@((item)=>item.MyTextField)"
-                                                    ValueField="@((item)=>item.MyValueField)"
-                                                    SelectedValue="@minuteSelect"
-                                                    SelectedValueChanged="@MyListValueChangedHandler"
-                                                    DefaultItemText="Hour start" />
-                                    </Field>
-                                </Fields>
-                            </CardBody>
-                        </Card>
-                    </Column>
-
-                    <Column>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Return time</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Fields>
-                                    <Field>
-                                        <FieldLabel>Start</FieldLabel>
-                                        <SelectList TItem="MySelectModel"
-                                                    TValue="int"
-                                                    Data="@hourData"
-                                                    TextField="@((item)=>item.MyTextField)"
-                                                    ValueField="@((item)=>item.MyValueField)"
-                                                    SelectedValue="@hourSelect"
-                                                    SelectedValueChanged="@MyListValueChangedHandler"
-                                                    DefaultItemText="Hour start" />
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel>End</FieldLabel>
-                                        <SelectList TItem="MySelectModel"
-                                                    TValue="int"
-                                                    Data="@minuteData"
-                                                    TextField="@((item)=>item.MyTextField)"
-                                                    ValueField="@((item)=>item.MyValueField)"
-                                                    SelectedValue="@minuteSelect"
-                                                    SelectedValueChanged="@MyListValueChangedHandler"
-                                                    DefaultItemText="Hour start" />
-                                    </Field>
-                                </Fields>
-                            </CardBody>
-                        </Card>
-                    </Column>
-                </Row>
+                <Switch TValue="bool" @bind-Checked="@showControl">Controls</Switch>
+            </CardBody>
+            <CardBody Flex="Flex.JustifyContent.Center">
+                <Carousel @bind-SelectedSlide="@selectSlide" ShowControls="@showControl">
+                    <CarouselSlide Name="1">
+                        <Image Source="Img/Travel1.png" Text="1st image" Display="Display.Block" Width="Width.Is100" />
+                    </CarouselSlide>
+                    <CarouselSlide Name="2">
+                        <Image Source="Img/Travel2.png" Text="1st image" Display="Display.Block" Width="Width.Is100" />
+                    </CarouselSlide>
+                    <CarouselSlide Name="3">
+                        <Image Source="Img/Travel3.png" Text="1st image" Display="Display.Block" Width="Width.Is100" />
+                    </CarouselSlide>
+                    <CarouselSlide Name="4">
+                        <Image Source="Img/Travel4.png" Text="1st image" Display="Display.Block" Width="Width.Is100" />
+                    </CarouselSlide>
+                    <CarouselSlide Name="5">
+                        <Image Source="Img/Travel5.png" Text="1st image" Display="Display.Block" Width="Width.Is100" />
+                    </CarouselSlide>
+                </Carousel>
             </CardBody>
         </Card>
     </Column>
 </Row>
 
-<Div Flex="Flex.JustifyContent.End.OnDesktop">
+<Div Padding="Padding.Is3" />
+<Div Flex="Flex.JustifyContent.Start.OnDesktop">
     <Button Color="Color.Primary" Clicked="FinishClicked">Finish</Button>
+    <Div Padding="Padding.Is4" />
     <Button Color="Color.Secondary" Clicked="CancelClicked">Cancel</Button>
 </Div>
 
@@ -199,23 +166,9 @@
         public int MyValueField { get; set; }
         public string MyTextField { get; set; }
     }
-
+    private bool showControl = true;
+    private string selectSlide = "1";
     private Vehicle vehicleBook;
-
-    static string[] Hours = { "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
-    static string[] Minutes = { "00", "15", "30", "45" };
-    IEnumerable<MySelectModel> hourData = Enumerable.Range(1, Hours.Length).Select(x => new MySelectModel { MyTextField = Hours[x - 1], MyValueField = x });
-    IEnumerable<MySelectModel> minuteData = Enumerable.Range(1, Minutes.Length).Select(x => new MySelectModel { MyTextField = Minutes[x - 1], MyValueField = x });
-
-    int hourSelect { get; set; } = 3;
-    int minuteSelect { get; set; } = 3;
-
-    void MyListValueChangedHandler(int newValue)
-    {
-        hourSelect = newValue;
-        minuteSelect = newValue;
-        StateHasChanged();
-    }
 
     protected override async Task OnInitializedAsync()
     {
