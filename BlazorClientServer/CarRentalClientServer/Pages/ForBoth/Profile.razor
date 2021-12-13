@@ -208,18 +208,6 @@
                             </FieldBody>
                         </Field>
                     </Validation>
-                    <Validation>
-                        <Field Horizontal="true">
-                            <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
-                            <FieldBody ColumnSize="ColumnSize.Is10">
-                                <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@employee.Password">
-                                    <Feedback>
-                                        <ValidationError />
-                                    </Feedback>
-                                </TextEdit>
-                            </FieldBody>
-                        </Field>
-                    </Validation>
                 </Validations>
             </ModalBody>
         }
@@ -239,24 +227,12 @@
                             </FieldBody>
                         </Field>
                     </Validation>
-                    <Validation>
-                        <Field Horizontal="true">
-                            <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
-                            <FieldBody ColumnSize="ColumnSize.Is10">
-                                <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@customer.Password">
-                                    <Feedback>
-                                        <ValidationError />
-                                    </Feedback>
-                                </TextEdit>
-                            </FieldBody>
-                        </Field>
-                    </Validation>
                 </Validations>
             </ModalBody>
         }
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="@SavePasswordChange">Save</Button>
-            <Button Color="Color.Secondary" Clicked="@HidePassword">Cancel</Button>
+            <Button Color="Color.Secondary" Clicked="@HideChangePassword">Cancel</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -269,6 +245,8 @@
 
     private Modal modalProfileEdit;
     private Modal modalPassword;
+
+    private string rePassword;
 
     private string bottomLabel = "";
 
@@ -311,7 +289,14 @@
 
     private Task SaveChange()
     {
-        //Save change part
+        if (isEmployee)
+        {
+            employeeService.UpdateEmployeeAsync(employee);
+        }
+        else
+        {
+            customerService.UpdateCustomerAsync(customer);
+        }
         bottomLabel = "Change saved";
         return modalProfileEdit.Hide();
     }
@@ -321,15 +306,14 @@
         return modalPassword.Show();
     }
 
-    private Task HidePassword()
+    private Task HideChangePassword()
     {
         return modalPassword.Hide();
     }
 
     private Task SavePasswordChange()
     {
-        //Save password part
-        bottomLabel = "Change saved";
+        SaveChange();
         return modalPassword.Hide();
     }
 
