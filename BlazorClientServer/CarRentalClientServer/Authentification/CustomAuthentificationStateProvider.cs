@@ -101,7 +101,7 @@ namespace CarRentalClientServer.Authentification
                 claims.Add(new Claim(ClaimTypes.Email, userDetails.Email));
                 claims.Add(new Claim("ID", userDetails.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Role, "Employee"));
-                if (userDetails.ClearanceLevel >1)
+                if (userDetails.ClearanceLevel < 1)
                     userDetails.ClearanceLevel = 1;
                 claims.Add(new Claim("Level", userDetails.ClearanceLevel.ToString()));
 

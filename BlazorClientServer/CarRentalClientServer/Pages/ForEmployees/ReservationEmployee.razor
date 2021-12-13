@@ -1,8 +1,9 @@
 ﻿@page "/ReservationsEmployee"
-@attribute [Authorize(Policy = "SecurityLevel1")]
+@* @attribute [Authorize(Policy = "SecurityLevel1")] *@
 
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
+@using CarRentalClientServer.Pages.ForCustomers
 
 @inject IReservationService reservationService;
 @inject IVehicleService vehicleService;
@@ -23,10 +24,13 @@
     }
 </Jumbotron>
 
+<button class="btn btn-outline-dark" @onclick="Debug">Debug</button>
+
 <DataGrid TItem="ReservationFormatted" Data="@reservationList"
           Sortable="true" Filterable="true" Editable="true"
           EditMode="DataGridEditMode.Form" UseInternalEditing
           ShowPager="true" PageSize="10"
+          SortMode="DataGridSortMode.Single"
           RowUpdated="@OnRowUpdated"
           RowInserted="@OnRowInserted"
           RowRemoved="@OnRowRemoved"
@@ -52,7 +56,7 @@
         </DataGridCommandColumn>
 
 
-        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID"/>
+        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID" Sortable="true"/>
         <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="true"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
         <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.CustomerId)" Caption="Customer ID" Editable="true"/>
@@ -62,12 +66,12 @@
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateCreated)" Caption="Date Created" Editable="false" DisplayFormat="{0:dd.MM.yyyy HH:mm}"/>
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateStart)" Caption="Date Start" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
             <EditTemplate>
-                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+                <DateEdit TValue="DateTime?" Date="@((DateTime?)context.CellValue)" DateChanged="@(v => context.CellValue = v)" InputMode="DateInputMode.DateTime" />
             </EditTemplate>
         </DataGridDateColumn>
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateEnd)" Caption="Date End" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
             <EditTemplate>
-                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+                <DateEdit TValue="DateTime?"  Date="@((DateTime?)context.CellValue)" DateChanged="@(v => context.CellValue = v)" InputMode="DateInputMode.DateTime" />
             </EditTemplate>
         </DataGridDateColumn>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.AllowedKm)" Caption="Allowed Km" Editable="true"/>
@@ -91,7 +95,6 @@
 
 
 @code {
-
     protected Progress progressRef = new();
     protected int progress;
 
@@ -106,12 +109,14 @@
 
     string selectedStatusFilter;
 
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
     private void OnNewItemDefaultSetter(ReservationFormatted reservation)
     {
         reservation.DateCreated = DateTime.Now;
-        reservation.DateStart = DateTime.Now;
-        reservation.DateEnd = DateTime.Now;
-        reservation.BillDate = DateTime.Now;
         StateHasChanged();
     }
 
@@ -122,8 +127,9 @@
         {
             if (item.Item.DateStart.CompareTo(item.Item.DateEnd) >= 0)
             {
-    //error label
-                throw new Exception();
+                errorLabel = "Select valid dates, the start date must be before the end date";
+                showError = true;
+                return;
             }
 
             item.Item.DateCreated = DateTime.Now;
@@ -153,11 +159,19 @@
         showError = false;
         try
         {
-        var r = item.Item.ToVanillaReservation();
-        r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
-        await reservationService.UpdateReservationAsync(r);
-        reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
-        await InvokeAsync(StateHasChanged);
+            if (item.Item.DateStart.CompareTo(item.Item.DateEnd) >= 0)
+            {
+                errorLabel = "Select valid dates, the start date must be before the end date";
+                showError = true;
+                StateHasChanged();
+                return;
+            }
+            
+            var r = item.Item.ToVanillaReservation();
+            r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
+            await reservationService.UpdateReservationAsync(r);
+            reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
@@ -173,9 +187,9 @@
         showError = false;
         try
         {
-        await reservationService.DeleteReservationAsync(reservation.Id);
-        reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
-        await InvokeAsync(StateHasChanged);
+            await reservationService.DeleteReservationAsync(reservation.Id);
+            reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
@@ -232,177 +246,5 @@
         }
         return true;
     }
-
-    private List<Customer> customerTestList = new()
-    {
-        new()
-        {
-            Id = 1,
-            Name = "AB"
-        },
-        new()
-        {
-            Id = 2,
-            Name = "DD"
-        },
-        new()
-        {
-            Id = 3,
-            Name = "EE"
-        }
-    };
-
-    private List<Vehicle> vehicleListTest = new()
-    {
-        new()
-        {
-            Id = 1,
-            Name = "CAR1",
-            Type = "Sedan",
-            PricePerDay = 100,
-            SeatsCount = 4,
-            IsAutomatic = true,
-            PowerKw = 250,
-            FuelType = "95",
-            Deposit = 500,
-        },
-        new()
-        {
-            Id = 2,
-            Name = "CAR2",
-            Type = "Sedan",
-            PricePerDay = 400,
-            SeatsCount = 2,
-            IsAutomatic = false,
-            PowerKw = 400,
-            FuelType = "92",
-            Deposit = 800,
-        },
-        new()
-        {
-            Id = 3,
-            Name = "CAR3",
-            Type = "SUV",
-            PricePerDay = 200,
-            SeatsCount = 5,
-            IsAutomatic = true,
-            PowerKw = 300,
-            FuelType = "95",
-            Deposit = 700,
-        },
-        new()
-        {
-            Id = 4,
-            Name = "CAR4",
-            Type = "MPV",
-            PricePerDay = 340,
-            SeatsCount = 8,
-            IsAutomatic = true,
-            PowerKw = 300,
-            FuelType = "Diesel",
-            Deposit = 500,
-        },
-        new()
-        {
-            Id = 5,
-            Name = "CAR5",
-            Type = "SUV",
-            PricePerDay = 600,
-            SeatsCount = 4,
-            IsAutomatic = false,
-            PowerKw = 500,
-            FuelType = "Diesel",
-            Deposit = 1000,
-        },
-        new()
-        {
-            Id = 6,
-            Name = "CAR6",
-            Type = "Sedan",
-            PricePerDay = 100,
-            SeatsCount = 4,
-            IsAutomatic = true,
-            PowerKw = 250,
-            FuelType = "92",
-            Deposit = 500,
-        },
-        new()
-        {
-            Id = 7,
-            Name = "CAR7",
-            Type = "Luxury",
-            PricePerDay = 730,
-            SeatsCount = 4,
-            IsAutomatic = true,
-            PowerKw = 430,
-            FuelType = "95",
-            Deposit = 500,
-        },
-        new()
-        {
-            Id = 8,
-            Name = "CAR8 OLD",
-            Type = "MPV",
-            PricePerDay = 360,
-            SeatsCount = 8,
-            IsAutomatic = false,
-            PowerKw = 250,
-            FuelType = "Diesel",
-            Deposit = 500,
-        }
-    };
-
-
-    private List<Reservation> reservationListTest = new()
-    {
-        new()
-        {
-            Id = 1,
-            SecurityDeposit = 500,
-            DateCreated = 1627870693,
-            DateStart = 1627957093,
-            DateEnd = 1628216293,
-            AllowedKm = 1500,
-            PaymentAmount = 3400,
-            BillDate = 1627870950,
-            IsPaid = true
-        },
-        new()
-        {
-            Id = 2,
-            SecurityDeposit = 500,
-            DateCreated = 1627870693,
-            DateStart = 1627957093,
-            DateEnd = 1628216293,
-            AllowedKm = 1500,
-            PaymentAmount = 5900,
-            BillDate = 1627871800,
-            IsPaid = false
-        },
-        new()
-        {
-            Id = 3,
-            SecurityDeposit = 500,
-            DateCreated = 1627870693,
-            DateStart = 1627957093,
-            DateEnd = 1628216293,
-            AllowedKm = 1500,
-            PaymentAmount = 4660,
-            BillDate = 1627870950,
-            IsPaid = true
-        }
-    };
-
-
-    private void TransferReservations()
-    {
-        foreach (var r in reservationListTest)
-        {
-            ReservationFormatted formatted = new ReservationFormatted(r);
-            reservationList.Add(formatted);
-        }
-    }
-
-
 
 }

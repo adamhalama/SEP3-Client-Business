@@ -2,9 +2,9 @@
 
 namespace CarRentalClientServer.Authentification
 {
-    public interface IAuthentication
+    /*public interface IAuthentication
     {
         Task ValidateLogin(string email, string password);
         void Logout();
-    }
+    }*/
 }

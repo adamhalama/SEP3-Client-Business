@@ -57,7 +57,7 @@ public class EmployeeController
 		employee.setEmail(employeeDetails.getEmail());
 		if(employeeDetails.getPassword() != null && !employeeDetails.getPassword().isEmpty())
 			employee.setPassword(employeeDetails.getPassword());
-		if (employeeDetails.getClearanceLevel() > 1)
+		if (employeeDetails.getClearanceLevel() < 1)
 			employeeDetails.setClearanceLevel(1);
 		employee.setClearanceLevel(employeeDetails.getClearanceLevel());
 		final Employee updatedEmployee = repository.save(employee);

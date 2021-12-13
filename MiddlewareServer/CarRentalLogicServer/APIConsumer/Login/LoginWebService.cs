@@ -33,7 +33,8 @@ namespace CarRentalLogicServer.APIConsumer.Login
                 throw new Exception(response.StatusCode + "");
 
             string message = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<UserLogin>(message);
+            var userLogin = JsonSerializer.Deserialize<UserLogin>(message);
+            return userLogin;
         }
     }
 }

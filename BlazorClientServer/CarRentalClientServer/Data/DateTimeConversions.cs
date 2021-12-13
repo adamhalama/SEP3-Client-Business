@@ -23,7 +23,7 @@ namespace CarRentalClientServer.Data
         {
             TimeSpan timeSpan = dateTime - new DateTime(1970, 1, 1, 0, 0, 0);
 
-            return (long)timeSpan.TotalSeconds;
+            return (long)timeSpan.TotalSeconds * 1000;
         }
 
         public static DateTime GetDateTime(long timestamp)

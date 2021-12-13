@@ -4,11 +4,11 @@ namespace CarRentalLogicServer.Models
 {
     public class UserLogin
     {
-        [JsonPropertyName("isSuccessful")]
+        [JsonPropertyName("successful")]
         public bool IsSuccessful { get; set; }
         [JsonPropertyName("userId")]
         public long UserId { get; set; }
-        [JsonPropertyName("isEmployee")]
+        [JsonPropertyName("employee")]
         public bool IsEmployee { get; set; }
         [JsonPropertyName("email")]
         public string Email { get; set; }
