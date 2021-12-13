@@ -5,8 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Components\**" />
       <Compile Remove="wwwroot\**" />
       <Compile Remove="obj\**" />
+      <Content Remove="Components\**" />
+      <EmbeddedResource Remove="Components\**" />
+      <None Remove="Components\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,7 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Components\" />
         <Folder Include="obj" />
     </ItemGroup>
 
