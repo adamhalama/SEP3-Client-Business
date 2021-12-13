@@ -119,19 +119,61 @@ using CarRentalClientServer.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 204 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
+#line 225 "C:\Users\fhuur\OneDrive\JavaClasses\SEP3\BlazorClientServer\CarRentalClientServer\Pages\Index.razor"
        
+    private IList<Vehicle> vehicleList;
+
+    protected Progress progressRef = new();     
+    protected int progress;
+    
+    private bool showError = false;
+    private string errorLabel = "Error label";
+    
     DatePicker<DateTime?> startDate;
     DatePicker<DateTime?> endDate;
+
     private bool isSearched = false;
     private bool isCorrect = false;
+
     string customCardStyle = $"width: 1100px";
     private Vehicle selectedVehicle;
 
     private string typeFilter;
     private string seatFilter;
+    
     [Inject] IMessageService MessageService { get; set; }
     [Inject] INotificationService NotificationService { get; set; }
+    
+    async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
+    {
+        progressRef.Animated = true;
+        progress = 0;
+        await InvokeAsync(StateHasChanged);
+        try
+        {
+            progress = 5;
+            await InvokeAsync(StateHasChanged);
+            var fetchedVehicles = VehicleData.GetVehiclesAsync();
+            progress = 33;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            await fetchedVehicles;
+            progress = 66;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            vehicleList = fetchedVehicles.Result;
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+            Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
+        }
+    }
 
     private bool TypeFilter(object itemValue, object searchValue)
     {
@@ -292,6 +334,7 @@ using CarRentalClientServer.Models;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IVehicleService VehicleData { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavMgr { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IVehicleService vs { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IReservationService rs { get; set; }
