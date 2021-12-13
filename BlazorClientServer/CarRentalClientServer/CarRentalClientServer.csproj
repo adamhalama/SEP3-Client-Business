@@ -26,6 +26,7 @@
 
     <ItemGroup>
         <Folder Include="Components\" />
+        <Folder Include="obj" />
     </ItemGroup>
 
     <ItemGroup>

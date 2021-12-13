@@ -34,6 +34,18 @@ namespace CarRentalLogicServer.APIConsumer
             // return message;
         }
 
+        public async Task<List<Vehicle>> GetAvailableVehiclesAsync(long startDate, long endDate)
+        {
+            HttpResponseMessage response = await client.GetAsync($"{uri}/vehicles/available/startDate={startDate}&endDate={endDate}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+
+            string message = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<Vehicle>>(message);
+        }
+
         public async Task<Vehicle> GetVehicleByIdAsync(long id)
         {
             HttpResponseMessage response = await client.GetAsync($"{uri}/vehicles/{id}");

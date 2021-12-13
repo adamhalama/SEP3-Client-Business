@@ -29,6 +29,7 @@
           Sortable="true" Filterable="true" Editable="true"
           EditMode="DataGridEditMode.Form" UseInternalEditing
           ShowPager="true" PageSize="10"
+          RowUpdated="@OnRowUpdated"  
           RowRemoved="@OnRowRemoved"
           ReadData="@LoadFromService">
     <DataGridColumns>
@@ -49,9 +50,8 @@
 
 
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID"/>
-        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="false"/>
+        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="true"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
-        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.CustomerId)" Caption="Customer ID" Editable="false"/>
         <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeId)" Caption="Employee ID" Editable="false"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeName)" Caption="Employee name" Editable="false"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.SecurityDeposit)" Caption="Security Deposit" Editable="false"
@@ -59,12 +59,12 @@
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateCreated)" Caption="Date Created" Editable="false" DisplayFormat="{0:dd.MM.yyyy HH:mm}"/>
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateStart)" Caption="Date Start" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
             <EditTemplate>
-                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+                <DateEdit TValue="DateTime?" Date="@((DateTime?)context.CellValue)" DateChanged="@(v => context.CellValue = v)" InputMode="DateInputMode.DateTime" />
             </EditTemplate>
         </DataGridDateColumn>
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateEnd)" Caption="Date End" Editable="true" DisplayFormat="{0:dd.MM.yyyy HH:mm}">
             <EditTemplate>
-                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
+                <DateEdit TValue="DateTime?" Date="@((DateTime?)context.CellValue)" DateChanged="@(v => context.CellValue = v)" InputMode="DateInputMode.DateTime" />
             </EditTemplate>
         </DataGridDateColumn>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.AllowedKm)" Caption="Allowed Km" Editable="false"/>
@@ -103,7 +103,58 @@
 
     string selectedStatusFilter;
 
-
+    async Task OnRowUpdated(SavedRowItem<ReservationFormatted, Dictionary<string, object>> item)
+    {
+        showError = false;
+        try
+        {
+            var updatingReservation = item.Item;
+            var days = ReservationFormatted.GetDaysBetweenTime(updatingReservation.DateStart, updatingReservation.DateEnd);
+            updatingReservation.BillDate = updatingReservation.DateEnd.AddDays(1);
+            updatingReservation.AllowedKm = days * 100;
+            updatingReservation.PaymentAmount = days * updatingReservation.Vehicle.PricePerDay;
+            
+            if (updatingReservation.DateStart.CompareTo(updatingReservation.DateEnd) >= 0)
+            {
+                errorLabel = "Select valid dates, the start date must be before the end date";
+                showError = true;
+                StateHasChanged();
+                return;
+            }
+            
+            var r = updatingReservation.ToVanillaReservation();
+            bool isValid = false;
+            var availableVehicles = await vehicleService.GetAvailableVehiclesAsync(r.DateStart, r.DateEnd);
+            foreach (var veh in availableVehicles)
+            {
+                if (veh.Id == r.Vehicle.Id)
+                {
+                    isValid = true;
+                    break;
+                }
+            }
+            if (!isValid)
+            {
+                errorLabel = "On these times, the vehicle isn't available";
+                showError = true;
+                StateHasChanged();
+                return;
+            }
+            
+            r.Vehicle = await vehicleService.GetVehicleAsync(updatingReservation.VehicleId);
+            await reservationService.UpdateReservationAsync(r);
+            reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while updating";
+            showError = true;
+            StateHasChanged();
+        }
+    }
+    
     async Task OnRowRemoved(ReservationFormatted reservation)
     {
         showError = false;

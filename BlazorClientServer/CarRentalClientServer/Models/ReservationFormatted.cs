@@ -85,6 +85,7 @@ namespace CarRentalClientServer.Models
             VehicleName = "Not Found";
             CustomerId = -1;
             EmployeeId = -1;
+            EmployeeName = "N/A";
             if (reservation.Vehicle != null && reservation.Vehicle.Name != null)
             {
                 VehicleId = reservation.Vehicle.Id;

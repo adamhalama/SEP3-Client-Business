@@ -17,6 +17,11 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
             return vehicleService.GetVehiclesAsync().Result;
         }
 
+        public IList<Vehicle> GetAvailableVehicles([Service] IVehicleService vehicleService, long startDate, long endDate)
+        {
+            return vehicleService.GetAvailableVehiclesAsync(startDate, endDate).Result;
+        }
+
         public async Task<Vehicle> GetVehicle([Service] IVehicleService vehicleService, long id)
         {
             return await vehicleService.GetVehicleByIdAsync(id);

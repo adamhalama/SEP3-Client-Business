@@ -123,10 +123,10 @@ public class Reservation
 
     @Column(name = "date_end", nullable = false)
     public long getDateEnd() {
-        return dateCreated;
+        return dateEnd;
     }
-    public void setDateEnd(long dateCreated) {
-        this.dateEnd = dateCreated;
+    public void setDateEnd(long dateEnd) {
+        this.dateEnd = dateEnd;
     }
 
     @Column(name = "allowed_km", nullable = false)

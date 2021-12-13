@@ -280,10 +280,7 @@
         bottomLabel = "";
         try
         {
-            Console.WriteLine("jebokokot1");
             user = ((CustomAuthenticationStateProvider)authenticationStateProvider).GetLoggedInUser();
-            //↓Nullpointer error
-            Console.WriteLine("jebokokot2");
             if (user.IsEmployee)
             {
                 isEmployee = true;
@@ -291,10 +288,8 @@
             }
             else if (!user.IsEmployee)
             {
-                Console.WriteLine("jebokokot3");
                 customer = await customerService.GetCustomerAsync(user.UserId);
             }
-            Console.WriteLine("jebokokot4");
         }
         catch (Exception e)
         {

@@ -102,6 +102,56 @@ namespace CarRentalClientServer.Data
             }
         }
 
+        public async Task<IList<Vehicle>> GetAvailableVehiclesAsync(long startDate, long endDate)
+        {
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                query
+                AvailableVehicles($startDate : Long!, $endDate : Long!)
+                {
+                    availableVehicles(startDate : $startDate, endDate : $endDate)
+                    {
+                        id
+                        name
+                        type
+                        pricePerDay
+                        seatsCount
+                        isAutomatic
+                        powerKw
+                        fuelType
+                        deposit
+                    }
+                }",
+                OperationName = "AvailableVehicles",
+                Variables = new 
+                    {
+                        startDate = startDate, 
+                        endDate = endDate
+                    }
+            };
+
+            try
+            {
+                var graphQLResponse = await graphQlClient.SendQueryAsync<AvailableVehiclesResponse>(request);
+                var errors = graphQLResponse.Errors;
+                if (errors != null)
+                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+
+                return graphQLResponse.Data.AvailableVehicles;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                if (e.InnerException != null)
+                {
+                    Console.WriteLine(e.InnerException.Message);
+                }
+
+                throw;
+            }
+        }
+
         //method not using Json
         public async Task<Vehicle> CreateVehicleAsync(string name, string type, int pricePerDay,
             int seatsCount, bool isAutomatic, int powerKw, string fuelType, int deposit)

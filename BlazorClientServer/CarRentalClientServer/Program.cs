@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using CarRentalClientServer.Authentification;
 using CarRentalClientServer.Data;
 using CarRentalClientServer.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -70,8 +74,6 @@ namespace CarRentalClientServer
                 }
             } while (Console.ReadLine() != "x");
             */
-            
-            
             
             CreateHostBuilder(args).Build().Run();
         }

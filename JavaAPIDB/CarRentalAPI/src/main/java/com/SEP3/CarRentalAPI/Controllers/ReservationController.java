@@ -78,7 +78,14 @@ public class ReservationController
         //todo maybe the setting is unnecessary
         reservation.setVehicle(vehicleRepository.getById(reservation.getVehicle().getId()));
         reservation.setCustomer(customerRepository.getById(reservation.getCustomer().getId()));
-        reservation.setEmployee(employeeRepository.getById(reservation.getEmployee().getId()));
+        if (reservation.getEmployee().getId() != -1)
+        {
+            reservation.setEmployee(employeeRepository.getById(reservation.getEmployee().getId()));
+        }
+        else
+        {
+            reservation.setEmployee(null);
+        }
 
         Reservation savedReservation = repository.save(reservation);
 

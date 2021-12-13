@@ -168,6 +168,8 @@
             }
             
             var r = item.Item.ToVanillaReservation();
+
+            r.Employee = await employeeService.GetEmployeeAsync(item.Item.EmployeeId);
             r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
             await reservationService.UpdateReservationAsync(r);
             reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());

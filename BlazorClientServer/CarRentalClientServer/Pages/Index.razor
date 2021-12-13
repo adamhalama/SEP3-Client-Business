@@ -1,10 +1,13 @@
 ﻿@page "/"
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
+@using CarRentalClientServer.Authentification
 @inject IReservationService rs;
 @inject IVehicleService vs;
 @inject NavigationManager NavMgr
 @inject IVehicleService VehicleData
+
+@inject AuthenticationStateProvider authenticationStateProvider
 
 <Div Padding="Padding.Is4"></Div>
 <Heading Size="HeadingSize.Is2" Flex="Flex.JustifyContent.Center">
@@ -21,7 +24,7 @@
                             <FieldLabel>Start date:</FieldLabel>
                             <Addons>
                                 <Addon AddonType="AddonType.Body">
-                                    <DatePicker @ref="@startDate" TValue="DateTime?" />
+                                    <DatePicker @ref="@startDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
                                 </Addon>
                                 <Addon AddonType="AddonType.End">
                                     <Button Color="Color.Light" Clicked="@(()=>startDate.ToggleAsync())">
@@ -34,7 +37,7 @@
                             <FieldLabel>End date:</FieldLabel>
                             <Addons>
                                 <Addon AddonType="AddonType.Body">
-                                    <DatePicker @ref="@endDate" TValue="DateTime?" />
+                                    <DatePicker @ref="@endDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
                                 </Addon>
                                 <Addon AddonType="AddonType.End">
                                     <Button Color="Color.Light" Clicked="@(()=>endDate.ToggleAsync())">
@@ -97,10 +100,17 @@
             </CardHeader>
             <CardBody>
                 <Fields>
+                
                     <Field>
                         <FieldLabel>Name</FieldLabel>
                         <FieldBody>
                             <TextEdit ReadOnly Text="@selectedVehicle?.Name"></TextEdit>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Vehicle ID</FieldLabel>
+                        <FieldBody>
+                            <NumericEdit ReadOnly Value="@selectedVehicle?.Id"></NumericEdit>
                         </FieldBody>
                     </Field>
                     <Field>
@@ -248,6 +258,14 @@
     
     async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
     {
+        showError = false;
+        if (!startDate.Date.HasValue || !endDate.Date.HasValue)
+        {
+            errorLabel = "Enter valid dates";
+            showError = true;
+            return;
+        }
+        
         progressRef.Animated = true;
         progress = 0;
         await InvokeAsync(StateHasChanged);
@@ -255,7 +273,7 @@
         {
             progress = 5;
             await InvokeAsync(StateHasChanged);
-            var fetchedVehicles = VehicleData.GetVehiclesAsync();
+            var fetchedVehicles = VehicleData.GetAvailableVehiclesAsync(DateTimeConversions.DateTimeToUnix(startDate.Date.Value), DateTimeConversions.DateTimeToUnix(endDate.Date.Value));
             progress = 33;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
@@ -295,107 +313,6 @@
         return true;
     }
 
-
-    private List<Vehicle> vehicleListTest = new()
-        {
-            new()
-            {
-                Id = 1,
-                Name = "CAR1",
-                Type = "Sedan",
-                PricePerDay = 100,
-                SeatsCount = 4,
-                IsAutomatic = true,
-                PowerKw = 250,
-                FuelType = "95",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 2,
-                Name = "CAR2",
-                Type = "Sedan",
-                PricePerDay = 400,
-                SeatsCount = 2,
-                IsAutomatic = false,
-                PowerKw = 400,
-                FuelType = "92",
-                Deposit = 800,
-            },
-            new()
-            {
-                Id = 3,
-                Name = "CAR3",
-                Type = "SUV",
-                PricePerDay = 200,
-                SeatsCount = 5,
-                IsAutomatic = true,
-                PowerKw = 300,
-                FuelType = "95",
-                Deposit = 700,
-            },
-            new()
-            {
-                Id = 4,
-                Name = "CAR4",
-                Type = "MPV",
-                PricePerDay = 340,
-                SeatsCount = 8,
-                IsAutomatic = true,
-                PowerKw = 300,
-                FuelType = "Diesel",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 5,
-                Name = "CAR5",
-                Type = "SUV",
-                PricePerDay = 600,
-                SeatsCount = 4,
-                IsAutomatic = false,
-                PowerKw = 500,
-                FuelType = "Diesel",
-                Deposit = 1000,
-            },
-            new()
-            {
-                Id = 6,
-                Name = "CAR6",
-                Type = "Sedan",
-                PricePerDay = 100,
-                SeatsCount = 4,
-                IsAutomatic = true,
-                PowerKw = 250,
-                FuelType = "92",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 7,
-                Name = "CAR7",
-                Type = "Luxury",
-                PricePerDay = 730,
-                SeatsCount = 4,
-                IsAutomatic = true,
-                PowerKw = 430,
-                FuelType = "95",
-                Deposit = 500,
-            },
-            new()
-            {
-                Id = 8,
-                Name = "CAR8 OLD",
-                Type = "MPV",
-                PricePerDay = 360,
-                SeatsCount = 8,
-                IsAutomatic = false,
-                PowerKw = 250,
-                FuelType = "Diesel",
-                Deposit = 500,
-            }
-        };
-
     private void SearchButtonClicked()
     {
         //search a car
@@ -429,7 +346,24 @@
 
     private void BookCarClicked(long id)
     {
-        NavMgr.NavigateTo($"/Book/{id}");
+        if (!startDate.Date.HasValue || !endDate.Date.HasValue)
+        {
+            errorLabel = "Pick correct dates";
+            showError = true;
+            return;
+        }
+        
+        long startDateTimestamp = DateTimeConversions.DateTimeToUnix(startDate.Date.Value);
+        long endDateTimestamp = DateTimeConversions.DateTimeToUnix(endDate.Date.Value);
+        NavMgr.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //customer
+        await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("jebnuty@jano.sk", "123");
+        
+        await base.OnInitializedAsync();
     }
 
 }

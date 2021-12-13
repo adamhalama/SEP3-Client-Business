@@ -1,6 +1,8 @@
 package com.SEP3.CarRentalAPI.Controllers;
 
+import com.SEP3.CarRentalAPI.DBRepository.ReservationRepository;
 import com.SEP3.CarRentalAPI.DBRepository.VehicleRepository;
+import com.SEP3.CarRentalAPI.Model.Reservation;
 import com.SEP3.CarRentalAPI.Model.Vehicle;
 import com.SEP3.CarRentalAPI.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,32 @@ public class VehicleController
     @Autowired
     private VehicleRepository repository;
 
+    @Autowired
+    private ReservationRepository reservationRepository;
+
     @GetMapping("/vehicles")
     public ResponseEntity<List<Vehicle>> getAllVehicles()
     {
         return ResponseEntity.ok().body(repository.findAll());
+    }
+
+    @GetMapping("/vehicles/available/startDate={startDate}&endDate={endDate}")
+    public ResponseEntity<List<Vehicle>> getAvailableVehicles(@PathVariable long endDate, @PathVariable long startDate)
+    {
+        List<Reservation> reservationList = reservationRepository.findAll();
+        List<Vehicle> vehicleList = repository.findAll();
+
+        for (Reservation reservation : reservationList)
+        {
+            if ( (reservation.getDateStart() < startDate && startDate < reservation.getDateEnd() )
+                    || ( reservation.getDateStart() < endDate && endDate < reservation.getDateEnd() ))
+            {
+                vehicleList.removeIf(vehicle -> vehicle.getId() == reservation.getVehicle().getId());
+//                vehicleList.remove(reservation.getVehicle());
+            }
+        }
+
+        return ResponseEntity.ok().body(vehicleList);
     }
 
     @GetMapping("/vehicles/{id}")
