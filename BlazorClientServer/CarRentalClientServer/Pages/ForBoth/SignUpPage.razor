@@ -6,14 +6,12 @@
 @inject NavigationManager NavMgr
 @inject ICustomerService customerService;
 
-<h3>SignUpPage</h3>
+<Div Padding="Padding.Is5"></Div>
 
-
-        <Header>
-            <ModalTitle>Sign up</ModalTitle>
-            <CloseButton/>
-        </Header>
-        <Body>
+<Field Flex="Flex.JustifyContent.Center">
+    <Card Style="@SignupStyle" Shadow="Shadow.Large">
+        <DisplayHeading Size="DisplayHeadingSize.Is3" Flex="Flex.JustifyContent.Center">Sign up</DisplayHeading>
+        <CardBody>
             <Validations Mode="ValidationMode.Auto" Model="@newUser">
                 <Validation>
                     <Field Horizontal="true">
@@ -75,27 +73,34 @@
                         </FieldBody>
                     </Field>
                 </Validation>
-                </Validations>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is10">
-                <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@rePassword">
-                    <Feedback>
-                        <ValidationError/>
-                    </Feedback>
-                </TextEdit>
-            </FieldBody>
-        </Field>
-        
-         <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
-        <Button Color="Color.Primary" Clicked="@SignUpAsync">Sign up</Button>
-        </Body>
+            </Validations>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is10">
+                    <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@rePassword">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+
+            <Fields>
+                <Paragraph>Already have an account ? </Paragraph>
+                <Link To="/Login">Login</Link>
+            </Fields>
+            <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
+            <Button Color="Color.Primary" Clicked="@SignUpAsync" Size="Size.Large" Block="true">Sign up</Button>
+        </CardBody>
+    </Card>
+</Field>
+
 @code {
-    
+
     private string bottomLabel = "";
     private Customer newUser = new Customer();
     private string rePassword;
-    
+
     private async Task SignUpAsync()
     {
         Console.WriteLine("sign up clicked");
@@ -123,4 +128,6 @@
             Console.WriteLine(e);
         }
     }
+
+    private string SignupStyle = $"width:1000px";
 }

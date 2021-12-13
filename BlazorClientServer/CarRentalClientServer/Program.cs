@@ -69,10 +69,9 @@ namespace CarRentalClientServer
                     Console.WriteLine(e);
                 }
             } while (Console.ReadLine() != "x");
-            */
-            
-            
-            
+*/
+
+
             CreateHostBuilder(args).Build().Run();
         }
 
