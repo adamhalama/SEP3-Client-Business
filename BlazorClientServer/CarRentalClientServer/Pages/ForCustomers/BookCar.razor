@@ -1,0 +1,418 @@
+﻿@page "/Book/{Id:long}/{StartDate:long}/{EndDate:long}"
+@inject NavigationManager NavMgr
+@using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Authentification
+
+@inject IVehicleService vehicleService;
+@inject ICustomerService customerService
+@inject IReservationService reservationService;
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Book car</JumbotronTitle>
+    <JumbotronSubtitle>
+        <h6>Car id is : @Id</h6>
+    </JumbotronSubtitle>
+    @if (showError)
+    {
+        <Paragraph TextColor="TextColor.Danger">
+            @errorLabel
+        </Paragraph>
+    }
+</Jumbotron>
+<Steps>
+    <Step Name="1" Completed="true">
+        <Marker>
+            <Icon Name="IconName.Check"/>
+        </Marker>
+        <Caption>Search</Caption>
+    </Step>
+    <Step Name="2" Completed="true">Book</Step>
+    <Step Name="3">
+        <Marker>
+            <Icon Name="IconName.Flag"/>
+        </Marker>
+        <Caption>
+            Finish
+        </Caption>
+    </Step>
+</Steps>
+
+<Row>
+    <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
+        <Card>
+            <CardHeader>
+                <CardTitle>Information about you</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Customer name</FieldLabel>
+                        <TextEdit ReadOnly Text="@loggedInCustomer.Name"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Email</FieldLabel>
+                        <TextEdit ReadOnly Text="@loggedInCustomer.Email"></TextEdit>
+                    </Field>
+                </Fields>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Address</FieldLabel>
+                        <TextEdit ReadOnly Text="@loggedInCustomer.Address"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Driving licence number</FieldLabel>
+                        <TextEdit ReadOnly Text="@loggedInCustomer.LicenceNumber"></TextEdit>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <CardTitle>Booking info</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Vehicle Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit ReadOnly Text="@selectedVehicle.Name"></TextEdit>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Type</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle.Type"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Price per day</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.PricePerDay"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Seat</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.SeatsCount"></NumericEdit>
+                    </Field>
+                </Fields>
+
+                <Fields>
+                    <Field>
+                        <FieldLabel>Automatic ?</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle.IsAutomatic.ToString()"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Power (kw)</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.PowerKw"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Fuel type</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle.FuelType"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Deposit</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle.Deposit"></NumericEdit>
+                    </Field>
+                </Fields>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Allowed km</FieldLabel>
+                        <NumericEdit ReadOnly Value="@preReservation.AllowedKm"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Total amount </FieldLabel>
+                        <NumericEdit ReadOnly Value="@preReservation.PaymentAmount"></NumericEdit>
+                    </Field>
+                </Fields>
+                <Fields>
+                    <Field>
+                        <FieldLabel>Start time</FieldLabel>
+                        <DateEdit ReadOnly Date="@preReservation.DateStart" InputMode="DateInputMode.DateTime"/>
+                    </Field>
+                    <Field>
+                        <FieldLabel>End time</FieldLabel>
+                        <DateEdit ReadOnly Date="@preReservation.DateEnd" InputMode="DateInputMode.DateTime"/>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Bill Date</FieldLabel>
+                        <DateEdit ReadOnly Date="@preReservation.BillDate" InputMode="DateInputMode.DateTime"/>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+
+        <Alert Color="Color.Danger" Visible>
+            <Heading TextColor="TextColor.Danger">Attention</Heading>
+            <AlertMessage>
+                Please check all the things for the reservation are correct and then continue !
+            </AlertMessage>
+        </Alert>
+    </Column>
+
+    <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnTablet">
+        <Card>
+            <CardHeader>
+                <CardTitle>Price</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Inline>
+                    <Heading TextColor="TextColor.Success">Total: @preReservation.PaymentAmount € </Heading>
+                </Inline>
+            </CardBody>
+        </Card>
+
+        <Card>
+            <CardBody>
+                <Switch TValue="bool" @bind-Checked="@showControl">Controls</Switch>
+            </CardBody>
+            <CardBody Flex="Flex.JustifyContent.Center">
+                <Carousel @bind-SelectedSlide="@selectSlide" ShowControls="@showControl">
+                    <CarouselSlide Name="1">
+                        <Image Source="Img/Travel1.png" Text="1st image" Display="Display.Block" Width="Width.Is100"/>
+                    </CarouselSlide>
+                    <CarouselSlide Name="2">
+                        <Image Source="Img/Travel2.png" Text="1st image" Display="Display.Block" Width="Width.Is100"/>
+                    </CarouselSlide>
+                    <CarouselSlide Name="3">
+                        <Image Source="Img/Travel3.png" Text="1st image" Display="Display.Block" Width="Width.Is100"/>
+                    </CarouselSlide>
+                    <CarouselSlide Name="4">
+                        <Image Source="Img/Travel4.png" Text="1st image" Display="Display.Block" Width="Width.Is100"/>
+                    </CarouselSlide>
+                    <CarouselSlide Name="5">
+                        <Image Source="Img/Travel5.png" Text="1st image" Display="Display.Block" Width="Width.Is100"/>
+                    </CarouselSlide>
+                </Carousel>
+            </CardBody>
+        </Card>
+    </Column>
+</Row>
+
+<Div Padding="Padding.Is3"/>
+<Div Flex="Flex.JustifyContent.Start.OnDesktop">
+    <Button Color="Color.Primary" Clicked="FinishClicked">Finish</Button>
+    <Div Padding="Padding.Is4"/>
+    <Button Color="Color.Secondary" Clicked="CancelClicked">Cancel</Button>
+</Div>
+
+@code {
+
+    [Parameter]
+    public long Id { get; set; }
+
+    [Parameter]
+    public long StartDate { get; set; }
+
+    [Parameter]
+    public long EndDate { get; set; }
+
+    public class MySelectModel
+    {
+        public int MyValueField { get; set; }
+        public string MyTextField { get; set; }
+    }
+
+
+    private bool showError = false;
+    private string errorLabel = "Error label";
+
+    private bool showControl = true;
+    private string selectSlide = "1";
+
+    private UserLogin user;
+    private Vehicle selectedVehicle = new();
+    private ReservationFormatted preReservation = new();
+
+
+    private Customer loggedInCustomer = new()
+    {
+        Id = 1,
+        Name = "User not logged in",
+        Email = "Please@Log.in",
+        Password = "x",
+        Address = "Customer address",
+        LicenceNumber = "Not logged in",
+    };
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        showError = false;
+        try
+        {
+            user = ((CustomAuthenticationStateProvider) authenticationStateProvider).GetLoggedInUser();
+            if (!user.IsEmployee)
+            {
+                loggedInCustomer = await customerService.GetCustomerAsync(user.UserId);
+            }
+            else
+            {
+                errorLabel = "An employee can not book a car with this, go to the reservations section, you will be redirected in 5 seconds";
+                await Task.Delay(5000);
+                NavMgr.NavigateTo("/ReservationsEmployee");
+            }
+
+            selectedVehicle = await vehicleService.GetVehicleAsync(Id);
+            preReservation = new ReservationFormatted(new Reservation()
+            {
+                Id = -1,
+                Vehicle = selectedVehicle,
+                Customer = loggedInCustomer,
+                SecurityDeposit = selectedVehicle.Deposit,
+                DateStart = StartDate,
+                DateEnd = EndDate,
+                IsPaid = false
+            });
+            int days = ReservationFormatted.GetDaysBetweenTime(preReservation.DateStart, preReservation.DateEnd);
+
+            preReservation.AllowedKm = days * 100;
+            preReservation.PaymentAmount = days * selectedVehicle.PricePerDay;
+            preReservation.BillDate = preReservation.DateEnd.AddDays(1);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            showError = true;
+            errorLabel = "Failed to load the selected vehicle, or you are not logged in";
+        }
+    }
+
+    private async Task FinishClicked()
+    {
+        try
+        {
+            await reservationService.CreateReservationAsync(Id, loggedInCustomer.Id, -1, preReservation.SecurityDeposit, 
+                DateTimeConversions.GetUnixTimestampNow(), StartDate, EndDate, 
+                preReservation.AllowedKm, preReservation.PaymentAmount,
+                DateTimeConversions.DateTimeToUnix(preReservation.BillDate), false);
+            NavMgr.NavigateTo("/BookFinish");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while sending the reservation to the server";
+            showError = true;
+        }
+    }
+
+    private void CancelClicked()
+    {
+        NavMgr.NavigateTo("/");
+    }
+
+    private long TotalAmount()
+    {
+    //add days calculation later
+        return selectedVehicle.PricePerDay * 2 + selectedVehicle.Deposit;
+    }
+
+    public List<Vehicle> vehicleTestList = new()
+    {
+        new()
+        {
+            Id = 1,
+            Name = "CAR1",
+            Type = "Sedan",
+            PricePerDay = 100,
+            SeatsCount = 4,
+            IsAutomatic = true,
+            PowerKw = 250,
+            FuelType = "95",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 2,
+            Name = "CAR2",
+            Type = "Sedan",
+            PricePerDay = 400,
+            SeatsCount = 2,
+            IsAutomatic = false,
+            PowerKw = 400,
+            FuelType = "92",
+            Deposit = 800,
+        },
+        new()
+        {
+            Id = 3,
+            Name = "CAR3",
+            Type = "SUV",
+            PricePerDay = 200,
+            SeatsCount = 5,
+            IsAutomatic = true,
+            PowerKw = 300,
+            FuelType = "95",
+            Deposit = 700,
+        },
+        new()
+        {
+            Id = 4,
+            Name = "CAR4",
+            Type = "MPV",
+            PricePerDay = 340,
+            SeatsCount = 8,
+            IsAutomatic = true,
+            PowerKw = 300,
+            FuelType = "Diesel",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 5,
+            Name = "CAR5",
+            Type = "SUV",
+            PricePerDay = 600,
+            SeatsCount = 4,
+            IsAutomatic = false,
+            PowerKw = 500,
+            FuelType = "Diesel",
+            Deposit = 1000,
+        },
+        new()
+        {
+            Id = 6,
+            Name = "CAR6",
+            Type = "Sedan",
+            PricePerDay = 100,
+            SeatsCount = 4,
+            IsAutomatic = true,
+            PowerKw = 250,
+            FuelType = "92",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 7,
+            Name = "CAR7",
+            Type = "Luxury",
+            PricePerDay = 730,
+            SeatsCount = 4,
+            IsAutomatic = true,
+            PowerKw = 430,
+            FuelType = "95",
+            Deposit = 500,
+        },
+        new()
+        {
+            Id = 8,
+            Name = "CAR8 OLD",
+            Type = "MPV",
+            PricePerDay = 360,
+            SeatsCount = 8,
+            IsAutomatic = false,
+            PowerKw = 250,
+            FuelType = "Diesel",
+            Deposit = 500,
+        }
+    };
+
+    private Customer customerTest = new()
+    {
+        Id = 1,
+        Name = "TEST",
+        Email = "TEST@TESTEMAIL.COM",
+        Password = "TEST",
+        Address = "TEST ADDRESS",
+        LicenceNumber = "TEST TEST 0001",
+    };
+
+}

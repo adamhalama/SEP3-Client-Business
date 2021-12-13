@@ -1,0 +1,208 @@
+﻿@page "/AllEmployees"
+@attribute [Authorize(Policy = "SecurityLevel2")]
+
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Models
+@inject IEmployeeService employeeService;
+
+<Div Padding="Padding.Is4"></Div>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Employee list</JumbotronTitle>
+    <JumbotronSubtitle>
+        All the employees.
+    </JumbotronSubtitle>
+    @if (showError)
+    {
+        <Paragraph TextColor="TextColor.Danger">
+            @errorLabel
+        </Paragraph>
+    }
+</Jumbotron>
+
+<DataGrid TItem="Employee" Data="@employeeList"
+          Sortable="true" Filterable="true" Editable="true"
+          EditMode="DataGridEditMode.Form" UseInternalEditing
+          ShowPager="true" PageSize="10"
+          RowUpdated="@OnRowUpdated"
+          RowInserted="@OnRowInserted"
+          RowRemoved="@OnRowRemoved"
+          NewItemDefaultSetter="@OnNewItemDefaultSetter"
+          ReadData="@LoadFromService">
+    <DataGridColumns>
+        <DataGridCommandColumn TItem="Employee">
+            <NewCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">New</Button>
+            </NewCommandTemplate>
+            <SaveCommandTemplate>
+                <Button Color="Color.Success" Clicked="@context.Clicked">Save</Button>
+            </SaveCommandTemplate>
+            <EditCommandTemplate>
+                <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+            </EditCommandTemplate>
+            <DeleteCommandTemplate>
+                <Button Color="Color.Danger" Clicked="@context.Clicked">Delete</Button>
+            </DeleteCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Color="Color.Secondary" Clicked="@context.Clicked">Cancel</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn TItem="Employee" Field="@nameof(Employee.Id)" Caption="ID" Sortable="true" Editable="false"/>
+        <DataGridColumn TItem="Employee" Field="@nameof(Employee.Name)" Caption="Name" Editable/>
+        <DataGridColumn TItem="Employee" Field="@nameof(Employee.Email)" Caption="Email" Editable/>
+        <DataGridColumn TItem="Employee" Field="@nameof(Employee.ClearanceLevel)" Caption="Clearance level" Editable/>
+        <DataGridColumn TItem="Employee" Field="@nameof(Employee.Password)" Caption="Password" Displayable="false" Editable/>
+    </DataGridColumns>
+    <EmptyTemplate>
+        <div class="box">
+            No Employees were found!
+        </div>
+    </EmptyTemplate>
+    <LoadingTemplate>
+        <div class="box">
+            <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+        </div>
+    </LoadingTemplate>
+</DataGrid>
+
+
+@code {
+
+    protected Progress progressRef = new();
+    protected int progress;
+
+    private bool showError = false;
+    private string errorLabel = "Error label";
+
+    private List<Employee> employees = null;
+    private IList<Employee> employeeList;
+    private Employee employeeSelected;
+
+    async Task LoadFromService(DataGridReadDataEventArgs<Employee> gridReadDataEventArgs)
+    {
+        showError = false;
+        progressRef.Animated = true;
+        progress = 0;
+        await InvokeAsync(StateHasChanged);
+        try
+        {
+            progress = 5;
+            await InvokeAsync(StateHasChanged);
+            var fetchEmployees = employeeService.GetEmployeesAsync();
+            progress = 33;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            await fetchEmployees;
+            progress = 66;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            employeeList = fetchEmployees.Result;
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+            Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
+        }
+    }
+
+    void OnNewItemDefaultSetter(Employee employee)
+    {
+        employees = new()
+        {
+            new()
+            {
+                Id = 1,
+                Name = "TEST1",
+                Email = "EMPLOYEE1@TEST.COM",
+                Password = "test1",
+                ClearanceLevel = 1
+            },
+            new()
+            {
+                Id = 2,
+                Name = "TEST2",
+                Email = "EMPLOYEE2@TEST.COM",
+                Password = "test1",
+                ClearanceLevel = 3
+            },
+            new()
+            {
+                Id = 3,
+                Name = "TEST3",
+                Email = "EMPLOYEE3@TEST.COM",
+                Password = "test1",
+                ClearanceLevel = 3
+            },
+            new()
+            {
+                Id = 4,
+                Name = "TEST4",
+                Email = "EMPLOYEE4@TEST.COM",
+                Password = "test1",
+                ClearanceLevel = 1
+            }
+        };
+        StateHasChanged();
+    }
+
+    async Task OnRowInserted(SavedRowItem<Employee, Dictionary<string, object>> item)
+    {
+        showError = false;
+        try
+        {
+            var employee = item.Item;
+            await employeeService.CreateEmployeeAsync(employee.Name, employee.Email, employee.Password, employee.ClearanceLevel);
+            employeeList = await employeeService.GetEmployeesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            errorLabel = "Error while creating";
+            showError = true;
+            StateHasChanged();
+            Console.WriteLine(e);
+        }
+    }
+
+    async Task OnRowUpdated(SavedRowItem<Employee, Dictionary<string, object>> item)
+    {
+        showError = false;
+        try
+        {
+            var employee = item.Item;
+            await employeeService.UpdateEmployeeAsync(employee);
+            employeeList = await employeeService.GetEmployeesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while updating";
+            showError = true;
+            StateHasChanged();
+        }
+    }
+
+    async Task OnRowRemoved(Employee employee)
+    {
+        showError = false;
+        try
+        {
+            await employeeService.DeleteEmployeeAsync(employee.Id);
+            employeeList = await employeeService.GetEmployeesAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = "Error while removing";
+            showError = true;
+            StateHasChanged();
+        }
+    }
+
+}

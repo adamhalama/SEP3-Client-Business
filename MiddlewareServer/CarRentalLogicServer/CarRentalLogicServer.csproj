@@ -8,9 +8,4 @@
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\GraphQL" />
-    <Folder Include="GraphQLResolvers\Mutation" />
-  </ItemGroup>
-
 </Project>

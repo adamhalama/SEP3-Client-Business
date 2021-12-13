@@ -1,0 +1,44 @@
+﻿@page "/AboutUs"
+
+<Div Padding="Padding.Is4"></Div>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">About us</JumbotronTitle>
+    <JumbotronSubtitle>
+        Here is our team.
+    </JumbotronSubtitle>
+</Jumbotron>
+<Figure Flex="Flex.JustifyContent.Center">
+    <FigureImage Source="Img/FullLogo.png" AlternateText="Team logo" />
+</Figure>
+
+<Divider DividerType="DividerType.TextContent" Text="Our team" />
+
+@* todo i would say this project is made by *@
+<Heading Size="HeadingSize.Is2">This Blazor app is made by : </Heading>
+<CardGroup>
+    <Card Margin="Margin.Is5.FromBottom">
+        <CardImage Source="Img/AdamGitIconSmall.png" Alt="Plcaeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="4">Ján Halama</CardTitle>
+            <CardText>304130@via.dk</CardText>
+        </CardBody>
+    </Card>
+    <Card Margin="Margin.Is5.FromBottom">
+        <CardImage Source="Img/JerryIcon.png" Alt="Plcaeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="4">Xuanyuan Cao</CardTitle>
+            <CardText>305557@via.dk</CardText>
+        </CardBody>
+    </Card>
+    <Card Margin="Margin.Is5.FromBottom">
+        <CardImage Source="Img/FelixIcon.png" Alt="Plcaeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="4">Ioan-Felix Stan</CardTitle>
+            <CardText>304090@via.dk</CardText>
+        </CardBody>
+    </Card>
+</CardGroup>
+
+@code {
+
+}

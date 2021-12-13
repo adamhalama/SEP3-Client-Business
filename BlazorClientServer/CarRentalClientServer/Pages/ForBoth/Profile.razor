@@ -1,0 +1,320 @@
+﻿@page "/Profile"
+@attribute [Authorize(Policy = "SecurityLevel0")]
+
+@using CarRentalClientServer.Authentification
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Models
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject IEmployeeService employeeService
+@inject ICustomerService customerService
+
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Profile</JumbotronTitle>
+    <JumbotronSubtitle>
+        Account detail for customer.
+    </JumbotronSubtitle>
+</Jumbotron>
+<Figure Flex="Flex.JustifyContent.Center">
+    <FigureImage Source="Img/UserIconBig.png" AlternateText="UserIcon" />
+</Figure>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <Alert Color="Color.Warning" Visible>
+            <AlertMessage>Please login first !</AlertMessage>
+        </Alert>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Policy="OnlyCustomer">
+    <Row>
+        <Column ColumnSize="ColumnSize.IsFull">
+            <Card Margin="Margin.Is4.OnY">
+                <CardBody Flex="Flex.JustifyContent.Center">
+                    <Fields>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Name:</Heading>
+                            <Paragraph>@customer.Name</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Email(Account):</Heading>
+                            <Paragraph>@customer.Email</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Address:</Heading>
+                            <Paragraph>@customer.Address</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Licence number:</Heading>
+                            <Paragraph>@customer.LicenceNumber</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Button Color="Color.Info" Size="Size.Medium" Clicked="@ShowEdit">Edit profile</Button>
+                            <Button Color="Color.Info" Size="Size.Medium" Clicked="@ShowChangePassword">Change password</Button>
+                        </Field>
+                    </Fields>
+                </CardBody>
+            </Card>
+        </Column>
+    </Row>
+</AuthorizeView>
+
+<AuthorizeView Policy="SecurityLevel1">
+    <Row>
+        <Column ColumnSize="ColumnSize.IsFull">
+            <Card Margin="Margin.Is4.OnY">
+                <CardBody Flex="Flex.JustifyContent.Center">
+                    <Fields>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Name:</Heading>
+                            <Paragraph>@employee.Name</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Email(Account):</Heading>
+                            <Paragraph>@employee.Email</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Heading Size="HeadingSize.Is5">Account level:</Heading>
+                            <Paragraph>@employee.ClearanceLevel</Paragraph>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+                            <Button Color="Color.Info" Size="Size.Medium" Clicked="@ShowEdit">Edit profile</Button>
+                            <Button Color="Color.Info" Size="Size.Medium" Clicked="@ShowChangePassword">Change password</Button>
+                        </Field>
+                    </Fields>
+                </CardBody>
+            </Card>
+        </Column>
+    </Row>
+</AuthorizeView>
+
+<Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
+
+<Modal @ref="modalProfileEdit">
+    <ModalContent Size="ModalSize.Large" Centered>
+        <ModalHeader>
+            <ModalTitle>Edit profile</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            @if (isEmployee)
+            {
+                <Validations Mode="ValidationMode.Auto" Model="@employee">
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Full Name</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Placeholder="First and last name" @bind-Text="@employee.Name">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Email</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Placeholder="Enter email" @bind-Text="@employee.Email">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                </Validations>
+            }
+            else
+            {
+                <Validations Mode="ValidationMode.Auto" Model="@customer">
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Full Name</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Placeholder="First and last name" @bind-Text="@customer.Name">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Email</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Placeholder="Enter email" @bind-Text="@customer.Email">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Licence number</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Placeholder="Licence number" @bind-Text="@customer.LicenceNumber">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Address</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Placeholder="Licence number" @bind-Text="@customer.Address">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                </Validations>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@SaveChange">Save</Button>
+            <Button Color="Color.Secondary" Clicked="@HideEdit">Cancel</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="modalPassword">
+    <ModalContent Size="ModalSize.Large" Centered>
+        <ModalHeader>
+            <ModalTitle>Change password</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        @if (isEmployee)
+        {
+            <ModalBody>
+                <Validations Mode="ValidationMode.Auto" Model="@employee">
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Password</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@employee.Password">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                </Validations>
+            </ModalBody>
+        }
+        else
+        {
+            <ModalBody>
+                <Validations Mode="ValidationMode.Auto" Model="@customer">
+                    <Validation>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is2">Password</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is10">
+                                <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@customer.Password">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
+                            </FieldBody>
+                        </Field>
+                    </Validation>
+                </Validations>
+            </ModalBody>
+        }
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@SavePasswordChange">Save</Button>
+            <Button Color="Color.Secondary" Clicked="@HideChangePassword">Cancel</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+@code {
+    private UserLogin user;
+    private Employee employee = new Employee() { ClearanceLevel = 1, Email = "Janko@kokot.com", Id = 1, Name = "Janko", Password = "123" };
+    private Customer customer = new Customer() { Email = "Janko@kokot.com", Id = 1, Name = "Janko", Password = "123", Address = "Jebo v lese", LicenceNumber = "kokotxxx" };
+
+    private Modal modalProfileEdit;
+    private Modal modalPassword;
+
+    private string rePassword;
+
+    private string bottomLabel = "";
+
+    private bool isLogin = false;
+    private bool isEmployee = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bottomLabel = "";
+        try
+        {
+            user = ((CustomAuthenticationStateProvider)authenticationStateProvider).GetLoggedInUser();
+            if (user.IsEmployee)
+            {
+                isEmployee = true;
+                employee = await employeeService.GetEmployeeAsync(user.UserId);
+            }
+            else if (!user.IsEmployee)
+            {
+                customer = await customerService.GetCustomerAsync(user.UserId);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("error:" + e);
+            //not sure what should implment here
+        }
+        await base.OnInitializedAsync();
+    }
+
+    private Task ShowEdit()
+    {
+        return modalProfileEdit.Show();
+    }
+
+    private Task HideEdit()
+    {
+        return modalProfileEdit.Hide();
+    }
+
+    private Task SaveChange()
+    {
+        if (isEmployee)
+        {
+            employeeService.UpdateEmployeeAsync(employee);
+        }
+        else
+        {
+            customerService.UpdateCustomerAsync(customer);
+        }
+        bottomLabel = "Change saved";
+        return modalProfileEdit.Hide();
+    }
+
+    private Task ShowChangePassword()
+    {
+        return modalPassword.Show();
+    }
+
+    private Task HideChangePassword()
+    {
+        return modalPassword.Hide();
+    }
+
+    private Task SavePasswordChange()
+    {
+        SaveChange();
+        return modalPassword.Hide();
+    }
+
+}

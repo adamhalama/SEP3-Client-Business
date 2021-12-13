@@ -1,0 +1,90 @@
+﻿@page "/ContactUs"
+
+<Div Padding="Padding.Is3"></Div>
+<Jumbotron>
+    <JumbotronTitle Size="JumbotronTitleSize.Is3">Contact us</JumbotronTitle>
+    <JumbotronSubtitle>
+        Do you have any problems? You can find answers here or contact us.
+    </JumbotronSubtitle>
+</Jumbotron>
+
+<Alert Color="Color.Info" Visible>
+    <AlertMessage>Before contact us :</AlertMessage>
+    <AlertDescription>
+        If you cannot solve the problems by yourself through FAQ and then you can contact us through email.
+    </AlertDescription>
+</Alert>
+
+<h2>FAQ</h2>
+<Alert Color="Color.Info" Visible>
+    <AlertMessage>You can find some suggestions maybe helpful to you.</AlertMessage>
+</Alert>
+<Card>
+    <CardBody>
+        <Accordion>
+            <Collapse Visible="@collapseFindCar">
+                <CollapseHeader>
+                    <Heading Size="HeadingSize.Is4">
+                        <Button Clicked="@(()=>collapseFindCar = !collapseFindCar)">Cannot find car ?</Button>
+                    </Heading>
+                </CollapseHeader>
+                <CollapseBody>
+                    Check the date you search is correct. If you still cannot find the car then there may not be a car available for rent at the moment,
+                    please wait for a while and try again. You can also send email to us for infomation.
+                </CollapseBody>
+            </Collapse>
+
+            <Collapse Visible="@collapseFindReservation">
+                <CollapseHeader>
+                    <Heading Size="HeadingSize.Is4">
+                        <Button Clicked="@(()=>collapseFindReservation = !collapseFindReservation)">Cannot find your reservation ?</Button>
+                    </Heading>
+                </CollapseHeader>
+                <CollapseBody>
+                    Please make sure your login account is correct. If the account is correct, please contact us for help.
+                </CollapseBody>
+            </Collapse>
+
+            <Collapse Visible="@collapseCannotLogin">
+                <CollapseHeader>
+                    <Heading Size="HeadingSize.Is4">
+                        <Button Clicked="@(()=>collapseCannotLogin = !collapseCannotLogin)">Cannot login ?</Button>
+                    </Heading>
+                </CollapseHeader>
+                <CollapseBody>
+                    The email you entered is correct ? You enter the correct password ? Is the Internet settings are correct ?
+                    If you still cannot login, please contact us.
+                </CollapseBody>
+            </Collapse>
+
+            <Collapse Visible="@collapseForget">
+                <CollapseHeader>
+                    <Heading Size="HeadingSize.Is4">
+                        <Button Clicked="@(()=>collapseForget = !collapseForget)">Forget your password ?</Button>
+                    </Heading>
+                </CollapseHeader>
+                <CollapseBody>
+                    Well, that is not a good news. Please send email to us to reset your password. Give us your account when sending email
+                    so that we can find your account easily.
+                </CollapseBody>
+            </Collapse>
+        </Accordion>
+    </CardBody>
+</Card>
+
+<h2>Send email</h2>
+<Alert Color="Color.Warning" Visible>
+    <AlertMessage>Cannot find answers for your problems ? Send email to us for more help.</AlertMessage>
+</Alert>
+<Card>
+    <CardBody>
+        <h4>Email address</h4>
+    </CardBody>
+</Card>
+
+@code {
+    bool collapseFindCar = false;
+    bool collapseFindReservation = false;
+    bool collapseForget = false;
+    bool collapseCannotLogin = false;
+}

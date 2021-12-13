@@ -1,8 +1,369 @@
-@page "/"
+﻿@page "/"
+@using CarRentalClientServer.Data
+@using CarRentalClientServer.Models
+@using CarRentalClientServer.Authentification
+@inject IReservationService rs;
+@inject IVehicleService vs;
+@inject NavigationManager NavMgr
+@inject IVehicleService VehicleData
 
-<h1>Hello, world!</h1>
+@inject AuthenticationStateProvider authenticationStateProvider
 
-Welcome to your new app.
+<Div Padding="Padding.Is4"></Div>
+<Heading Size="HeadingSize.Is2" Flex="Flex.JustifyContent.Center">
+    Want to rent a car to travel ? Find it now !
+</Heading>
+
+<Field Horizontal Flex="Flex.JustifyContent.Center">
+    <Card Style="@customCardStyle">
+        <CardBody Flex="Flex.JustifyContent.Center">
+            <Row>
+                <Column ColumnSize="ColumnSize.IsFull">
+                    <Fields>
+                        <Column ColumnSize="ColumnSize.IsAuto">
+                            <FieldLabel>Start date:</FieldLabel>
+                            <Addons>
+                                <Addon AddonType="AddonType.Body">
+                                    <DatePicker @ref="@startDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                                </Addon>
+                                <Addon AddonType="AddonType.End">
+                                    <Button Color="Color.Light" Clicked="@(()=>startDate.ToggleAsync())">
+                                        <Icon Name="IconName.CalendarDay" />
+                                    </Button>
+                                </Addon>
+                            </Addons>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.IsAuto">
+                            <FieldLabel>End date:</FieldLabel>
+                            <Addons>
+                                <Addon AddonType="AddonType.Body">
+                                    <DatePicker @ref="@endDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                                </Addon>
+                                <Addon AddonType="AddonType.End">
+                                    <Button Color="Color.Light" Clicked="@(()=>endDate.ToggleAsync())">
+                                        <Icon Name="IconName.CalendarDay" />
+                                    </Button>
+                                </Addon>
+                            </Addons>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.IsAuto">
+                            <FieldLabel>Search!</FieldLabel> <!--Remove later-->
+                            <Addons>
+                                <Addon AddonType="AddonType.End">
+                                    <Button Color="Color.Dark" Clicked="@SearchButtonClicked">
+                                        <Icon Name="IconName.Search" />
+                                    </Button>
+                                </Addon>
+                            </Addons>
+                        </Column>
+                    </Fields>
+                </Column>
+            </Row>
+        </CardBody>
+    </Card>
+</Field>
+
+<Div Padding="Padding.Is4">
+    @if (!isCorrect)
+    {
+        <Alert Color="Color.Warning" Visible>
+            <AlertMessage>Select correct start and end date !</AlertMessage>
+        </Alert>
+    }
+
+    @if (isSearched)
+    {
+        <CarRentalClientServer.Components.CarInfo />
+        <Steps>
+            <Step Name="1" Completed="true">Search</Step>
+            <Step Name="2">Book</Step>
+            <Step Name="3">
+                <Marker>
+                    <Icon Name="IconName.Flag" />
+                </Marker>
+                <Caption>
+                    Finish
+                </Caption>
+            </Step>
+        </Steps>
+
+        <h3>Matched cars</h3>
+        @if (showError)
+        {
+            <Paragraph TextColor="TextColor.Danger">
+                @errorLabel
+            </Paragraph>
+        }
+        <Card>
+            <CardHeader>
+                <CardTitle>Deatil</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Fields>
+                
+                    <Field>
+                        <FieldLabel>Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit ReadOnly Text="@selectedVehicle?.Name"></TextEdit>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Vehicle ID</FieldLabel>
+                        <FieldBody>
+                            <NumericEdit ReadOnly Value="@selectedVehicle?.Id"></NumericEdit>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Type</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle?.Type"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Price per day</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.PricePerDay"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Seat</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.SeatsCount"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Automatic ?</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle?.IsAutomatic.ToString()"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Power (kw)</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.PowerKw"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Fuel type</FieldLabel>
+                        <TextEdit ReadOnly Text="@selectedVehicle?.FuelType"></TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Deposit</FieldLabel>
+                        <NumericEdit ReadOnly Value="@selectedVehicle?.Deposit"></NumericEdit>
+                    </Field>
+                    <Field>
+                        <Button Color="Color.Primary" Clicked="@(() => BookCarClicked(selectedVehicle.Id))">Book this car</Button>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+
+        <Divider />
+
+        <DataGrid TItem="Vehicle" Data="vehicleList" 
+                  ShowPager="true" PageSize="10"
+                  SelectionMode="DataGridSelectionMode.Single"
+                  @bind-SelectedRow="@selectedVehicle" 
+                  Responsive Filterable FilterMethod="DataGridFilterMethod.Contains"
+                  ReadData="@LoadFromService">
+            <DataGridColumns>
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" />
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" CustomFilter="@TypeFilter">
+                    <FilterTemplate>
+                        <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange( typeFilter);})">
+                            <SelectItem TValue="string" Value="@("*")">All</SelectItem>
+                            <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
+                            <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
+                            <SelectItem TValue="string" Value="@("SUV")">SUV</SelectItem>
+                            <SelectItem TValue="string" Value="@("MPV")">MPV</SelectItem>
+                        </Select>
+                    </FilterTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable=false />
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
+                    <FilterTemplate>
+                        <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange( seatFilter );})">
+                            <SelectItem TValue="string" Value="@("*")">All</SelectItem>
+                            <SelectItem TValue="int" Value="@(2)">2</SelectItem>
+                            <SelectItem TValue="int" Value="@(4)">4</SelectItem>
+                            <SelectItem TValue="int" Value="@(5)">5</SelectItem>
+                            <SelectItem TValue="int" Value="@(6)">6</SelectItem>
+                            <SelectItem TValue="int" Value="@(7)">7</SelectItem>
+                            <SelectItem TValue="int" Value="@(8)">8</SelectItem>
+                        </Select>
+                    </FilterTemplate>
+                </DataGridColumn>
+            </DataGridColumns>
+            <EmptyTemplate>
+                    <div class="box">
+                        No Cars were found!
+                    </div>
+                </EmptyTemplate>
+                <LoadingTemplate>
+                    <div class="box">
+                        <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+                    </div>
+                </LoadingTemplate>
+        </DataGrid>
+
+    }
+</Div>
 
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<CardDeck>
+    <Card Margin="Margin.Is4.FromBottom">
+        <CardImage Source="Img/CarRent.png" Alt="Placeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="5">Quick</CardTitle>
+            <CardText>
+                You can get your car quickly and easily. We provide cars with good conditions.
+            </CardText>
+        </CardBody>
+    </Card>
+    <Card Margin="Margin.Is4.FromBottom">
+        <CardImage Source="Img/Payment.png" Alt="Placeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="5">Easy to pay</CardTitle>
+            <CardText>
+                We support many ways for you to pay. You can pay through bank cards or mobile phone.
+            </CardText>
+        </CardBody>
+    </Card>
+    <Card Margin="Margin.Is4.FromBottom">
+        <CardImage Source="Img/Travel.png" Alt="Placeholder image"></CardImage>
+        <CardBody>
+            <CardTitle Size="5">Travel</CardTitle>
+            <CardText>
+                Enjoy your trip! If you have any questions, please contact us.
+            </CardText>
+        </CardBody>
+    </Card>
+</CardDeck>
+
+
+
+@code {
+    private IList<Vehicle> vehicleList;
+
+    protected Progress progressRef = new();     
+    protected int progress;
+    
+    private bool showError = false;
+    private string errorLabel = "Error label";
+    
+    DatePicker<DateTime?> startDate;
+    DatePicker<DateTime?> endDate;
+
+    private bool isSearched = false;
+    private bool isCorrect = false;
+
+    string customCardStyle = $"width: 1100px";
+    private Vehicle selectedVehicle;
+
+    private string typeFilter;
+    private string seatFilter;
+    
+    [Inject] IMessageService MessageService { get; set; }
+    [Inject] INotificationService NotificationService { get; set; }
+    
+    async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
+    {
+        showError = false;
+        if (!startDate.Date.HasValue || !endDate.Date.HasValue)
+        {
+            errorLabel = "Enter valid dates";
+            showError = true;
+            return;
+        }
+        
+        progressRef.Animated = true;
+        progress = 0;
+        await InvokeAsync(StateHasChanged);
+        try
+        {
+            progress = 5;
+            await InvokeAsync(StateHasChanged);
+            var fetchedVehicles = VehicleData.GetAvailableVehiclesAsync(DateTimeConversions.DateTimeToUnix(startDate.Date.Value), DateTimeConversions.DateTimeToUnix(endDate.Date.Value));
+            progress = 33;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            await fetchedVehicles;
+            progress = 66;
+            await Task.Delay(500);
+            await InvokeAsync(StateHasChanged);
+            vehicleList = fetchedVehicles.Result;
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            progress = 100;
+            await InvokeAsync(StateHasChanged);
+            Console.WriteLine(e);
+            errorLabel = "Error while loading data";
+            showError = true;
+        }
+    }
+
+    private bool TypeFilter(object itemValue, object searchValue)
+    {
+        if (searchValue is string statusFilter)
+        {
+            return statusFilter == "*" || statusFilter == itemValue?.ToString();
+        }
+        return true;
+    }
+
+    private bool SeatFilter(object seatValue, object seatSearchValue)
+    {
+        if (seatSearchValue is string statusFilter)
+        {
+            return statusFilter == "*" || statusFilter == seatValue?.ToString();
+        }
+        return true;
+    }
+
+    private void SearchButtonClicked()
+    {
+        //search a car
+        var start = startDate.Date.Value;
+        var end = endDate.Date.Value;
+        var today = DateTime.Now;
+        int compNum = DateTime.Compare(start, end);
+        int compNum1 = DateTime.Compare(start, today);
+        int compNum2 = DateTime.Compare(end, today);
+        if (compNum > 0)
+        {
+            this.isSearched = false;
+            this.isCorrect = false;
+        }
+        else
+        {
+            if (compNum1 < 0 && compNum2 < 0)
+            {
+                this.isSearched = false;
+                this.isCorrect = false;
+            }
+            else
+            {
+                this.isSearched = true;
+                this.isCorrect = true;
+            }
+
+        }
+
+    }
+
+    private void BookCarClicked(long id)
+    {
+        if (!startDate.Date.HasValue || !endDate.Date.HasValue)
+        {
+            errorLabel = "Pick correct dates";
+            showError = true;
+            return;
+        }
+        
+        long startDateTimestamp = DateTimeConversions.DateTimeToUnix(startDate.Date.Value);
+        long endDateTimestamp = DateTimeConversions.DateTimeToUnix(endDate.Date.Value);
+        NavMgr.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //customer
+        await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("jebnuty@jano.sk", "123");
+        
+        await base.OnInitializedAsync();
+    }
+
+}

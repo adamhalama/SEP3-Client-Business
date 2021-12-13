@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
+using CarRentalLogicServer.APIConsumer.ClientFactory;
+using CarRentalLogicServer.APIConsumer.Login;
+using CarRentalLogicServer.GraphQLResolvers.Mutation;
 using CarRentalLogicServer.GraphQLResolvers.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,17 +21,29 @@ namespace CarRentalLogicServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ICarService, WebCarService>();
-            
-            
+            // Interfaces
+            services.AddScoped<ICustomerService, CustomerWebService>();
+            services.AddScoped<IEmployeeService, EmployeeWebService>();
+            services.AddScoped<IReservationService, ReservationWebService>();
+            services.AddScoped<IVehicleService, VehicleWebService>();
+            services.AddScoped<ILoginService, LoginWebService>();
+
+            //Httpclient factory - needed to make sure all the WebService classes have the same client
             services
                 .AddGraphQLServer()
                 .AddQueryType(q => q.Name("Query"))
-                .AddType<PetResolver>()
-                .AddType<CarListResolver>()
-                // .AddMutationType(m => m.Name("Mutation"))
-                // .AddType<PetsMutateResolver>()
+                .AddType<CustomerResolver>()
+                .AddType<EmployeeResolver>()
+                .AddType<ReservationResolver>()
+                .AddType<VehicleResolver>()
+                .AddMutationType(m => m.Name("Mutation"))
+                .AddType<VehicleMutationResolver>()
+                .AddType<CustomerMutationResolver>()
+                .AddType<EmployeeMutationResolver>()
+                .AddType<ReservationMutationResolver>()
+                .AddType<LoginMutationResolver>()
                 ;
+            services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

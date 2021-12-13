@@ -1,0 +1,133 @@
+﻿@page "/SignUp"
+@using Microsoft.AspNetCore.Components
+@using CarRentalClientServer.Models
+@using CarRentalClientServer.Data
+
+@inject NavigationManager NavMgr
+@inject ICustomerService customerService;
+
+<Div Padding="Padding.Is5"></Div>
+
+<Field Flex="Flex.JustifyContent.Center">
+    <Card Style="@SignupStyle" Shadow="Shadow.Large">
+        <DisplayHeading Size="DisplayHeadingSize.Is3" Flex="Flex.JustifyContent.Center">Sign up</DisplayHeading>
+        <CardBody>
+            <Validations Mode="ValidationMode.Auto" Model="@newUser">
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Full Name</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="First and last name" @bind-Text="@newUser.Name">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Email</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="Enter email" @bind-Text="@newUser.Email">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Address</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="Full Address" @bind-Text="@newUser.Address">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Driving Licence</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Placeholder="Licence Number" @bind-Text="@newUser.LicenceNumber">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Horizontal="true">
+                        <FieldLabel ColumnSize="ColumnSize.Is2">Password</FieldLabel>
+                        <FieldBody ColumnSize="ColumnSize.Is10">
+                            <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@newUser.Password">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+            </Validations>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2">Re Password</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is10">
+                    <TextEdit Role="TextRole.Password" Placeholder="Retype password" @bind-Text="@rePassword">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+
+            <Fields>
+                <Paragraph>Already have an account ? </Paragraph>
+                <Link To="/Login">Login</Link>
+            </Fields>
+            <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
+            <Button Color="Color.Primary" Clicked="@SignUpAsync" Size="Size.Large" Block="true">Sign up</Button>
+        </CardBody>
+    </Card>
+</Field>
+
+@code {
+
+    private string bottomLabel = "";
+    private Customer newUser = new Customer();
+    private string rePassword;
+
+    private async Task SignUpAsync()
+    {
+        Console.WriteLine("sign up clicked");
+        bottomLabel = "";
+        if (!rePassword.Equals(newUser.Password))
+        {
+            bottomLabel = "Repeated password is wrong";
+            return;
+        }
+        try
+        {
+            var createdCustomer = await customerService.CreateCustomerAsync
+                (newUser.Name, newUser.Email, newUser.Password, newUser.Address, newUser.LicenceNumber);
+            if (createdCustomer != null)
+            {
+                bottomLabel = "Customer account created successfully, you will be redirected to the login page automatically";
+                newUser = new Customer();
+                await Task.Delay(2000);
+                NavMgr.NavigateTo("/login");
+            }
+        }
+        catch (Exception e)
+        {
+            bottomLabel = "Error occured while signing up";
+            Console.WriteLine(e);
+        }
+    }
+
+    private string SignupStyle = $"width:1000px";
+}
