@@ -5,47 +5,63 @@
 @inject NavigationManager navMgr
 @inject AuthenticationStateProvider authenticationStateProvider
 
-<h3>Login here</h3>
+<Div Padding="Padding.Is5"></Div>
+<Div Padding="Padding.Is5"></Div>
 
+<AuthorizeView>
+    <NotAuthorized>
+        <Field Horizontal="true" Flex="Flex.JustifyContent.Center">
+            <Card Style="@LoginStyle" Shadow="Shadow.Large">
+                <Validations Mode="ValidationMode.Auto" Model="@loginCredentials">
+                    <DisplayHeading Size="DisplayHeadingSize.Is3" Flex="Flex.JustifyContent.Center">Login</DisplayHeading>
+                    <CardBody Flex="Flex.JustifyContent.Center">
+                        <Row>
+                            <Column ColumnSize="ColumnSize.IsFull">
+                                <Validation>
+                                    <Fields>
+                                        <Field>
+                                            <FieldLabel>Email</FieldLabel>
+                                            <TextEdit Placeholder="Enter your email" @bind-Text="@loginCredentials.Email"/>
+                                            <ValidationError/>
+                                        </Field>
+                                    </Fields>
+                                </Validation>
 
-<Body>
-<div class="form-group col-md-3">
-    <AuthorizeView>
-        <NotAuthorized>
-            <Validations Mode="ValidationMode.Auto" Model="@loginCredentials">
-                <Validation>
-                    <Field>
-                        <FieldLabel>Email</FieldLabel>
-                        <TextEdit Placeholder="Enter your email" @bind-Text="@loginCredentials.Email"/>
-                        <ValidationError/>
-                    </Field>
-                </Validation>
-                <Field>
-                    <FieldLabel>Password</FieldLabel>
-                    <TextEdit Role="TextRole.Password" Placeholder="Enter password" @bind-Text="@loginCredentials.Password"/>
-                    <ValidationError/>
-                </Field>
-            </Validations>
-            <Button Color="Color.Primary" Clicked="@Login">Login</Button>
-        </NotAuthorized>
-        <Authorized>
-            <div class="form-group col-md-3">
-                <p class="actions">
-                    <button class="btn btn-outline-dark" @onclick="LogOut">Log Out</button>
-                </p>
-            </div>
-        </Authorized>
-    </AuthorizeView>
-    <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
-</div>
-</Body>
-
+                                <Fields>
+                                    <Field>
+                                        <FieldLabel>Password</FieldLabel>
+                                        <TextEdit Role="TextRole.Password" Placeholder="Enter password" @bind-Text="@loginCredentials.Password"/>
+                                        <ValidationError/>
+                                    </Field>
+                                </Fields>
+                                <Fields>
+                                    <Paragraph>Don't have account ? </Paragraph>
+                                    <Link To="/Signup">Create one !</Link>
+                                </Fields>
+                            </Column>
+                        </Row>
+                    </CardBody>
+                    <Label TextColor="TextColor.Primary" Position="new FluentPosition()">@bottomLabel</Label>
+                </Validations>
+                <Button Color="Color.Primary" Clicked="@Login" Size="Size.Large">Login</Button>
+            </Card>
+        </Field>
+    </NotAuthorized>
+    <Authorized>
+        <div class="form-group col-md-3">
+            <p class="actions">
+                <button class="btn btn-outline-dark" @onclick="LogOut">Log Out</button>
+            </p>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
 @code {
 
     private string bottomLabel = "";
     private Customer loginCredentials = new Customer();
-    
+    private string LoginStyle = $"width: 800px";
+
 
     private async Task Login()
     {
