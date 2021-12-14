@@ -52,8 +52,6 @@
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.Id)" Caption="ID"/>
         <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleId)" Caption="Vehicle Id" Editable="true"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.VehicleName)" Caption="Vehicle Name" Editable="false"/>
-        <DataGridNumericColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeId)" Caption="Employee ID" Editable="false"/>
-        <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.EmployeeName)" Caption="Employee name" Editable="false"/>
         <DataGridColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.SecurityDeposit)" Caption="Security Deposit" Editable="false"
                         DisplayFormat="{0:C}" DisplayFormatProvider="@System.Globalization.CultureInfo.GetCultureInfo("fr-FR")"/>
         <DataGridDateColumn TItem="ReservationFormatted" Field="@nameof(ReservationFormatted.DateCreated)" Caption="Date Created" Editable="false" DisplayFormat="{0:dd.MM.yyyy HH:mm}"/>
