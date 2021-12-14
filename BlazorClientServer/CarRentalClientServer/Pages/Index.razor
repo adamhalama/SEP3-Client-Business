@@ -2,10 +2,10 @@
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Authentification
-@inject IReservationService rs;
-@inject IVehicleService vs;
-@inject NavigationManager NavMgr
-@inject IVehicleService VehicleData
+@inject IReservationService _reservationService;
+@inject IVehicleService _vehicleService;
+@inject NavigationManager _navigationManager
+@inject IVehicleService _vehicleData
 
 @inject AuthenticationStateProvider authenticationStateProvider
 
@@ -27,10 +27,10 @@
                             <FieldLabel>Start date:</FieldLabel>
                             <Addons>
                                 <Addon AddonType="AddonType.Body">
-                                    <DatePicker @ref="@startDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                                    <DatePicker @ref="@_startDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
                                 </Addon>
                                 <Addon AddonType="AddonType.End">
-                                    <Button Color="Color.Light" Clicked="@(()=>startDate.ToggleAsync())">
+                                    <Button Color="Color.Light" Clicked="@(()=>_startDate.ToggleAsync())">
                                         <Icon Name="IconName.CalendarDay" />
                                     </Button>
                                 </Addon>
@@ -40,10 +40,10 @@
                             <FieldLabel>End date:</FieldLabel>
                             <Addons>
                                 <Addon AddonType="AddonType.Body">
-                                    <DatePicker @ref="@endDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                                    <DatePicker @ref="@_endDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
                                 </Addon>
                                 <Addon AddonType="AddonType.End">
-                                    <Button Color="Color.Light" Clicked="@(()=>endDate.ToggleAsync())">
+                                    <Button Color="Color.Light" Clicked="@(()=>_endDate.ToggleAsync())">
                                         <Icon Name="IconName.CalendarDay" />
                                     </Button>
                                 </Addon>
@@ -67,14 +67,14 @@
 </Field>
 
 <Div Padding="Padding.Is4">
-    @if (!isCorrect)
+    @if (!_isCorrect)
     {
         <Alert Color="Color.Warning" Visible>
             <AlertMessage>Select correct start and end date !</AlertMessage>
         </Alert>
     }
 
-    @if (isSearched)
+    @if (_isSearched)
     {
         <CarRentalClientServer.Components.CarInfo />
         <Steps>
@@ -91,10 +91,10 @@
         </Steps>
 
         <h3>Matched cars</h3>
-        @if (showError)
+        @if (_showError)
         {
             <Paragraph TextColor="TextColor.Danger">
-                @errorLabel
+                @_errorLabel
             </Paragraph>
         }
         <Card>
@@ -107,45 +107,45 @@
                     <Field>
                         <FieldLabel>Name</FieldLabel>
                         <FieldBody>
-                            <TextEdit ReadOnly Text="@selectedVehicle?.Name"></TextEdit>
+                            <TextEdit ReadOnly Text="@_selectedVehicle?.Name"></TextEdit>
                         </FieldBody>
                     </Field>
                     <Field>
                         <FieldLabel>Vehicle ID</FieldLabel>
                         <FieldBody>
-                            <NumericEdit ReadOnly Value="@selectedVehicle?.Id"></NumericEdit>
+                            <NumericEdit ReadOnly Value="@_selectedVehicle?.Id"></NumericEdit>
                         </FieldBody>
                     </Field>
                     <Field>
                         <FieldLabel>Type</FieldLabel>
-                        <TextEdit ReadOnly Text="@selectedVehicle?.Type"></TextEdit>
+                        <TextEdit ReadOnly Text="@_selectedVehicle?.Type"></TextEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Price per day</FieldLabel>
-                        <NumericEdit ReadOnly Value="@selectedVehicle?.PricePerDay"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@_selectedVehicle?.PricePerDay"></NumericEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Seat</FieldLabel>
-                        <NumericEdit ReadOnly Value="@selectedVehicle?.SeatsCount"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@_selectedVehicle?.SeatsCount"></NumericEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Automatic ?</FieldLabel>
-                        <TextEdit ReadOnly Text="@selectedVehicle?.IsAutomatic.ToString()"></TextEdit>
+                        <TextEdit ReadOnly Text="@_selectedVehicle?.IsAutomatic.ToString()"></TextEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Power (kw)</FieldLabel>
-                        <NumericEdit ReadOnly Value="@selectedVehicle?.PowerKw"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@_selectedVehicle?.PowerKw"></NumericEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Fuel type</FieldLabel>
-                        <TextEdit ReadOnly Text="@selectedVehicle?.FuelType"></TextEdit>
+                        <TextEdit ReadOnly Text="@_selectedVehicle?.FuelType"></TextEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Deposit</FieldLabel>
-                        <NumericEdit ReadOnly Value="@selectedVehicle?.Deposit"></NumericEdit>
+                        <NumericEdit ReadOnly Value="@_selectedVehicle?.Deposit"></NumericEdit>
                     </Field>
                     <Field>
-                        <Button Color="Color.Primary" Clicked="@(() => BookCarClicked(selectedVehicle.Id))">Book this car</Button>
+                        <Button Color="Color.Primary" Clicked="@(() => BookCarClicked(_selectedVehicle.Id))">Book this car</Button>
                     </Field>
                 </Fields>
             </CardBody>
@@ -176,17 +176,17 @@
         </Bar>
         <Divider />
 
-        <DataGrid TItem="Vehicle" Data="vehicleList" 
+        <DataGrid TItem="Vehicle" Data="_vehicleList" 
                   ShowPager="true" PageSize="10"
                   SelectionMode="DataGridSelectionMode.Single"
-                  @bind-SelectedRow="@selectedVehicle" 
+                  @bind-SelectedRow="@_selectedVehicle" 
                   Responsive Filterable FilterMethod="DataGridFilterMethod.Contains"
                   ReadData="@LoadFromService">
             <DataGridColumns>
                 <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" />
                 <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" CustomFilter="@TypeFilter">
                     <FilterTemplate>
-                        <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange( typeFilter);})">
+                        <Select TValue="string" SelectedValue="@_typeFilter" SelectedValueChanged="@(value => {_typeFilter = value;context.TriggerFilterChange( _typeFilter);})">
                             <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                             <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
                             <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
@@ -198,7 +198,7 @@
                 <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable=false />
                 <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
                     <FilterTemplate>
-                        <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange( seatFilter );})">
+                        <Select TValue="string" SelectedValue="@_seatFilter" SelectedValueChanged="@(value => {_seatFilter = value; context.TriggerFilterChange( _seatFilter );})">
                             <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                             <SelectItem TValue="int" Value="@(2)">2</SelectItem>
                             <SelectItem TValue="int" Value="@(4)">4</SelectItem>
@@ -217,7 +217,7 @@
                 </EmptyTemplate>
                 <LoadingTemplate>
                     <div class="box">
-                        <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+                        <Progress class="progress is-small is-primary" @ref="ProgressRef" Color="Color.Primary" Max="100" Value="Progress"/>
                     </div>
                 </LoadingTemplate>
         </DataGrid>
@@ -256,7 +256,7 @@
     </Card>
 </CardDeck>
 
-<Modal @ref="sedanModal">
+<Modal @ref="_sedanModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Sedan</ModalTitle>
@@ -274,7 +274,7 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="luxuryModal">
+<Modal @ref="_luxuryModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Sedan</ModalTitle>
@@ -292,7 +292,7 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="suvModal">
+<Modal @ref="_suvModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>SUV</ModalTitle>
@@ -310,7 +310,7 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="mpvModal">
+<Modal @ref="_mpvModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>MPV</ModalTitle>
@@ -329,70 +329,70 @@
 </Modal>
 
 @code {
-    private IList<Vehicle> vehicleList;
+    private IList<Vehicle> _vehicleList;
 
-    protected Progress progressRef = new();     
-    protected int progress;
+    protected Progress ProgressRef = new();     
+    protected int Progress;
     
-    private bool showError = false;
-    private string errorLabel = "Error label";
+    private bool _showError = false;
+    private string _errorLabel = "Error label";
     
-    DatePicker<DateTime?> startDate;
-    DatePicker<DateTime?> endDate;
+    DatePicker<DateTime?> _startDate;
+    DatePicker<DateTime?> _endDate;
 
-    private bool isSearched = false;
-    private bool isCorrect = false;
+    private bool _isSearched = false;
+    private bool _isCorrect = false;
 
     string customCardStyle = $"width: 1100px";
-    private Vehicle selectedVehicle;
+    private Vehicle _selectedVehicle;
 
-    private string typeFilter;
-    private string seatFilter;
+    private string _typeFilter;
+    private string _seatFilter;
     
-    private Modal sedanModal;
-    private Modal luxuryModal;
-    private Modal suvModal;
-    private Modal mpvModal;
+    private Modal _sedanModal;
+    private Modal _luxuryModal;
+    private Modal _suvModal;
+    private Modal _mpvModal;
     
     [Inject] IMessageService MessageService { get; set; }
     [Inject] INotificationService NotificationService { get; set; }
     
     async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
     {
-        showError = false;
-        if (!startDate.Date.HasValue || !endDate.Date.HasValue)
+        _showError = false;
+        if (!_startDate.Date.HasValue || !_endDate.Date.HasValue)
         {
-            errorLabel = "Enter valid dates";
-            showError = true;
+            _errorLabel = "Enter valid dates";
+            _showError = true;
             return;
         }
         
-        progressRef.Animated = true;
-        progress = 0;
+        ProgressRef.Animated = true;
+        Progress = 0;
         await InvokeAsync(StateHasChanged);
         try
         {
-            progress = 5;
+            Progress = 5;
             await InvokeAsync(StateHasChanged);
-            var fetchedVehicles = VehicleData.GetAvailableVehiclesAsync(DateTimeConversions.DateTimeToUnix(startDate.Date.Value), DateTimeConversions.DateTimeToUnix(endDate.Date.Value));
-            progress = 33;
+            var fetchedVehicles = _vehicleData.GetAvailableVehiclesAsync(DateTimeConversions.DateTimeToUnix(_startDate.Date.Value), DateTimeConversions.DateTimeToUnix(_endDate.Date.Value));
+            Progress = 33;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
             await fetchedVehicles;
-            progress = 66;
+            Progress = 66;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
-            vehicleList = fetchedVehicles.Result;
-            progress = 100;
+            _vehicleList = fetchedVehicles.Result;
+            Progress = 100;
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
-            progress = 100;
+            Progress = 100;
             await InvokeAsync(StateHasChanged);
             Console.WriteLine(e);
-            errorLabel = "Error while loading data";
-            showError = true;
+            _errorLabel = "Error while loading data";
+            _showError = true;
         }
     }
 
@@ -417,28 +417,28 @@
     private void SearchButtonClicked()
     {
         //search a car
-        var start = startDate.Date.Value;
-        var end = endDate.Date.Value;
+        var start = _startDate.Date.Value;
+        var end = _endDate.Date.Value;
         var today = DateTime.Now;
         int compNum = DateTime.Compare(start, end);
         int compNum1 = DateTime.Compare(start, today);
         int compNum2 = DateTime.Compare(end, today);
         if (compNum > 0)
         {
-            this.isSearched = false;
-            this.isCorrect = false;
+            this._isSearched = false;
+            this._isCorrect = false;
         }
         else
         {
             if (compNum1 < 0 && compNum2 < 0)
             {
-                this.isSearched = false;
-                this.isCorrect = false;
+                this._isSearched = false;
+                this._isCorrect = false;
             }
             else
             {
-                this.isSearched = true;
-                this.isCorrect = true;
+                this._isSearched = true;
+                this._isCorrect = true;
             }
 
         }
@@ -447,16 +447,16 @@
 
     private void BookCarClicked(long id)
     {
-        if (!startDate.Date.HasValue || !endDate.Date.HasValue)
+        if (!_startDate.Date.HasValue || !_endDate.Date.HasValue)
         {
-            errorLabel = "Pick correct dates";
-            showError = true;
+            _errorLabel = "Pick correct dates";
+            _showError = true;
             return;
         }
         
-        long startDateTimestamp = DateTimeConversions.DateTimeToUnix(startDate.Date.Value);
-        long endDateTimestamp = DateTimeConversions.DateTimeToUnix(endDate.Date.Value);
-        NavMgr.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
+        long startDateTimestamp = DateTimeConversions.DateTimeToUnix(_startDate.Date.Value);
+        long endDateTimestamp = DateTimeConversions.DateTimeToUnix(_endDate.Date.Value);
+        _navigationManager.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
     }
 
     private async Task LoginCustomer()
@@ -478,42 +478,42 @@
 
     private Task ShowSedan()
     {
-        return sedanModal.Show();
+        return _sedanModal.Show();
     }
 
     private Task HideSedan()
     {
-        return sedanModal.Hide();
+        return _sedanModal.Hide();
     }
 
     private Task ShowLuxury()
     {
-        return luxuryModal.Show();
+        return _luxuryModal.Show();
     }
 
     private Task HideLuxury()
     {
-        return luxuryModal.Hide();
+        return _luxuryModal.Hide();
     }
 
     private Task ShowSUV()
     {
-        return suvModal.Show();
+        return _suvModal.Show();
     }
 
     private Task HideSUV()
     {
-        return suvModal.Hide();
+        return _suvModal.Hide();
     }
 
     private Task ShowMPV()
     {
-        return mpvModal.Show();
+        return _mpvModal.Show();
     }
 
     private Task HideMPV()
     {
-        return mpvModal.Hide();
+        return _mpvModal.Hide();
     }
 
 }
