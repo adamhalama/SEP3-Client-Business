@@ -5,6 +5,7 @@ namespace CarRentalLogicServer.APIConsumer.ClientFactory
     public class HttpClientFactory : IHttpClientFactory
     {
         private HttpClient client;
+        private string uri = "https://carrental-springboot-rest-api.herokuapp.com/api";
         
         public HttpClient GetHttpClient()
         {
@@ -19,6 +20,11 @@ namespace CarRentalLogicServer.APIConsumer.ClientFactory
                 client = new HttpClient(clientHandler);
             }
             return client;
+        }
+
+        public string GetUri()
+        {
+            return uri;
         }
     }
 }

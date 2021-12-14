@@ -13,13 +13,14 @@ namespace CarRentalLogicServer.APIConsumer
     //todo check the methods, it was copied ctrlR
     public class EmployeeWebService : IEmployeeService
     {
-        private string uri = "http://localhost:8080/api";
+        private string uri;
 
         private readonly HttpClient client;
 
         public EmployeeWebService([Service] IHttpClientFactory clientFactory)
         {
             client = clientFactory.GetHttpClient();
+            uri = clientFactory.GetUri();
         }
         
         

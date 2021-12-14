@@ -13,13 +13,14 @@ namespace CarRentalLogicServer.APIConsumer
     //todo check the methods, it was copied ctrlR
     public class CustomerWebService : ICustomerService
     {
-        private string uri = "http://localhost:8080/api";
+        private string uri;
 
         private readonly HttpClient client;
 
         public CustomerWebService([Service] IHttpClientFactory clientFactory)
         {
             client = clientFactory.GetHttpClient();
+            uri = clientFactory.GetUri();
         }
         
         public async Task<List<Customer>> GetCustomersAsync()

@@ -12,13 +12,14 @@ namespace CarRentalLogicServer.APIConsumer
 { 
     public class VehicleWebService : IVehicleService
     {
-        private string uri = "http://localhost:8080/api";
+        private string uri;
 
         private readonly HttpClient client;
 
         public VehicleWebService([Service] IHttpClientFactory clientFactory)
         {
             client = clientFactory.GetHttpClient();
+            uri = clientFactory.GetUri();
         }
         
         public async Task<List<Vehicle>> GetVehiclesAsync()

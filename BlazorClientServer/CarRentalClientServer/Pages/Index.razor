@@ -13,6 +13,9 @@
 <Heading Size="HeadingSize.Is2" Flex="Flex.JustifyContent.Center">
     Want to rent a car to travel ? Find it now !
 </Heading>
+<Button Clicked="@LoginCustomer">Log in as customer</Button>
+<Button Clicked="@LoginEmployee">Log in as Employee</Button>
+
 
 <Field Horizontal Flex="Flex.JustifyContent.Center">
     <Card Style="@customCardStyle">
@@ -358,11 +361,20 @@
         NavMgr.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
     }
 
+    private async Task LoginCustomer()
+    {
+        await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("jebnuty@jano.sk", "123");
+    }
+    
+    private async Task LoginEmployee()
+        {
+            await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("admin@bruh.com", "admin");
+        }
+
     protected override async Task OnInitializedAsync()
     {
-        //customer
-        await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("jebnuty@jano.sk", "123");
-        
+        //custome
+
         await base.OnInitializedAsync();
     }
 

@@ -13,13 +13,14 @@ namespace CarRentalLogicServer.APIConsumer.Login
 {
     public class LoginWebService : ILoginService
     {
-        private string uri = "http://localhost:8080/api";
+        private string uri;
 
         private readonly HttpClient client;
 
         public LoginWebService([Service] IHttpClientFactory clientFactory)
         {
             client = clientFactory.GetHttpClient();
+            uri = clientFactory.GetUri();
         }
         public async Task<UserLogin> LoginAsync(UserLogin credentials)
         {
