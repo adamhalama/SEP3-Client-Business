@@ -13,11 +13,8 @@ namespace CarRentalLogicServer.Factories
             if (client == null)
             {
                 HttpClientHandler clientHandler = new HttpClientHandler();
-                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
-                {
-                    return true;
-                };
-
+                clientHandler.ServerCertificateCustomValidationCallback = 
+                    (sender, cert, chain, sslPolicyErrors) => true;
                 client = new HttpClient(clientHandler);
             }
             return client;

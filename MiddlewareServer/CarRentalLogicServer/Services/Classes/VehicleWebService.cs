@@ -99,7 +99,7 @@ namespace CarRentalLogicServer.Services.Classes
             HttpContent content = new StringContent(vehicleAsJson,
                 Encoding.UTF8,
                 "application/json");
-            
+            //send Http request, receiving and putting it into a response 
             HttpResponseMessage response = await client.PutAsync($"{uri}/vehicles/{vehicle.Id}", content);
             if (!response.IsSuccessStatusCode)
             {

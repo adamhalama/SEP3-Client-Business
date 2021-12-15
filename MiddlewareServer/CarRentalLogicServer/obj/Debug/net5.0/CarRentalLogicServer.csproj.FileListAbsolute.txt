@@ -43,7 +43,6 @@ C:\Users\janad\OneDrive\Adam\Dokumenty\VIA\3rd semester\DNP1x\Exercises\HotChoco
 C:\Users\janad\OneDrive\Adam\Dokumenty\VIA\3rd semester\DNP1x\Exercises\HotChocolateDemo\HotChocolateServerForSEP3\CarRentalLogicServer\obj\Debug\net5.0\ref\CarRentalLogicServer.dll
 C:\Users\janad\OneDrive\Adam\Dokumenty\VIA\3rd semester\DNP1x\Exercises\HotChocolateDemo\HotChocolateServerForSEP3\CarRentalLogicServer\obj\Debug\net5.0\CarRentalLogicServer.pdb
 C:\Users\janad\OneDrive\Adam\Dokumenty\VIA\3rd semester\DNP1x\Exercises\HotChocolateDemo\HotChocolateServerForSEP3\CarRentalLogicServer\obj\Debug\net5.0\CarRentalLogicServer.genruntimeconfig.cache
-C:\Users\janad\OneDrive\Adam\Dokumenty\GitHub\SEP3\SEP3\MiddlewareServer\CarRentalLogicServer\bin\Debug\net5.0\APIConsumer\cars.json
 C:\Users\janad\OneDrive\Adam\Dokumenty\GitHub\SEP3\SEP3\MiddlewareServer\CarRentalLogicServer\bin\Debug\net5.0\appsettings.Development.json
 C:\Users\janad\OneDrive\Adam\Dokumenty\GitHub\SEP3\SEP3\MiddlewareServer\CarRentalLogicServer\bin\Debug\net5.0\appsettings.json
 C:\Users\janad\OneDrive\Adam\Dokumenty\GitHub\SEP3\SEP3\MiddlewareServer\CarRentalLogicServer\bin\Debug\net5.0\CarRentalLogicServer.exe

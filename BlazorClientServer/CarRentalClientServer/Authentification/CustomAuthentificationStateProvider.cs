@@ -54,8 +54,19 @@ namespace CarRentalClientServer.Authentification
             Console.WriteLine("Validating log in");
             if (cachedUser == null)
             {
-                if (string.IsNullOrEmpty(email)) throw new Exception("Enter email");
-                if (string.IsNullOrEmpty(password)) throw new Exception("Enter password");
+                if (string.IsNullOrEmpty(email)) 
+                {
+                    //throw new Exception("Enter email");
+                    Console.WriteLine("Authentication failed with no email being provided");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(password))
+                {
+                    //throw new Exception("Enter password");
+                    Console.WriteLine("Authentication failed with no password being provided");
+                    return;
+                }
             }
 
 

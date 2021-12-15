@@ -1,6 +1,7 @@
 ﻿@page "/Login"
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Authentification
+@using Blazorise.Extensions
 
 @inject NavigationManager navMgr
 @inject AuthenticationStateProvider authenticationStateProvider
@@ -65,6 +66,10 @@
 
     private async Task Login()
     {
+        if (loginCredentials.Email.IsNullOrEmpty() || loginCredentials.Password.IsNullOrEmpty())
+        {
+            bottomLabel = "Fill in the email and the password";
+        }
         bottomLabel = "";
         try
         {

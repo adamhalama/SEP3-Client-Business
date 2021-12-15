@@ -42,7 +42,8 @@ namespace CarRentalClientServer.Data
 
             try
             {
-                var graphQLResponse = await graphQlClient.SendQueryAsync<AllVehiclesResponse>(request);
+                var graphQLResponse 
+                    = await graphQlClient.SendQueryAsync<AllVehiclesResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
                     ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
@@ -240,11 +241,8 @@ namespace CarRentalClientServer.Data
 
             try
             {
-                //showing what was sent
-                Console.WriteLine(JsonSerializer.Serialize(request,
-                    new JsonSerializerOptions {WriteIndented = true}));
-
-                var graphQLResponse = await graphQlClient.SendQueryAsync<UpdateVehicleResponse>(request);
+                var graphQLResponse 
+                    = await graphQlClient.SendQueryAsync<UpdateVehicleResponse>(request);
 
                 var errors = graphQLResponse.Errors;
                 if (errors != null)

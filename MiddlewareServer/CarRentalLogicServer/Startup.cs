@@ -22,8 +22,7 @@ namespace CarRentalLogicServer
             services.AddScoped<IReservationService, ReservationWebService>();
             services.AddScoped<IVehicleService, VehicleWebService>();
             services.AddScoped<ILoginService, LoginWebService>();
-
-            //Httpclient factory - needed to make sure all the WebService classes have the same client
+            
             services
                 .AddGraphQLServer()
                 .AddQueryType(q => q.Name("Query"))
@@ -39,6 +38,7 @@ namespace CarRentalLogicServer
                 .AddType<LoginMutationResolver>()
                 ;
             services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
+            //Httpclient factory - needed to make sure all the WebService classes have the same client
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

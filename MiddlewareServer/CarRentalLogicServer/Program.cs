@@ -15,9 +15,6 @@ namespace CarRentalLogicServer
         {
             //TODO the application is on "applicationUrl": "https://localhost:5010;http://localhost:5009",
             
-            
-            
-            
             CreateHostBuilder(args).Build().Run();
         }
 
