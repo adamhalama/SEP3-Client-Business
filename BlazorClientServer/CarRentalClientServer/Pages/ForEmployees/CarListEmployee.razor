@@ -10,10 +10,10 @@
     <JumbotronSubtitle>
         All the cars.
     </JumbotronSubtitle>
-    @if (showError)
+    @if (_showError)
         {
             <Paragraph TextColor="TextColor.Danger">
-                @errorLabel
+                @_errorLabel
             </Paragraph>
         }
 </Jumbotron>
@@ -43,7 +43,7 @@
 <Div Padding="Padding.Is2"></Div>
 
 
-<DataGrid TItem="Vehicle" Data="vehicleList" 
+<DataGrid TItem="Vehicle" Data="_vehicleList" 
           Editable="true"
           EditMode="DataGridEditMode.Form" UseInternalEditing
           ShowPager="true" PageSize="10"
@@ -78,7 +78,7 @@
         <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.PowerKw)" Caption="Power in KW" Editable="true" Sortable="true"/>
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" Editable="true" Sortable="true" CustomFilter="@TypeFilter">
             <FilterTemplate>
-                <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange(typeFilter);})">
+                <Select TValue="string" SelectedValue="@_typeFilter" SelectedValueChanged="@(value => {_typeFilter = value;context.TriggerFilterChange(_typeFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                     <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
                     <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
@@ -90,7 +90,7 @@
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Editable="true" Sortable="true" Filterable="false"/>
         <DataGridNumericColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" Editable="true" Sortable="true" CustomFilter="@SeatFilter">
             <FilterTemplate>
-                <Select TValue="string" SelectedValue="@seatFilter" SelectedValueChanged="@(value => {seatFilter = value; context.TriggerFilterChange(seatFilter);})">
+                <Select TValue="string" SelectedValue="@_seatFilter" SelectedValueChanged="@(value => {_seatFilter = value; context.TriggerFilterChange(_seatFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                     <SelectItem TValue="int" Value="@(2)">2</SelectItem>
                     <SelectItem TValue="int" Value="@(4)">4</SelectItem>
@@ -104,7 +104,7 @@
         </DataGridNumericColumn>
         <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.FuelType)" Caption="Fuel Type" Editable="true" Sortable="true" Filterable="false">
             <FilterTemplate>
-                <Select TValue="string" SelectedValue="@typeFilter" SelectedValueChanged="@(value => {typeFilter = value;context.TriggerFilterChange(typeFilter);})">
+                <Select TValue="string" SelectedValue="@_typeFilter" SelectedValueChanged="@(value => {_typeFilter = value;context.TriggerFilterChange(_typeFilter);})">
                     <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                     <SelectItem TValue="string" Value="@("Petrol")">Petrol</SelectItem>
                     <SelectItem TValue="string" Value="@("Diesel")">Diesel</SelectItem>
@@ -123,13 +123,13 @@
     </EmptyTemplate>
     <LoadingTemplate>
         <div class="box">
-            <Progress class="progress is-small is-primary" @ref="progressRef" Color="Color.Primary" Max="100" Value="progress"/>
+            <Progress class="progress is-small is-primary" @ref="ProgressRef" Color="Color.Primary" Max="100" Value="Progress"/>
         </div>
     </LoadingTemplate>
 
 </DataGrid>
 
-<Modal @ref="sedanModal">
+<Modal @ref="_sedanModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Sedan</ModalTitle>
@@ -147,7 +147,7 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="luxuryModal">
+<Modal @ref="_luxuryModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Sedan</ModalTitle>
@@ -165,7 +165,7 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="suvModal">
+<Modal @ref="_suvModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>SUV</ModalTitle>
@@ -183,7 +183,7 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="mpvModal">
+<Modal @ref="_mpvModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>MPV</ModalTitle>
@@ -205,50 +205,49 @@
 //SelectedValueChanged="@(value => {context.Item.FuelType = value;context.UpdateCell(nameof(Vehicle.FuelType), value);})"
     //SelectedValueChanged="@(value => {context.Item.Type = value;context.UpdateCell(nameof(Vehicle.Type), value);})"
 
-    protected Progress progressRef = new();
-    protected int progress;
+    protected Progress ProgressRef = new();
+    protected int Progress;
     
-    private IList<Vehicle> vehicleList;
+    private IList<Vehicle> _vehicleList;
     
-    private bool showError = false;
-    private string errorLabel = "Error label";
+    private bool _showError = false;
+    private string _errorLabel = "Error label";
 
-    private Modal sedanModal;
-    private Modal luxuryModal;
-    private Modal suvModal;
-    private Modal mpvModal;
-    private Vehicle selectedVehicle;
-    private string typeFilter;
-    private string seatFilter;
+    private Modal _sedanModal;
+    private Modal _luxuryModal;
+    private Modal _suvModal;
+    private Modal _mpvModal;
+    private string _typeFilter;
+    private string _seatFilter;
 
     async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
     {
-        progressRef.Animated = true;
-        progress = 0;
+        ProgressRef.Animated = true;
+        Progress = 0;
         await InvokeAsync(StateHasChanged);
         try
         {
-            progress = 5;
+            Progress = 5;
             await InvokeAsync(StateHasChanged);
             var fetchedVehicles = VehicleData.GetVehiclesAsync();
-            progress = 33;
+            Progress = 33;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
             await fetchedVehicles;
-            progress = 66;
+            Progress = 66;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
-            vehicleList = fetchedVehicles.Result;
-            progress = 100;
+            _vehicleList = fetchedVehicles.Result;
+            Progress = 100;
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
-            progress = 100;
+            Progress = 100;
             await InvokeAsync(StateHasChanged);
             Console.WriteLine(e);
-            errorLabel = "Error while loading data";
-            showError = true;
+            _errorLabel = "Error while loading data";
+            _showError = true;
         }
     }
 
@@ -259,58 +258,58 @@
 
     async Task OnRowInserted(SavedRowItem<Vehicle, Dictionary<string, object>> item)
     {
-        showError = false;
+        _showError = false;
         try
         {
         var v = item.Item;
         await VehicleData.CreateVehicleAsync(v.Name, v.Type, v.PricePerDay, v.SeatsCount,
             v.IsAutomatic, v.PowerKw, v.FuelType, v.Deposit);
 
-        vehicleList = await VehicleData.GetVehiclesAsync();
+        _vehicleList = await VehicleData.GetVehiclesAsync();
         StateHasChanged();
         }
         catch (Exception e)
         {
-            errorLabel = "Error while creating";
-            showError = true;
+            _errorLabel = "Error while creating";
+            _showError = true;
             Console.WriteLine(e);
         }
     }
 
     async Task OnRowUpdated(SavedRowItem<Vehicle, Dictionary<string, object>> item)
     {
-        showError = false;
+        _showError = false;
         try
         {
             var v = item.Item;
             await VehicleData.UpdateVehicleAsync(v);
 
-            vehicleList = await VehicleData.GetVehiclesAsync();
+            _vehicleList = await VehicleData.GetVehiclesAsync();
             StateHasChanged();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            errorLabel = "Error while updating";
-            showError = true;
+            _errorLabel = "Error while updating";
+            _showError = true;
         }
     }
 
     async Task OnRowRemoved(Vehicle vehicle)
     {
-        showError = false;
+        _showError = false;
         try
         {
         await VehicleData.DeleteVehicleAsync(vehicle.Id);
 
-        vehicleList = await VehicleData.GetVehiclesAsync();
+        _vehicleList = await VehicleData.GetVehiclesAsync();
         StateHasChanged();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            errorLabel = "Error while removing";
-            showError = true;
+            _errorLabel = "Error while removing";
+            _showError = true;
         }
     }
 
@@ -335,42 +334,42 @@
 
     private Task ShowSedan()
     {
-        return sedanModal.Show();
+        return _sedanModal.Show();
     }
 
     private Task HideSedan()
     {
-        return sedanModal.Hide();
+        return _sedanModal.Hide();
     }
 
     private Task ShowLuxury()
     {
-        return luxuryModal.Show();
+        return _luxuryModal.Show();
     }
 
     private Task HideLuxury()
     {
-        return luxuryModal.Hide();
+        return _luxuryModal.Hide();
     }
 
     private Task ShowSUV()
     {
-        return suvModal.Show();
+        return _suvModal.Show();
     }
 
     private Task HideSUV()
     {
-        return suvModal.Hide();
+        return _suvModal.Hide();
     }
 
     private Task ShowMPV()
     {
-        return mpvModal.Show();
+        return _mpvModal.Show();
     }
 
     private Task HideMPV()
     {
-        return mpvModal.Hide();
+        return _mpvModal.Hide();
     }
 
     private List<Vehicle> vehicleListTest = new()
