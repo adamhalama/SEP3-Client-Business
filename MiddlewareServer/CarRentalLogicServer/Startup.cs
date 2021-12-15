@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CarRentalLogicServer.APIConsumer;
-using CarRentalLogicServer.APIConsumer.ClientFactory;
-using CarRentalLogicServer.APIConsumer.Login;
-using CarRentalLogicServer.GraphQLResolvers.Mutation;
-using CarRentalLogicServer.GraphQLResolvers.Query;
+using CarRentalLogicServer.Factories;
+using CarRentalLogicServer.GraphQLResolvers.Mutations;
+using CarRentalLogicServer.GraphQLResolvers.Queries;
+using CarRentalLogicServer.Services.Classes;
+using CarRentalLogicServer.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

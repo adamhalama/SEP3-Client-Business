@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
 
-namespace CarRentalLogicServer.APIConsumer.Login
+namespace CarRentalLogicServer.Services.Interfaces
 {
     public interface ILoginService
     {

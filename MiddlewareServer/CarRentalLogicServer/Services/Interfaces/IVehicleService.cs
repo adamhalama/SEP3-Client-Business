@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CarRentalLogicServer.APIConsumer
+namespace CarRentalLogicServer.Services.Interfaces
 {
     public interface IVehicleService
     {

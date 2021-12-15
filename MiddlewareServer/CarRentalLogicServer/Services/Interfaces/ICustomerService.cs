@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
 
-namespace CarRentalLogicServer.APIConsumer
+namespace CarRentalLogicServer.Services.Interfaces
 {
     public interface ICustomerService
     {

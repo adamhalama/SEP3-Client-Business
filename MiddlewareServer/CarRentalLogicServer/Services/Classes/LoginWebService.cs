@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
+using CarRentalLogicServer.Services.Interfaces;
 using HotChocolate;
-using IHttpClientFactory = CarRentalLogicServer.APIConsumer.ClientFactory.IHttpClientFactory;
+using IHttpClientFactory = CarRentalLogicServer.Factories.IHttpClientFactory;
 
-namespace CarRentalLogicServer.APIConsumer.Login
+namespace CarRentalLogicServer.Services.Classes
 {
     public class LoginWebService : ILoginService
     {

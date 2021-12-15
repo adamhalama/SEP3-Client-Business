@@ -5,10 +5,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalLogicServer.Models;
+using CarRentalLogicServer.Services.Interfaces;
 using HotChocolate;
-using IHttpClientFactory = CarRentalLogicServer.APIConsumer.ClientFactory.IHttpClientFactory;
+using IHttpClientFactory = CarRentalLogicServer.Factories.IHttpClientFactory;
 
-namespace CarRentalLogicServer.APIConsumer
+namespace CarRentalLogicServer.Services.Classes
 {
     //todo check the methods, it was copied ctrlR
     public class ReservationWebService : IReservationService

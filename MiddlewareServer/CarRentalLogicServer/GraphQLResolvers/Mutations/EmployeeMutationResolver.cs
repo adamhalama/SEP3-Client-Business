@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
+using CarRentalLogicServer.Services;
+using CarRentalLogicServer.Services.Interfaces;
 using HotChocolate;
 using HotChocolate.Types;
 
-namespace CarRentalLogicServer.GraphQLResolvers.Mutation
+namespace CarRentalLogicServer.GraphQLResolvers.Mutations
 {
     // class containing mutation resolvers for updating data
     [ExtendObjectType(Name = "Mutation")]

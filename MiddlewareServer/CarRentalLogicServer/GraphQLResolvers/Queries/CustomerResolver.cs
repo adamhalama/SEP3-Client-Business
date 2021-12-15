@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
+using CarRentalLogicServer.Services;
+using CarRentalLogicServer.Services.Interfaces;
 using HotChocolate;
 using HotChocolate.Types;
 
-namespace CarRentalLogicServer.GraphQLResolvers.Query
+namespace CarRentalLogicServer.GraphQLResolvers.Queries
 {
     // class containing query resolvers for getting data
     [ExtendObjectType(Name = "Query")]

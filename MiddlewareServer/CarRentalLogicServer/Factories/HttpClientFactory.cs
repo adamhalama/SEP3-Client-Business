@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
+using IHttpClientFactory = CarRentalLogicServer.Factories.IHttpClientFactory;
 
-namespace CarRentalLogicServer.APIConsumer.ClientFactory
+namespace CarRentalLogicServer.Factories
 {
     public class HttpClientFactory : IHttpClientFactory
     {
