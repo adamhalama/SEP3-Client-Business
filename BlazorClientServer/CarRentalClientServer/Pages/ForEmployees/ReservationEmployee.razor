@@ -4,6 +4,7 @@
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Pages.ForCustomers
+@using CarRentalClientServer.Utilities
 
 @inject IReservationService reservationService;
 @inject IVehicleService vehicleService;
@@ -168,7 +169,16 @@
             }
             
             var r = item.Item.ToVanillaReservation();
+            var isValid = await CheckAvailabilityUtility.CheckForAvailability(r.DateStart, r.DateEnd, r.Vehicle.Id, vehicleService);
 
+            if (!isValid)
+            {
+                errorLabel = "On these times, the vehicle isn't available";
+                showError = true;
+                StateHasChanged();
+                return;
+            }
+            
             r.Employee = await employeeService.GetEmployeeAsync(item.Item.EmployeeId);
             r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
             await reservationService.UpdateReservationAsync(r);

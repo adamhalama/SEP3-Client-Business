@@ -4,6 +4,7 @@
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Authentification
+@using CarRentalClientServer.Utilities
 @inject AuthenticationStateProvider authenticationStateProvider
 
 @inject IReservationService reservationService;
@@ -120,17 +121,10 @@
                 return;
             }
             
+            
             var r = updatingReservation.ToVanillaReservation();
-            bool isValid = false;
-            var availableVehicles = await vehicleService.GetAvailableVehiclesAsync(r.DateStart, r.DateEnd);
-            foreach (var veh in availableVehicles)
-            {
-                if (veh.Id == r.Vehicle.Id)
-                {
-                    isValid = true;
-                    break;
-                }
-            }
+            var isValid = await CheckAvailabilityUtility.CheckForAvailability(r.DateStart, r.DateEnd, r.Vehicle.Id, vehicleService);
+
             if (!isValid)
             {
                 errorLabel = "On these times, the vehicle isn't available";
@@ -152,7 +146,9 @@
             StateHasChanged();
         }
     }
+
     
+
     async Task OnRowRemoved(ReservationFormatted reservation)
     {
         showError = false;
