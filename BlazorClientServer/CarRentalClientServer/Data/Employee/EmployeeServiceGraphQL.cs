@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalClientServer.Data.Responses;
 using CarRentalClientServer.Models;
+using CarRentalClientServer.Utilities;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -39,7 +40,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<AllEmployeesResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.AllEmployees;
             }
@@ -80,7 +81,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<EmployeeResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.Employee;
             }
@@ -129,7 +130,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<CreateEmployeeResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.CreateEmployee;
             }
@@ -168,7 +169,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<UpdateEmployeeResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.UpdateEmployee;
             }
@@ -203,7 +204,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<DeleteEmployeeResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.DeleteEmployee != null;
             }

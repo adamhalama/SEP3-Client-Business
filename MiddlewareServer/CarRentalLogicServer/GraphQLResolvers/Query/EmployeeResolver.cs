@@ -14,12 +14,28 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
     {
         public IList<Employee> GetAllEmployees([Service] IEmployeeService employeeService)
         {
-            return employeeService.GetEmployeesAsync().Result;
+            try
+            {
+                return employeeService.GetEmployeesAsync().Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Employee> GetEmployee([Service] IEmployeeService employeeService, long id)
         {
-            return await employeeService.GetEmployeeByIdAsync(id);
+            try
+            {
+                return await employeeService.GetEmployeeByIdAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

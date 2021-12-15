@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using CarRentalClientServer.Data;
+using CarRentalClientServer.Utilities;
 
 namespace CarRentalClientServer.Models
 {
@@ -99,12 +100,12 @@ namespace CarRentalClientServer.Models
                 EmployeeName = reservation.Employee.Name;
             }
             SecurityDeposit = reservation.SecurityDeposit;
-            DateCreated = DateTimeConversions.GetDateTime(reservation.DateCreated);
-            DateStart = DateTimeConversions.GetDateTime(reservation.DateStart);
-            DateEnd = DateTimeConversions.GetDateTime(reservation.DateEnd);
+            DateCreated = TimeConversionUtility.GetDateTime(reservation.DateCreated);
+            DateStart = TimeConversionUtility.GetDateTime(reservation.DateStart);
+            DateEnd = TimeConversionUtility.GetDateTime(reservation.DateEnd);
             AllowedKm = reservation.AllowedKm;
             PaymentAmount = reservation.PaymentAmount;
-            BillDate = DateTimeConversions.GetDateTime(reservation.BillDate);
+            BillDate = TimeConversionUtility.GetDateTime(reservation.BillDate);
             IsPaid = reservation.IsPaid;
         }
 
@@ -117,12 +118,12 @@ namespace CarRentalClientServer.Models
                 Customer = Customer,
                 Employee = Employee,
                 SecurityDeposit = SecurityDeposit,
-                DateCreated = DateTimeConversions.DateTimeToUnix(DateCreated),
-                DateStart = DateTimeConversions.DateTimeToUnix(DateStart),
-                DateEnd = DateTimeConversions.DateTimeToUnix(DateEnd),
+                DateCreated = TimeConversionUtility.DateTimeToUnix(DateCreated),
+                DateStart = TimeConversionUtility.DateTimeToUnix(DateStart),
+                DateEnd = TimeConversionUtility.DateTimeToUnix(DateEnd),
                 AllowedKm = AllowedKm,
                 PaymentAmount = PaymentAmount,
-                BillDate = DateTimeConversions.DateTimeToUnix(BillDate),
+                BillDate = TimeConversionUtility.DateTimeToUnix(BillDate),
                 IsPaid = IsPaid
             };
         }

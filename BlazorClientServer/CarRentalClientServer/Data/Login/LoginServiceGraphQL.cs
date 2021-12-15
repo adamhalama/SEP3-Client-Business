@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using CarRentalClientServer.Data.Responses;
 using CarRentalClientServer.Models;
+using CarRentalClientServer.Utilities;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -45,7 +46,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<ValidateUserResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.ValidateUser;
             }

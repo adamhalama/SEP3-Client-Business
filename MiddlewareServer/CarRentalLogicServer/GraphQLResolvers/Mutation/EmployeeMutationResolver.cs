@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
 using HotChocolate;
@@ -12,18 +13,41 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     {
         public async Task<Employee> CreateEmployee([Service] IEmployeeService employeeService, Employee employee)
         {
-            var emp = await employeeService.CreateEmployeeAsync(employee);
-            return emp;
+            try
+            {
+                return await employeeService.CreateEmployeeAsync(employee);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Employee> UpdateEmployee([Service] IEmployeeService employeeService, Employee employee)
         {
-            return await employeeService.UpdateEmployeeAsync(employee);
+            try
+            {
+                return await employeeService.UpdateEmployeeAsync(employee);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Employee> DeleteEmployee([Service] IEmployeeService employeeService, long id)
         {
-            return await employeeService.DeleteEmployeeAsync(id);
+            try
+            {
+                return await employeeService.DeleteEmployeeAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

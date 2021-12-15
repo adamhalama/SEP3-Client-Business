@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using CarRentalClientServer.Data;
+using CarRentalClientServer.Utilities;
 
 namespace CarRentalClientServer.Models
 {
@@ -20,22 +21,22 @@ namespace CarRentalClientServer.Models
 
         public string GetDateCreatedFormat()
         {
-            return DateTimeConversions.GetDateFormat(DateCreated);
+            return TimeConversionUtility.GetDateFormat(DateCreated);
         }
         
         public string GetDateStartFormat()
         {
-            return DateTimeConversions.GetDateTimeFormat(DateStart);
+            return TimeConversionUtility.GetDateTimeFormat(DateStart);
         }
         
         public string GetDateEndFormat()
         {
-            return DateTimeConversions.GetDateTimeFormat(DateEnd);
+            return TimeConversionUtility.GetDateTimeFormat(DateEnd);
         }
         
         public string GetBillDateFormat()
         {
-            return DateTimeConversions.GetDateFormat(BillDate);
+            return TimeConversionUtility.GetDateFormat(BillDate);
         }
         
     }

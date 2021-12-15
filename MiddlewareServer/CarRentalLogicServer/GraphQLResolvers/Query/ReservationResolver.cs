@@ -14,25 +14,65 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
     {
         public IList<Reservation> GetAllReservations([Service] IReservationService reservationService)
         {
-            return reservationService.GetReservationsAsync().Result;
+            try
+            {
+                return reservationService.GetReservationsAsync().Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Reservation> GetReservation([Service] IReservationService reservationService, long id)
         {
-            return await reservationService.GetReservationByIdAsync(id);
+            try
+            {
+                return await reservationService.GetReservationByIdAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         
         public IList<Reservation> GetReservationsByVehicle([Service] IReservationService reservationService, long id)
         {
-            return reservationService.GetReservationsByVehicleAsync(id).Result;
+            try
+            {
+                return reservationService.GetReservationsByVehicleAsync(id).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }       
         public IList<Reservation> GetReservationsByCustomer([Service] IReservationService reservationService, long id)
         {
-            return reservationService.GetReservationsByCustomerAsync(id).Result;
+            try
+            {
+                return reservationService.GetReservationsByCustomerAsync(id).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }       
         public IList<Reservation> GetReservationsByEmployee([Service] IReservationService reservationService, long id)
         {
-            return reservationService.GetReservationsByEmployeeAsync(id).Result;
+            try
+            {
+                return reservationService.GetReservationsByEmployeeAsync(id).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         
         

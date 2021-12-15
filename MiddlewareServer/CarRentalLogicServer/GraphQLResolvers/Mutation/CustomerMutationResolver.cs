@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
 using HotChocolate;
@@ -12,17 +13,41 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     {
         public async Task<Customer> CreateCustomer([Service] ICustomerService customerService, Customer customer)
         {
-            return await customerService.CreateCustomerAsync(customer);
+            try
+            {
+                return await customerService.CreateCustomerAsync(customer);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Customer> UpdateCustomer([Service] ICustomerService customerService, Customer customer)
         {
-            return await customerService.UpdateCustomerAsync(customer);
+            try
+            {
+                return await customerService.UpdateCustomerAsync(customer);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Customer> DeleteCustomer([Service] ICustomerService customerService, long id)
         {
-            return await customerService.DeleteCustomerAsync(id);
+            try
+            {
+                return await customerService.DeleteCustomerAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

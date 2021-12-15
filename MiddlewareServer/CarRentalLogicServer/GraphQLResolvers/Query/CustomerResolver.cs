@@ -14,12 +14,28 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
     {
         public IList<Customer> GetAllCustomers([Service] ICustomerService customerService)
         {
-            return customerService.GetCustomersAsync().Result;
+            try
+            {
+                return customerService.GetCustomersAsync().Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Customer> GetCustomer([Service] ICustomerService customerService, long id)
         {
-            return await customerService.GetCustomerByIdAsync(id);
+            try
+            {
+                return await customerService.GetCustomerByIdAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

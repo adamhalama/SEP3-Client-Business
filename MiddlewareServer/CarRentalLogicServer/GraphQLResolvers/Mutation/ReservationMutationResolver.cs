@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.Models;
 using HotChocolate;
@@ -12,17 +13,41 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     {
         public async Task<Reservation> CreateReservation([Service] IReservationService reservationService, Reservation reservation)
         {
-            return await reservationService.CreateReservationAsync(reservation);
+            try
+            {
+                return await reservationService.CreateReservationAsync(reservation);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Reservation> UpdateReservation([Service] IReservationService reservationService, Reservation reservation)
         {
-            return await reservationService.UpdateReservationAsync(reservation);
+            try
+            {
+                return await reservationService.UpdateReservationAsync(reservation);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Reservation> DeleteReservation([Service] IReservationService reservationService, long id)
         {
-            return await reservationService.DeleteReservationAsync(id);
+            try
+            {
+                return await reservationService.DeleteReservationAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         } 
     }
 }

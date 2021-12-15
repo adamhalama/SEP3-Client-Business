@@ -1,4 +1,5 @@
-﻿using CarRentalLogicServer.APIConsumer;
+﻿using System;
+using CarRentalLogicServer.APIConsumer;
 using CarRentalLogicServer.APIConsumer.Login;
 using CarRentalLogicServer.Models;
 using HotChocolate;
@@ -12,7 +13,15 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     {
         public UserLogin ValidateUser([Service] ILoginService loginService, UserLogin credentials)
         {
-            return loginService.LoginAsync(credentials).Result;
+            try
+            {
+                return loginService.LoginAsync(credentials).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         } 
     }
 }

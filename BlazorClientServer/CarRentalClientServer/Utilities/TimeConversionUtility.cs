@@ -1,17 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 
-namespace CarRentalClientServer.Data
+namespace CarRentalClientServer.Utilities
 {
-    public class DateTimeConversions
+    public static class TimeConversionUtility
     {
-
-        /*public static long GetUnixTimestampFromString(string dateTime)
-        {
-            //todo
-            return 1;
-        }*/
-        
         public static long GetUnixTimestampNow()
         {
             TimeSpan timeSpan = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0);

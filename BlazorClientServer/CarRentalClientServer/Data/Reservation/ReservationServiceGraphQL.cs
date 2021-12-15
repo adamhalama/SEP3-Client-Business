@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CarRentalClientServer.Data.Responses;
 using CarRentalClientServer.Models;
+using CarRentalClientServer.Utilities;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -71,7 +72,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<AllReservationsResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.AllReservations;
             }
@@ -132,7 +133,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<ReservationsByVehicleResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.ReservationsByVehicle;
             }
@@ -200,7 +201,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<ReservationsByCustomerResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.ReservationsByCustomer;
             }
@@ -268,7 +269,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<ReservationsByEmployeeResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.ReservationsByEmployee;
             }
@@ -337,7 +338,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<ReservationResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.Reservation;
             }
@@ -449,7 +450,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<CreateReservationResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.CreateReservation;
             }
@@ -520,7 +521,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<UpdateReservationResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.UpdateReservation;
             }
@@ -552,7 +553,7 @@ namespace CarRentalClientServer.Data
                 var graphQLResponse = await graphQlClient.SendQueryAsync<DeleteReservationResponse>(request);
                 var errors = graphQLResponse.Errors;
                 if (errors != null)
-                    ErrorHandling.HandleGraphQLReturnErrors(errors);
+                    ErrorHandlingUtility.HandleGraphQLReturnErrors(errors);
 
                 return graphQLResponse.Data.DeleteReservation != null;
             }

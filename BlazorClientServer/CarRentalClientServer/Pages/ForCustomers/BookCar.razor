@@ -3,6 +3,7 @@
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Authentification
+@using CarRentalClientServer.Utilities
 
 @inject IVehicleService vehicleService;
 @inject ICustomerService customerService
@@ -281,9 +282,9 @@
         try
         {
             await reservationService.CreateReservationAsync(Id, loggedInCustomer.Id, -1, preReservation.SecurityDeposit, 
-                DateTimeConversions.GetUnixTimestampNow(), StartDate, EndDate, 
+                TimeConversionUtility.GetUnixTimestampNow(), StartDate, EndDate, 
                 preReservation.AllowedKm, preReservation.PaymentAmount,
-                DateTimeConversions.DateTimeToUnix(preReservation.BillDate), false);
+                TimeConversionUtility.DateTimeToUnix(preReservation.BillDate), false);
             NavMgr.NavigateTo("/BookFinish");
         }
         catch (Exception e)

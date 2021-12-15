@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CarRentalLogicServer.APIConsumer;
@@ -14,17 +15,41 @@ namespace CarRentalLogicServer.GraphQLResolvers.Query
     {
         public IList<Vehicle> GetAllVehicles([Service] IVehicleService vehicleService)
         {
-            return vehicleService.GetVehiclesAsync().Result;
+            try
+            {
+                return vehicleService.GetVehiclesAsync().Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public IList<Vehicle> GetAvailableVehicles([Service] IVehicleService vehicleService, long startDate, long endDate)
         {
-            return vehicleService.GetAvailableVehiclesAsync(startDate, endDate).Result;
+            try
+            {
+                return vehicleService.GetAvailableVehiclesAsync(startDate, endDate).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Vehicle> GetVehicle([Service] IVehicleService vehicleService, long id)
         {
-            return await vehicleService.GetVehicleByIdAsync(id);
+            try
+            {
+                return await vehicleService.GetVehicleByIdAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

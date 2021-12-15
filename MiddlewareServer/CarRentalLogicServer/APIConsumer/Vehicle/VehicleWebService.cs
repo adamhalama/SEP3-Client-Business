@@ -13,7 +13,6 @@ namespace CarRentalLogicServer.APIConsumer
     public class VehicleWebService : IVehicleService
     {
         private string uri;
-
         private readonly HttpClient client;
 
         public VehicleWebService([Service] IHttpClientFactory clientFactory)

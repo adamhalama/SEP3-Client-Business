@@ -2,6 +2,7 @@
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Authentification
+@using CarRentalClientServer.Utilities
 @inject IReservationService rs;
 @inject IVehicleService vs;
 @inject NavigationManager NavMgr
@@ -276,7 +277,7 @@
         {
             progress = 5;
             await InvokeAsync(StateHasChanged);
-            var fetchedVehicles = VehicleData.GetAvailableVehiclesAsync(DateTimeConversions.DateTimeToUnix(startDate.Date.Value), DateTimeConversions.DateTimeToUnix(endDate.Date.Value));
+            var fetchedVehicles = VehicleData.GetAvailableVehiclesAsync(TimeConversionUtility.DateTimeToUnix(startDate.Date.Value), TimeConversionUtility.DateTimeToUnix(endDate.Date.Value));
             progress = 33;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
@@ -356,8 +357,8 @@
             return;
         }
         
-        long startDateTimestamp = DateTimeConversions.DateTimeToUnix(startDate.Date.Value);
-        long endDateTimestamp = DateTimeConversions.DateTimeToUnix(endDate.Date.Value);
+        long startDateTimestamp = TimeConversionUtility.DateTimeToUnix(startDate.Date.Value);
+        long endDateTimestamp = TimeConversionUtility.DateTimeToUnix(endDate.Date.Value);
         NavMgr.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
     }
 

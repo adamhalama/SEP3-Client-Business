@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 using GraphQL;
 
-namespace CarRentalClientServer.Data
+namespace CarRentalClientServer.Utilities
 {
-    public class ErrorHandling
+    public static class ErrorHandlingUtility
     {
         public static void HandleGraphQLReturnErrors(GraphQLError[] errors)
         {

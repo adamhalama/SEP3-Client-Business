@@ -14,17 +14,41 @@ namespace CarRentalLogicServer.GraphQLResolvers.Mutation
     {
         public async Task<Vehicle> CreateVehicle([Service] IVehicleService vehicleService, Vehicle vehicle)
         {
-            return await vehicleService.CreateVehicleAsync(vehicle);
+            try
+            {
+                return await vehicleService.CreateVehicleAsync(vehicle);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Vehicle> UpdateVehicle([Service] IVehicleService vehicleService, Vehicle vehicle)
         {
-            return await vehicleService.UpdateVehicleAsync(vehicle);
+            try
+            {
+                return await vehicleService.UpdateVehicleAsync(vehicle);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Vehicle> DeleteVehicle([Service] IVehicleService vehicleService, long id)
         {
-            return await vehicleService.DeleteVehicleAsync(id);
+            try
+            {
+                return await vehicleService.DeleteVehicleAsync(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
