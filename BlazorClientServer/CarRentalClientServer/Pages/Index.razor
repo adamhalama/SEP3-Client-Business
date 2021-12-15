@@ -2,6 +2,7 @@
 @using CarRentalClientServer.Data
 @using CarRentalClientServer.Models
 @using CarRentalClientServer.Authentification
+@using CarRentalClientServer.Utilities
 @inject IReservationService _reservationService;
 @inject IVehicleService _vehicleService;
 @inject NavigationManager _navigationManager
@@ -27,11 +28,11 @@
                             <FieldLabel>Start date:</FieldLabel>
                             <Addons>
                                 <Addon AddonType="AddonType.Body">
-                                    <DatePicker @ref="@_startDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                                    <DatePicker @ref="@_startDate" TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
                                 </Addon>
                                 <Addon AddonType="AddonType.End">
-                                    <Button Color="Color.Light" Clicked="@(()=>_startDate.ToggleAsync())">
-                                        <Icon Name="IconName.CalendarDay" />
+                                    <Button Color="Color.Light" Clicked="@(() => _startDate.ToggleAsync())">
+                                        <Icon Name="IconName.CalendarDay"/>
                                     </Button>
                                 </Addon>
                             </Addons>
@@ -40,11 +41,11 @@
                             <FieldLabel>End date:</FieldLabel>
                             <Addons>
                                 <Addon AddonType="AddonType.Body">
-                                    <DatePicker @ref="@_endDate" TValue="DateTime?" InputMode="DateInputMode.DateTime" />
+                                    <DatePicker @ref="@_endDate" TValue="DateTime?" InputMode="DateInputMode.DateTime"/>
                                 </Addon>
                                 <Addon AddonType="AddonType.End">
-                                    <Button Color="Color.Light" Clicked="@(()=>_endDate.ToggleAsync())">
-                                        <Icon Name="IconName.CalendarDay" />
+                                    <Button Color="Color.Light" Clicked="@(() => _endDate.ToggleAsync())">
+                                        <Icon Name="IconName.CalendarDay"/>
                                     </Button>
                                 </Addon>
                             </Addons>
@@ -54,7 +55,7 @@
                             <Addons>
                                 <Addon AddonType="AddonType.End">
                                     <Button Color="Color.Dark" Clicked="@SearchButtonClicked">
-                                        <Icon Name="IconName.Search" />
+                                        <Icon Name="IconName.Search"/>
                                     </Button>
                                 </Addon>
                             </Addons>
@@ -76,13 +77,13 @@
 
     @if (_isSearched)
     {
-        <CarRentalClientServer.Components.CarInfo />
+        <CarRentalClientServer.Components.CarInfo/>
         <Steps>
             <Step Name="1" Completed="true">Search</Step>
             <Step Name="2">Book</Step>
             <Step Name="3">
                 <Marker>
-                    <Icon Name="IconName.Flag" />
+                    <Icon Name="IconName.Flag"/>
                 </Marker>
                 <Caption>
                     Finish
@@ -103,7 +104,7 @@
             </CardHeader>
             <CardBody>
                 <Fields>
-                
+
                     <Field>
                         <FieldLabel>Name</FieldLabel>
                         <FieldBody>
@@ -151,7 +152,7 @@
             </CardBody>
         </Card>
 
-        <Divider />
+        <Divider/>
         <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light" ThemeContrast="ThemeContrast.Light" Shadow="Shadow.Small">
             <BarMenu>
                 <BarStart>
@@ -174,19 +175,19 @@
                 </BarStart>
             </BarMenu>
         </Bar>
-        <Divider />
+        <Divider/>
 
-        <DataGrid TItem="Vehicle" Data="_vehicleList" 
+        <DataGrid TItem="Vehicle" Data="_vehicleList"
                   ShowPager="true" PageSize="10"
                   SelectionMode="DataGridSelectionMode.Single"
-                  @bind-SelectedRow="@_selectedVehicle" 
+                  @bind-SelectedRow="@_selectedVehicle"
                   Responsive Filterable FilterMethod="DataGridFilterMethod.Contains"
                   ReadData="@LoadFromService">
             <DataGridColumns>
-                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name" />
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Name)" Caption="Name"/>
                 <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.Type)" Caption="Type" CustomFilter="@TypeFilter">
                     <FilterTemplate>
-                        <Select TValue="string" SelectedValue="@_typeFilter" SelectedValueChanged="@(value => {_typeFilter = value;context.TriggerFilterChange( _typeFilter);})">
+                        <Select TValue="string" SelectedValue="@_typeFilter" SelectedValueChanged="@(value => {_typeFilter = value;context.TriggerFilterChange(_typeFilter);})">
                             <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                             <SelectItem TValue="string" Value="@("Sedan")">Sedan</SelectItem>
                             <SelectItem TValue="string" Value="@("Luxury")">Luxury</SelectItem>
@@ -195,10 +196,10 @@
                         </Select>
                     </FilterTemplate>
                 </DataGridColumn>
-                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable=false />
+                <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.PricePerDay)" Caption="Price per day" Filterable="false"/>
                 <DataGridColumn TItem="Vehicle" Field="@nameof(Vehicle.SeatsCount)" Caption="Seat" CustomFilter="@SeatFilter">
                     <FilterTemplate>
-                        <Select TValue="string" SelectedValue="@_seatFilter" SelectedValueChanged="@(value => {_seatFilter = value; context.TriggerFilterChange( _seatFilter );})">
+                        <Select TValue="string" SelectedValue="@_seatFilter" SelectedValueChanged="@(value => {_seatFilter = value; context.TriggerFilterChange(_seatFilter);})">
                             <SelectItem TValue="string" Value="@("*")">All</SelectItem>
                             <SelectItem TValue="int" Value="@(2)">2</SelectItem>
                             <SelectItem TValue="int" Value="@(4)">4</SelectItem>
@@ -211,17 +212,16 @@
                 </DataGridColumn>
             </DataGridColumns>
             <EmptyTemplate>
-                    <div class="box">
-                        No Cars were found!
-                    </div>
-                </EmptyTemplate>
-                <LoadingTemplate>
-                    <div class="box">
-                        <Progress class="progress is-small is-primary" @ref="ProgressRef" Color="Color.Primary" Max="100" Value="Progress"/>
-                    </div>
-                </LoadingTemplate>
+                <div class="box">
+                    No Cars were found!
+                </div>
+            </EmptyTemplate>
+            <LoadingTemplate>
+                <div class="box">
+                    <Progress class="progress is-small is-primary" @ref="ProgressRef" Color="Color.Primary" Max="100" Value="Progress"/>
+                </div>
+            </LoadingTemplate>
         </DataGrid>
-
     }
 </Div>
 
@@ -331,12 +331,12 @@
 @code {
     private IList<Vehicle> _vehicleList;
 
-    protected Progress ProgressRef = new();     
+    protected Progress ProgressRef = new();
     protected int Progress;
-    
+
     private bool _showError = false;
     private string _errorLabel = "Error label";
-    
+
     DatePicker<DateTime?> _startDate;
     DatePicker<DateTime?> _endDate;
 
@@ -348,15 +348,18 @@
 
     private string _typeFilter;
     private string _seatFilter;
-    
+
     private Modal _sedanModal;
     private Modal _luxuryModal;
     private Modal _suvModal;
     private Modal _mpvModal;
-    
-    [Inject] IMessageService MessageService { get; set; }
-    [Inject] INotificationService NotificationService { get; set; }
-    
+
+    [Inject]
+    IMessageService MessageService { get; set; }
+
+    [Inject]
+    INotificationService NotificationService { get; set; }
+
     async Task LoadFromService(DataGridReadDataEventArgs<Vehicle> gridReadDataEventArgs)
     {
         _showError = false;
@@ -366,7 +369,7 @@
             _showError = true;
             return;
         }
-        
+
         ProgressRef.Animated = true;
         Progress = 0;
         await InvokeAsync(StateHasChanged);
@@ -374,7 +377,7 @@
         {
             Progress = 5;
             await InvokeAsync(StateHasChanged);
-            var fetchedVehicles = _vehicleData.GetAvailableVehiclesAsync(DateTimeConversions.DateTimeToUnix(_startDate.Date.Value), DateTimeConversions.DateTimeToUnix(_endDate.Date.Value));
+            var fetchedVehicles = _vehicleData.GetAvailableVehiclesAsync(TimeConversionUtility.DateTimeToUnix(_startDate.Date.Value), TimeConversionUtility.DateTimeToUnix(_endDate.Date.Value));
             Progress = 33;
             await Task.Delay(500);
             await InvokeAsync(StateHasChanged);
@@ -416,7 +419,7 @@
 
     private void SearchButtonClicked()
     {
-        //search a car
+    //search a car
         var start = _startDate.Date.Value;
         var end = _endDate.Date.Value;
         var today = DateTime.Now;
@@ -440,9 +443,7 @@
                 this._isSearched = true;
                 this._isCorrect = true;
             }
-
         }
-
     }
 
     private void BookCarClicked(long id)
@@ -453,25 +454,25 @@
             _showError = true;
             return;
         }
-        
-        long startDateTimestamp = DateTimeConversions.DateTimeToUnix(startDate.Date.Value);
-        long endDateTimestamp = DateTimeConversions.DateTimeToUnix(endDate.Date.Value);
-        NavMgr.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
+
+        long startDateTimestamp = TimeConversionUtility.DateTimeToUnix(_startDate.Date.Value);
+        long endDateTimestamp = TimeConversionUtility.DateTimeToUnix(_endDate.Date.Value);
+        _navigationManager.NavigateTo($"/Book/{id}/{startDateTimestamp}/{endDateTimestamp}");
     }
 
     private async Task LoginCustomer()
     {
         await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("jebnuty@jano.sk", "123");
     }
-    
+
     private async Task LoginEmployee()
-        {
-            await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("admin@bruh.com", "admin");
-        }
+    {
+        await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("admin@bruh.com", "admin");
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        //custome
+    //custome
 
         await base.OnInitializedAsync();
     }
