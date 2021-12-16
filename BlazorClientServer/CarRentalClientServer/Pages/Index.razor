@@ -14,8 +14,10 @@
 <Heading Size="HeadingSize.Is2" Flex="Flex.JustifyContent.Center">
     Want to rent a car to travel ? Find it now !
 </Heading>
-<Button Clicked="@LoginCustomer">Log in as customer</Button>
-<Button Clicked="@LoginEmployee">Log in as Employee</Button>
+
+@*For development and testing*@
+@*<Button Clicked="@LoginCustomer">Log in as customer</Button>
+<Button Clicked="@LoginEmployee">Log in as Employee</Button>*@
 
 
 <Field Horizontal Flex="Flex.JustifyContent.Center">
@@ -462,11 +464,13 @@
 
     private async Task LoginCustomer()
     {
+        //for development and testing
         await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("jebnuty@jano.sk", "123");
     }
 
     private async Task LoginEmployee()
     {
+    //for development and testing
         await ((CustomAuthenticationStateProvider) authenticationStateProvider).ValidateLogin("admin@bruh.com", "admin");
     }
 

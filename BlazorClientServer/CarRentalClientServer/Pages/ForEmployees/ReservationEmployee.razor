@@ -25,8 +25,6 @@
     }
 </Jumbotron>
 
-<button class="btn btn-outline-dark" @onclick="Debug">Debug</button>
-
 <DataGrid TItem="ReservationFormatted" Data="@reservationList"
           Sortable="true" Filterable="true" Editable="true"
           EditMode="DataGridEditMode.Form" UseInternalEditing
@@ -160,7 +158,8 @@
         showError = false;
         try
         {
-            if (item.Item.DateStart.CompareTo(item.Item.DateEnd) >= 0)
+            var updatingReservation = item.Item;
+            if (updatingReservation.DateStart.CompareTo(updatingReservation.DateEnd) >= 0 || updatingReservation.DateStart.CompareTo(DateTime.Now) < 0)
             {
                 errorLabel = "Select valid dates, the start date must be before the end date";
                 showError = true;
@@ -168,7 +167,7 @@
                 return;
             }
             
-            var r = item.Item.ToVanillaReservation();
+            var r = updatingReservation.ToVanillaReservation();
             var isValid = await CheckAvailabilityUtility.CheckForAvailability(r.DateStart, r.DateEnd, r.Vehicle.Id, vehicleService);
 
             if (!isValid)
@@ -179,8 +178,8 @@
                 return;
             }
             
-            r.Employee = await employeeService.GetEmployeeAsync(item.Item.EmployeeId);
-            r.Vehicle = await vehicleService.GetVehicleAsync(item.Item.VehicleId);
+            r.Employee = await employeeService.GetEmployeeAsync(updatingReservation.EmployeeId);
+            r.Vehicle = await vehicleService.GetVehicleAsync(updatingReservation.VehicleId);
             await reservationService.UpdateReservationAsync(r);
             reservationList = ReservationFormatted.FormatReservations(await reservationService.GetReservationsAsync());
             await InvokeAsync(StateHasChanged);

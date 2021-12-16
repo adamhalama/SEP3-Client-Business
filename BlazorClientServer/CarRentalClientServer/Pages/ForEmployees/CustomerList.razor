@@ -6,6 +6,7 @@
 @using System.Collections.Generic
 @using System.Threading.Tasks
 @using Blazorise.DataGrid
+@using Blazorise.Extensions
 @using CarRentalClientServer.Models
 @inject ICustomerService CustomerData;
 
@@ -122,6 +123,13 @@
         try
         {
             var c = item.Item;
+            if (c.Address.IsNullOrEmpty() || c.Email.IsNullOrEmpty() || c.Name.IsNullOrEmpty() || c.LicenceNumber.IsNullOrEmpty())
+            {
+                errorLabel = "Please fill in all the fields";
+                showError = true;
+                return;
+            }
+            
             await CustomerData.CreateCustomerAsync(c.Name, c.Email, c.Password, c.Address, c.LicenceNumber);
 
             customerList = await CustomerData.GetCustomersAsync();
@@ -142,6 +150,13 @@
         try
         {
             var customer = item.Item;
+            if (customer.Address.IsNullOrEmpty() || customer.Email.IsNullOrEmpty() || customer.Name.IsNullOrEmpty() || customer.LicenceNumber.IsNullOrEmpty())
+            {
+                errorLabel = "Please fill in all the fields";
+                showError = true;
+                return;
+            }
+            
             await CustomerData.UpdateCustomerAsync(customer);
 
             customerList = await CustomerData.GetCustomersAsync();

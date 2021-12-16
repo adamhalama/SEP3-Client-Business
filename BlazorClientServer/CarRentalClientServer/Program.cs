@@ -69,20 +69,15 @@ namespace CarRentalClientServer
             */
             try
             {
-                IVehicleService vehicleService = new VehicleServiceGraphQL();
                 IEmployeeService employeeService = new EmployeeServiceGraphQL();
-                ICustomerService customerService = new CustomerServiceGraphQL();
-                IReservationService reservationService = new ReservationServiceGraphQL();
-                Console.WriteLine("Customer");
-                await customerService.CreateCustomerAsync("jebo", "jebnuty@jano.sk", "123", "V lese", "123XX");
-                Console.WriteLine("Employee");
+                Console.WriteLine("Creating default Employee: admin@bruh.com admin");
                 await employeeService.CreateEmployeeAsync("admin", "admin@bruh.com", "admin", 2);
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine("the accounts have probably been already created");
+                Console.WriteLine("the account has already been created");
             }
             
             CreateHostBuilder(args).Build().Run();

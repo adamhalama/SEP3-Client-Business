@@ -113,7 +113,7 @@
             updatingReservation.AllowedKm = days * 100;
             updatingReservation.PaymentAmount = days * updatingReservation.Vehicle.PricePerDay;
             
-            if (updatingReservation.DateStart.CompareTo(updatingReservation.DateEnd) >= 0)
+            if (updatingReservation.DateStart.CompareTo(updatingReservation.DateEnd) >= 0 || updatingReservation.DateStart.CompareTo(DateTime.Now) < 0)
             {
                 errorLabel = "Select valid dates, the start date must be before the end date";
                 showError = true;
